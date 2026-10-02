@@ -1,0 +1,16 @@
+# Installed by deploy/install.sh, which fills in @USER@ and @BACKEND@.
+[Unit]
+Description=Haunt Director (show control API + UI)
+After=network-online.target fppd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@BACKEND@
+ExecStart=@BACKEND@/.venv/bin/uvicorn haunt_director.api.app:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

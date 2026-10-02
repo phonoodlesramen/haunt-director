@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 646" width="1400" height="646">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7f93b8"/>
+      <stop offset="0.55" stop-color="#b3b9cc"/>
+      <stop offset="1" stop-color="#d8c9b8"/>
+    </linearGradient>
+    <radialGradient id="moonglow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f3ead0" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f3ead0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lawn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d8f4e"/>
+      <stop offset="1" stop-color="#4f6e38"/>
+    </linearGradient>
+    <radialGradient id="win" cx="0.5" cy="0.5" r="0.7">
+      <stop offset="0" stop-color="#ffcf7a"/>
+      <stop offset="1" stop-color="#c46a1c"/>
+    </radialGradient>
+    <radialGradient id="porch" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffd28a" stop-opacity="0.5"/><stop offset="1" stop-color="#ffd28a" stop-opacity="0"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="14"/></filter>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9bc9c"/>
+      <stop offset="1" stop-color="#b3a586"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1400" height="646" fill="url(#sky)"/>
+  <!-- stars -->
+  <g fill="#e9e4ff" opacity="0">
+    <circle cx="90" cy="40" r="1.4"/><circle cx="210" cy="95" r="1"/><circle cx="330" cy="30" r="1.6"/>
+    <circle cx="460" cy="70" r="1"/><circle cx="560" cy="22" r="1.3"/><circle cx="690" cy="58" r="1"/>
+    <circle cx="820" cy="34" r="1.5"/><circle cx="905" cy="88" r="1"/><circle cx="1180" cy="40" r="1.2"/>
+    <circle cx="1270" cy="110" r="1"/><circle cx="1350" cy="60" r="1.5"/><circle cx="150" cy="150" r="0.9"/>
+    <circle cx="610" cy="120" r="0.9"/><circle cx="760" cy="140" r="1"/><circle cx="1010" cy="20" r="1"/>
+  </g>
+  <!-- moon -->
+  <circle cx="1080" cy="120" r="150" fill="url(#moonglow)"/>
+  <circle cx="1080" cy="120" r="58" fill="#efe6c8"/>
+  <circle cx="1062" cy="104" r="11" fill="#d9cfae"/><circle cx="1098" cy="136" r="15" fill="#ddd3b3"/>
+  <circle cx="1090" cy="96" r="6" fill="#d6cba9"/>
+  <!-- distant tree line -->
+  <path d="M0 330 Q60 280 120 315 T240 300 T360 318 T480 296 T600 320 T720 300 T840 318 T960 296 T1080 314 T1200 298 T1320 316 L1400 300 L1400 400 L0 400Z" fill="#5d6b5a"/>
+
+  <!-- house -->
+  <g>
+    <rect x="430" y="190" width="460" height="170" fill="url(#wall)"/>
+    <polygon points="410,195 660,105 910,195" fill="#4b4c55"/>
+    <!-- dormers -->
+    <g fill="#bfb293">
+      <rect x="512" y="150" width="46" height="45"/><polygon points="504,152 535,124 566,152" fill="#4b4c55"/>
+      <rect x="637" y="128" width="46" height="67"/><polygon points="629,130 660,100 691,130" fill="#4b4c55"/>
+      <rect x="762" y="150" width="46" height="45"/><polygon points="754,152 785,124 816,152" fill="#4b4c55"/>
+    </g>
+    <rect x="522" y="160" width="26" height="28" fill="url(#win)" opacity="0.85"/>
+    <rect x="647" y="146" width="26" height="34" fill="#3d4452"/>
+    <rect x="772" y="160" width="26" height="28" fill="url(#win)" opacity="0.6"/>
+    <!-- side wing -->
+    <rect x="890" y="250" width="200" height="110" fill="#b8916f"/>
+    <polygon points="880,255 950,205 1100,205 1110,255" fill="#4b4c55"/>
+    <!-- chimneys -->
+    <rect x="452" y="120" width="22" height="70" fill="#8a5a45"/>
+    <rect x="1040" y="175" width="18" height="40" fill="#8a5a45"/>
+    <!-- upper windows -->
+    <g>
+      <rect x="455" y="215" width="30" height="40" fill="#3d4452"/>
+      <rect x="510" y="215" width="30" height="40" fill="url(#win)" opacity="0.9"/>
+      <rect x="590" y="215" width="30" height="40" fill="#3d4452"/>
+      <rect x="700" y="215" width="30" height="40" fill="url(#win)" opacity="0.7"/>
+      <rect x="780" y="215" width="30" height="40" fill="#3d4452"/>
+      <rect x="835" y="215" width="30" height="40" fill="url(#win)" opacity="0.55"/>
+    </g>
+    <!-- lower windows -->
+    <g>
+      <rect x="455" y="285" width="30" height="46" fill="url(#win)" opacity="0.65"/>
+      <rect x="520" y="285" width="30" height="46" fill="#3d4452"/>
+      <rect x="770" y="285" width="30" height="46" fill="#3d4452"/>
+      <rect x="835" y="285" width="30" height="46" fill="url(#win)" opacity="0.8"/>
+      <rect x="930" y="280" width="28" height="44" fill="#3d4452"/>
+      <rect x="985" y="280" width="28" height="44" fill="url(#win)" opacity="0.5"/>
+      <rect x="1040" y="280" width="28" height="44" fill="#3d4452"/>
+    </g>
+    <!-- door + porch light -->
+    <rect x="640" y="282" width="40" height="78" fill="#5b4a3a"/>
+    <rect x="644" y="286" width="32" height="10" fill="url(#win)" opacity="0.7"/>
+    <circle cx="690" cy="295" r="4" fill="#ffd28a"/>
+    <circle cx="690" cy="295" r="26" fill="url(#porch)"/>
+  </g>
+
+  <!-- lawn hills -->
+  <path d="M0 395 Q300 345 640 362 L660 362 Q1000 345 1400 380 L1400 520 L0 520Z" fill="url(#lawn)"/>
+  <!-- front steps -->
+  <g fill="#9a9aa0">
+    <polygon points="640,362 680,362 700,520 620,520"/>
+  </g>
+  <g stroke="#7c7c82" stroke-width="2">
+    <line x1="636" y1="390" x2="684" y2="390"/><line x1="632" y1="420" x2="688" y2="420"/>
+    <line x1="628" y1="450" x2="692" y2="450"/><line x1="624" y1="485" x2="696" y2="485"/>
+  </g>
+  <!-- tombstones -->
+  <g fill="#8f9093">
+    <path d="M250 440 v-34 a18 18 0 0 1 36 0 v34z"/>
+    <path d="M330 455 v-26 a14 14 0 0 1 28 0 v26z"/>
+    <rect x="1015" y="420" width="26" height="36" rx="3"/>
+    <path d="M1090 450 v-30 a16 16 0 0 1 32 0 v30z"/>
+    <rect x="1180" y="430" width="8" height="34"/><rect x="1170" y="440" width="28" height="7"/>
+  </g>
+  <!-- giant skeleton silhouette (a nod to the classic 12-ft yard skeleton) -->
+  <g fill="#d8d4c6" opacity="0.85">
+    <circle cx="812" cy="276" r="9"/>
+    <rect x="808" y="286" width="8" height="34" rx="3"/>
+    <rect x="798" y="292" width="28" height="4" rx="2"/>
+    <rect x="796" y="300" width="32" height="3" rx="1.5"/><rect x="798" y="307" width="28" height="3" rx="1.5"/>
+    <path d="M800 294 L786 270" stroke="#d8d4c6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M824 294 L840 318" stroke="#d8d4c6" stroke-width="4" stroke-linecap="round"/>
+    <path d="M808 320 L802 360" stroke="#d8d4c6" stroke-width="5" stroke-linecap="round"/>
+    <path d="M816 320 L822 360" stroke="#d8d4c6" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- gnarled trees -->
+  <g fill="#3b3029" stroke="#3b3029" stroke-linecap="round">
+    <path d="M150 520 C160 420 140 360 175 300 C190 270 170 230 200 200" stroke-width="22" fill="none"/>
+    <path d="M178 300 C120 270 90 240 60 230" stroke-width="10" fill="none"/>
+    <path d="M190 250 C240 220 270 170 300 150" stroke-width="9" fill="none"/>
+    <path d="M200 200 C210 160 190 130 205 100" stroke-width="7" fill="none"/>
+    <path d="M300 150 C320 140 335 120 350 118" stroke-width="4" fill="none"/>
+    <path d="M60 230 C40 225 25 210 15 196" stroke-width="4" fill="none"/>
+    <path d="M1265 520 C1255 430 1275 370 1240 310 C1225 280 1245 240 1215 210" stroke-width="24" fill="none"/>
+    <path d="M1240 310 C1300 280 1330 250 1370 236" stroke-width="10" fill="none"/>
+    <path d="M1228 260 C1180 230 1150 190 1120 170" stroke-width="9" fill="none"/>
+    <path d="M1215 210 C1205 170 1225 140 1210 110" stroke-width="7" fill="none"/>
+    <path d="M1120 170 C1100 160 1088 142 1070 140" stroke-width="4" fill="none"/>
+  </g>
+  <!-- hanging ghosts -->
+  <g fill="#cfd6e6" opacity="0.55">
+    <path d="M285 165 q-14 6 -12 40 l6 -6 l5 8 l5 -8 l5 8 l5 -8 l6 6 q2 -34 -12 -40z"/>
+    <path d="M1150 185 q-12 5 -10 34 l5 -5 l4 7 l4 -7 l4 7 l4 -7 l5 5 q2 -29 -10 -34z"/>
+  </g>
+  <!-- iron fence -->
+  <g stroke="#2e2e33" stroke-width="4">
+    <line x1="0" y1="500" x2="560" y2="500"/><line x1="760" y1="500" x2="1400" y2="500"/>
+  </g>
+  <g fill="#2e2e33">
+    <path d="M20 530 v-50 l4 -8 l4 8 v50z"/><path d="M70 530 v-50 l4 -8 l4 8 v50z"/><path d="M120 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M220 530 v-50 l4 -8 l4 8 v50z"/><path d="M270 530 v-50 l4 -8 l4 8 v50z"/><path d="M320 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M370 530 v-50 l4 -8 l4 8 v50z"/><path d="M420 530 v-50 l4 -8 l4 8 v50z"/><path d="M470 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M520 530 v-50 l4 -8 l4 8 v50z"/><path d="M780 530 v-50 l4 -8 l4 8 v50z"/><path d="M830 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M880 530 v-50 l4 -8 l4 8 v50z"/><path d="M930 530 v-50 l4 -8 l4 8 v50z"/><path d="M980 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M1030 530 v-50 l4 -8 l4 8 v50z"/><path d="M1080 530 v-50 l4 -8 l4 8 v50z"/><path d="M1130 530 v-50 l4 -8 l4 8 v50z"/>
+    <path d="M1300 530 v-50 l4 -8 l4 8 v50z"/><path d="M1350 530 v-50 l4 -8 l4 8 v50z"/>
+  </g>
+  <!-- sidewalk and street -->
+  <rect x="0" y="520" width="1400" height="30" fill="#b7b5ad"/>
+  <rect x="0" y="550" width="1400" height="12" fill="#cfccc4"/>
+  <rect x="0" y="562" width="1400" height="84" fill="#55565b"/>
+  <!-- ground mist -->
+  <g fill="#b9c3d6" opacity="0.10" filter="url(#blur)">
+    <ellipse cx="300" cy="470" rx="320" ry="26"/><ellipse cx="1000" cy="460" rx="380" ry="30"/>
+    <ellipse cx="660" cy="505" rx="420" ry="18"/>
+  </g>
+</svg>

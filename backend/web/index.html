@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1016">
+<title>Haunt Director</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1016; --surface:#171A23; --surface2:#1F2330; --surface3:#272C3B;
+  --line:#2C3140; --line-soft:#232838; --text:#E8E6E3; --muted:#8A8FA0; --faint:#5C6274;
+  --accent:#E8A33D; --accent-ink:#1A1206; --danger:#E05A47; --ok:#6BAE7A; --warn:#D4A24C; --fogc:#9FB3C8;
+  --r:12px; --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --disp:"Oswald","IBM Plex Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans)}
+body{max-width:680px;margin:0 auto;padding:0 0 160px}
+h1{font-family:var(--disp);font-size:20px;letter-spacing:.5px;margin:0;text-transform:uppercase}
+h2{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:var(--muted);margin:22px 4px 10px}
+header{position:sticky;top:0;z-index:20;background:rgba(14,16,22,.94);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:9px;padding:12px 16px}
+.hrow{display:flex;align-items:center;gap:10px}
+.sigstrip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sigstrip::-webkit-scrollbar{display:none}
+.sigstrip:empty{display:none}
+.sigpill{flex:none;display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--faint);background:var(--surface);border:1px solid var(--line-soft);
+  border-radius:999px;padding:4px 9px 4px 5px;transition:color .12s,border-color .12s}
+.sigsw{width:13px;height:13px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:#090b10;
+  flex:none;transition:background .1s,box-shadow .1s}
+.sigpill.on{color:var(--text);border-color:var(--line)}
+.sigpill.strobe .sigsw{animation:sigblink .16s steps(2,start) infinite}
+@keyframes sigblink{50%{opacity:.25}}
+.sigpill.fog .sigsw{border-radius:4px}
+.sigpill.fog.firing{color:var(--accent-ink);background:linear-gradient(180deg,var(--fogc),#7f93a8);border-color:transparent}
+.sigpill.fog.firing.suppressed{background:transparent;color:var(--fogc);border:1px dashed var(--fogc)}
+.mbadge{display:none;margin-left:7px;vertical-align:2px;font-size:9.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:2px 7px}
+.card.manual .mbadge{display:inline-block}
+.card:not(.manual) .relbtn{display:none}
+.sigpill.presence.nosensor{color:var(--faint);opacity:.65}
+.sigpill.presence.nosensor .sigsw{background:#090b10;border-color:var(--line-soft)}
+.sigpill.presence.clear{color:var(--muted);border-color:var(--line)}
+.sigpill.presence.clear .sigsw{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+.sigpill.presence.present{color:#fff;border-color:transparent;background:linear-gradient(180deg,var(--danger),#a3241a)}
+.sigpill.presence.present .sigsw{background:#fff;box-shadow:0 0 9px var(--danger);animation:sigblink .5s steps(2,start) infinite}
+.sigpill.presence.armed.clear{border-color:var(--ok)}
+.fogbanner{font-family:var(--disp);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;text-align:center;
+  color:var(--accent-ink);background:linear-gradient(180deg,var(--warn),#c8912f);border-radius:8px;padding:7px 10px;font-weight:600}
+.fogbanner[hidden]{display:none}
+.pad{padding:0 16px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-left:auto;
+  background:var(--surface);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--faint)}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.dot.bad{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:12px 0}
+.row{display:flex;align-items:center;gap:12px}.grow{flex:1;min-width:0}
+.name{font-weight:600;font-size:16px}.sub{font-size:12px;color:var(--muted);margin-top:2px}
+.swatch{width:42px;height:42px;border-radius:10px;border:2px solid var(--line);flex:none}
+label{font-size:12px;color:var(--muted);display:block;margin:14px 0 6px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=color]{width:56px;height:40px;border:none;background:none;padding:0;border-radius:10px}
+.btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface2);color:var(--text);
+  padding:11px 14px;border-radius:10px;cursor:pointer;flex:1;min-width:84px}
+button:active{transform:translateY(1px)}
+button.primary{background:linear-gradient(180deg,var(--accent),#cf8d2c);border-color:transparent;color:var(--accent-ink)}
+button.ghost{background:transparent}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.chip{flex:none;padding:8px 12px;border-radius:999px;font-size:13px}
+.statusgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface2);border-radius:10px;padding:12px 14px}
+.stat .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.stat .v{font-size:18px;font-weight:700;margin-top:4px;font-family:var(--disp)}
+.view{display:none}.view.active{display:block}
+/* ---- stage (ported from the studio for parity) ---- */
+.stagewrap{position:relative;width:100%;aspect-ratio:2.167;min-height:170px;background:#06070B;
+  overflow:hidden;isolation:isolate;border-radius:8px}
+.stagebg{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;
+  filter:brightness(.44) saturate(.20) contrast(1.08)}
+.nightwash{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(22,38,78,.62),rgba(14,24,54,.34) 50%,rgba(5,8,18,.70));
+  mix-blend-mode:multiply}
+.stageground{position:absolute;left:0;right:0;bottom:0;height:26%;
+  background:linear-gradient(to top,rgba(12,14,20,.92),transparent)}
+.fxlayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
+#fxLights{filter:blur(8px)} #fxFog{filter:blur(11px)}
+.aimline{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:visible}
+.aimline line{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 4;opacity:.55}
+.tcode{position:absolute;left:10px;top:8px;font-family:ui-monospace,monospace;font-size:11px;
+  color:rgba(255,255,255,.5);background:rgba(4,5,9,.55);padding:2px 7px;border-radius:4px;z-index:8}
+.fixture{position:absolute;transform:translate(-50%,-50%);cursor:grab;display:flex;flex-direction:column;
+  align-items:center;gap:3px;z-index:5;touch-action:none;opacity:0;transition:opacity .2s;pointer-events:none}
+.stage-edit .fixture{opacity:1;pointer-events:auto}
+.fixture .pin{width:16px;height:16px;border-radius:3px;border:1.5px solid rgba(255,255,255,.62);background:rgba(0,0,0,.45)}
+.fixture.fog .pin{border-radius:50%;border-style:dashed}
+.fixture.prop .pin{border-radius:2px;width:11px;height:22px;border-style:dotted}
+.fixture.audio_sink .pin{border-radius:50% 50% 3px 3px}
+.fixture.static_rgb .pin{border-radius:50%;width:14px;height:14px;
+  background:conic-gradient(from 0deg,#ff3030,#ffcf30,#38d66b,#2ea6ff,#8b2fff,#ff3030)}
+.fixture .lbl{font-family:var(--disp);font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);background:rgba(4,5,9,.66);padding:1px 5px;border-radius:3px;white-space:nowrap}
+.fixture.sel .pin{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,163,61,.28)}
+.aimdot{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;
+  border:1.5px dashed var(--accent);background:rgba(232,163,61,.12);z-index:7;touch-action:none;
+  display:none;align-items:center;justify-content:center}
+.stage-edit .aimdot.show{display:flex}
+.aimdot::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.aimhint{position:absolute;left:8px;bottom:8px;z-index:9;font-family:var(--disp);font-size:10px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:rgba(4,5,9,.72);
+  padding:3px 9px;border-radius:4px;border:1px solid var(--accent-dim)}
+.aimhint[hidden]{display:none!important}
+.scenecard .sw{display:flex;gap:6px;margin:12px 0 4px}
+.scenecard .sw i{width:100%;height:26px;border-radius:6px;border:1px solid var(--line-soft);display:block;transition:background .1s}
+.progress{height:6px;background:var(--surface3);border-radius:999px;overflow:hidden;margin-top:12px}
+.progress i{display:block;height:100%;width:0;background:var(--accent)}
+.playing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:680px;margin:0 auto;
+  background:linear-gradient(180deg,rgba(14,16,22,0),var(--bg) 22%);padding:10px 16px calc(8px + env(safe-area-inset-bottom))}
+.stop{width:100%;font-family:var(--disp);font-size:17px;letter-spacing:1px;text-transform:uppercase;padding:16px;
+  border-radius:12px;background:linear-gradient(180deg,#e8543f,#c8402f);border:none;color:#fff;box-shadow:0 8px 24px rgba(224,90,71,.35)}
+.nav{display:flex;gap:8px;margin-top:10px}
+.nav button{font-family:var(--disp);letter-spacing:.6px;text-transform:uppercase;font-size:12px;background:var(--surface);border:1px solid var(--line);flex:1 1 0;min-width:0;padding-left:2px;padding-right:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav button[aria-selected=true]{background:var(--surface3);border-color:var(--accent);color:var(--accent)}
+@media (max-width:440px){.nav{gap:5px}.nav button{font-size:11px;letter-spacing:.2px;padding-left:0;padding-right:0}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:154px;z-index:40;background:var(--surface3);
+  border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;
+  transition:opacity .2s;pointer-events:none;max-width:90%}
+.toast.show{opacity:1}.muted{color:var(--muted)}
+/* ---- scene editor sheet ---- */
+.scenecard .cardhead{display:flex;align-items:flex-start;gap:8px}
+.iconbtn{flex:none;width:34px;min-width:34px;height:34px;padding:0;border-radius:9px;
+  background:var(--surface2);border:1px solid var(--line);color:var(--muted);font-size:15px;line-height:1}
+.iconbtn:disabled{opacity:.35}
+.scenecard.disabled{opacity:.5}
+.scenecard.disabled .name::after{content:" · off";color:var(--faint);font-weight:400;font-size:12px}
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:rgba(4,5,9,.6);backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-backdrop.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;max-width:680px;margin:0 auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 0 0;
+  padding:8px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);
+  transition:transform .24s cubic-bezier(.2,.7,.2,1);max-height:90vh;overflow-y:auto}
+.sheet.show{transform:translateY(0)}
+.sheet .grab{width:38px;height:4px;border-radius:99px;background:var(--line);margin:6px auto 10px}
+.sheet h3{font-family:var(--disp);font-size:16px;letter-spacing:.5px;text-transform:uppercase;margin:2px 0 4px}
+.field{margin:12px 0}
+.field label{margin:0 0 6px}
+.field input[type=text],.field input[type=number],.field select,.field textarea{
+  width:100%;font:inherit;color:var(--text);background:var(--surface2);border:1px solid var(--line);
+  border-radius:10px;padding:11px 12px}
+.field textarea{resize:vertical;min-height:44px}
+.field .rowline{display:flex;align-items:center;gap:10px}
+.field .rowline input[type=range]{flex:1}
+.field .val{font-size:12px;color:var(--muted);min-width:52px;text-align:right}
+.vo-preview{flex:none;padding:8px 12px;border-radius:9px;background:var(--surface3);border:1px solid var(--line);font-size:13px}
+.sheet .savebar{display:flex;gap:8px;margin-top:18px}
+.sheet .savebar .primary{flex:2}.sheet .savebar .ghost{flex:1}
+.toggle{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.switch{position:relative;width:46px;height:26px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch .track{position:absolute;inset:0;background:var(--surface3);border:1px solid var(--line);border-radius:99px;transition:.15s}
+.switch .track::before{content:"";position:absolute;left:3px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:.15s}
+.switch input:checked + .track{background:rgba(232,163,61,.3);border-color:var(--accent)}
+.switch input:checked + .track::before{transform:translateX(20px);background:var(--accent)}
+/* ============ desktop / responsive (artifact-style layout) ============ */
+@media (min-width:900px){
+  body{max-width:1180px;display:flex;flex-direction:column;padding:0 0 28px}
+  header{order:0;position:sticky;top:0}
+  header h1{font-size:22px}
+  /* bottom nav + stop become a top toolbar under the app bar (like the artifact's tab row) */
+  .bottom{order:1;position:static;max-width:none;margin:0;background:none;box-shadow:none;
+    display:flex;align-items:center;gap:16px;padding:10px 16px;border-bottom:1px solid var(--line)}
+  main.pad{order:2;padding-top:4px}
+  .bottom .nav{order:0;flex:1;margin:0}
+  .bottom .stop{order:1;flex:none;width:auto;font-size:14px;letter-spacing:.5px;padding:12px 22px;box-shadow:none}
+  .nav button{flex:none;padding:10px 24px;font-size:14px}
+  /* live: status across the top, fixtures in a grid */
+  #view-live .statusgrid{grid-template-columns:repeat(4,1fr)}
+  #lights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  #lights .card{margin:0}
+  /* scenes: stage hero on the left, scene list as a right rail (artifact Design layout) */
+  .scenes-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+  .sg-main{min-width:0}
+  .sg-main > h2:first-child, .sg-rail > h2:first-child{margin-top:6px}
+  .sg-rail .scenecard{margin:0 0 12px}
+  /* editor: centered modal instead of a bottom sheet */
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-46%) scale(.98);
+    width:min(560px,92vw);max-width:560px;border-radius:16px;max-height:86vh;
+    transition:opacity .2s,transform .2s}
+  .sheet .grab{display:none}
+  .sheet:not(.show){opacity:0;pointer-events:none}
+  .sheet.show{transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+}
+@media (min-width:1240px){
+  #lights{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* ============ timeline / keyframe editor ============ */
+.ed-head{display:flex;align-items:center;gap:10px;margin:16px 4px 6px}
+.ed-title{font-family:var(--disp);font-size:18px;letter-spacing:.5px;text-transform:uppercase;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-back{flex:none;background:var(--surface2);border:1px solid var(--line);color:var(--text);
+  padding:9px 13px;border-radius:9px;font-weight:600}
+.edt-save{flex:none;width:auto;min-width:96px}
+.savestat{flex:none;font-size:11px;color:var(--muted);min-width:60px;text-align:right;font-variant:tabular-nums}
+.savestat[data-k=saving]{color:var(--warn)} .savestat[data-k=saved]{color:var(--ok)} .savestat[data-k=error]{color:var(--danger)}
+.btn-mini{flex:none;width:auto;min-width:0;padding:9px 12px;background:var(--surface2);border:1px solid var(--line);
+  color:var(--text);border-radius:9px;font-size:12px;font-weight:600}
+.btn-mini:disabled{opacity:.4}
+/* per-track mute buttons + muted-lane styling */
+.rowlbl .rl-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mutebtn{flex:none;width:24px;min-width:24px;height:20px;padding:0;border-radius:5px;border:1px solid var(--line);
+  background:var(--surface3);color:var(--muted);font-size:11px;line-height:1;cursor:pointer;margin-left:4px}
+.mutebtn.on{background:rgba(224,90,71,.22);border-color:var(--danger)}
+.tlrow.muted .tltrack{opacity:.3;filter:grayscale(.65)}
+.tlrow.muted .rowlbl .rl-name{text-decoration:line-through;opacity:.55}
+.tlblock.audioblk.music{opacity:.85;cursor:default;color:#eadfce}
+/* clip trim widget */
+.trimbox{margin-top:10px;padding:10px;background:var(--surface2);border:1px solid var(--line);border-radius:10px}
+.trimhd{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:4px}
+.trimbox audio{width:100%;margin:6px 0;height:36px}
+.trimrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trimrow .mini{flex:none}
+/* show mode */
+.showstate{display:flex;align-items:center;gap:12px}
+.ss-dot{width:14px;height:14px;border-radius:50%;background:var(--faint);flex:none}
+.ss-dot.armed{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.ss-dot.scare{background:var(--danger);box-shadow:0 0 12px var(--danger)}
+.ss-dot.cooldown{background:var(--warn);box-shadow:0 0 10px var(--warn)}
+#armBtn.on{background:linear-gradient(180deg,#e8543f,#c8402f);color:#fff}
+.winrow{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}
+.winrow input[type=text],.winrow input[type=number],.winrow input[type=time],.winrow select{
+  font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.transport{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tbtn{flex:none;min-width:0;width:auto;padding:9px 14px}
+.transport input[type=range]{flex:1;min-width:120px}
+.mono{font-family:ui-monospace,SFMono-Regular,monospace;font-size:12px;color:var(--muted);min-width:96px;text-align:right}
+.tlpanel{overflow-x:auto;overflow-y:hidden;background:var(--surface);-webkit-overflow-scrolling:touch}
+.tlinner{position:relative}
+.tlruler{position:relative;height:22px;border-bottom:1px solid var(--line)}
+.tlruler .tick{position:absolute;top:0;bottom:0;border-left:1px solid var(--line-soft);
+  font-size:10px;color:var(--faint);padding-left:3px;line-height:22px;font-family:ui-monospace,monospace}
+.tlrow{display:flex;align-items:stretch;border-top:1px solid var(--line-soft)}
+.tlrow .rowlbl{flex:none;width:var(--tl-lbl);box-sizing:border-box;padding:0 8px;display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--muted);border-right:1px solid var(--line);background:var(--surface2);
+  position:sticky;left:0;z-index:2}
+.tlrow .rowlbl .kd{width:8px;height:8px;border-radius:2px;flex:none;background:var(--faint)}
+.tlrow.fog .rowlbl .kd{border-radius:50%}
+.tlrow.audio{background:rgba(232,163,61,.05)}
+.tlrow.audio.first{border-top:2px solid var(--line)}
+.tlrow.audio .rowlbl{color:var(--accent);background:var(--surface3)}
+.tlrow.audio .rowlbl .kd{border-radius:50%;background:var(--accent)}
+.tltrack{position:relative;height:46px;flex:none}
+.tlblock{position:absolute;top:7px;height:32px;min-width:8px;border-radius:5px;border:1px solid rgba(255,255,255,.22);
+  cursor:pointer;overflow:hidden;font-size:10px;line-height:13px;color:#0c0c10;padding:2px 4px;white-space:nowrap;
+  box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.tlblock .bt{font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.02em;font-size:8px}
+.tlblock.sel{outline:2px solid #fff;outline-offset:0;z-index:3}
+.tlblock{touch-action:none}
+.tlblock .tlresize{position:absolute;right:0;top:0;bottom:0;width:9px;cursor:ew-resize;background:rgba(0,0,0,.20);border-left:1px solid rgba(255,255,255,.25)}
+.tltrack{touch-action:none}
+.tlruler{cursor:pointer;touch-action:none}
+.tladd{position:absolute;right:4px;top:11px;width:24px;height:24px;border-radius:6px;border:1px dashed var(--line);
+  background:var(--surface3);color:var(--muted);font-size:15px;line-height:22px;text-align:center;cursor:pointer;z-index:2}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);pointer-events:none;z-index:4;
+  box-shadow:0 0 6px var(--accent)}
+.playhead .phandle{position:absolute;top:-3px;left:-7px;width:16px;height:16px;border-radius:50%;
+  background:var(--accent);pointer-events:auto;cursor:ew-resize;touch-action:none;
+  box-shadow:0 0 6px var(--accent);border:2px solid var(--bg)}
+.cardhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cardhdr .ch{font-size:12px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:0}
+.mini{flex:none;width:auto;font-size:12px;padding:6px 10px;background:var(--surface2);border:1px solid var(--line);color:var(--danger)}
+.evrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.evrow.one{grid-template-columns:1fr}
+.swatchrow{display:flex;gap:8px;align-items:center}
+.swatchrow input[type=color]{width:48px;height:38px}
+.swatchrow input[type=text]{flex:1;font-family:ui-monospace,monospace}
+#view-editor .field{margin:10px 0}
+@media (min-width:900px){
+  .edwrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+  .ed-main{min-width:0}
+  .ed-head{margin-top:8px}
+}
+/* ---- sound library manager ---- */
+.libwrap{max-width:760px;margin:0 auto}
+.libadd{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.libadd input[type=text],.libadd input[type=file]{flex:1;min-width:150px}
+.libadd select{flex:none;width:auto}
+.libcat{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:16px 2px 6px}
+.librow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;margin:8px 0}
+.libleft{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.libtw{min-width:0;flex:1}
+.libtitle{width:100%;background:var(--surface2);border:1px solid var(--line);color:var(--text);
+  border-radius:8px;padding:7px 9px;font-size:14px}
+.libmeta{margin-top:3px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.libright{display:flex;align-items:center;gap:8px;flex:none}
+.libcatsel{width:auto;font-size:12px;padding:6px 8px}
+.librow.playing{border-color:var(--accent)}
+/* ---- System (FPP health) ---- */
+.sysgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.systile{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.systile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.systile .v{font-size:15px;margin-top:4px;display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.systile .d{font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.systile .dot{flex:none} .systile .vt{min-width:0;overflow:hidden;text-overflow:ellipsis}
+#fogTest,#volTest{flex:none;width:auto;padding:10px 14px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line-soft)}
+.chk:first-child{border-top:0;padding-top:2px}
+.chk .dot{flex:none;margin-top:6px}
+.chk .body{flex:1;min-width:0}
+.chk .t{font-weight:600;font-size:14px}
+.chk .d{font-size:13px;color:var(--muted);margin-top:2px}
+.chk .h{font-size:12px;color:var(--faint);margin-top:4px}
+.chk button{flex:none;width:auto;padding:8px 12px;font-size:13px}
+.syssum{font-size:13px;color:var(--muted);margin:0 2px 8px}
+.sysbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sysbtns button{font-size:13px;padding:12px 10px}
+.sysbtns button.danger{border-color:var(--danger);color:var(--danger)}
+.fpplink{display:inline-block;margin-top:12px;color:var(--accent);font-size:14px;text-decoration:none}
+.sysreconnect{border-color:var(--warn)}
+.pill{cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <h1>🎃 Haunt Director</h1>
+    <span class="pill" onclick="go('system')" title="FPP health"><span id="hdot" class="dot"></span><span id="hlabel">…</span></span>
+  </div>
+  <div id="sigstrip" class="sigstrip" aria-label="Live fixture signal"></div>
+  <div id="fogBanner" class="fogbanner" hidden>Fog output disabled — cues show here, machine won't fire</div>
+</header>
+
+<main class="pad">
+  <section id="view-live" class="view active">
+    <h2>Status</h2>
+    <div class="card">
+      <div class="statusgrid">
+        <div class="stat"><div class="k">FPP</div><div class="v" id="s-mode">—</div></div>
+        <div class="stat"><div class="k">DMX Output</div><div class="v" id="s-out">—</div></div>
+        <div class="stat"><div class="k">Fixtures</div><div class="v" id="s-dev">—</div></div>
+        <div class="stat"><div class="k">Now Playing</div><div class="v" id="s-play">Manual</div></div>
+      </div>
+      <div class="sub" id="s-warn" style="margin-top:10px"></div>
+    </div>
+    <h2>Lights</h2><div id="lights"></div>
+    <h2>Fog</h2><div id="fog"></div>
+    <h2 style="display:flex;align-items:center">Yard lights <span class="muted" style="font-size:12px;font-weight:400;margin-left:8px">static solar spotlights</span></h2>
+    <div id="yardlights"></div>
+  </section>
+
+  <section id="view-scenes" class="view">
+    <div class="scenes-grid">
+      <div class="sg-main">
+        <h2 style="display:flex;align-items:center">Stage
+          <button id="editLayout" onclick="toggleLayout()" style="flex:none;margin-left:auto;font-size:11px;padding:6px 10px">Edit layout</button>
+        </h2>
+        <div class="card" style="padding:8px">
+          <div class="stagewrap" id="stage">
+            <div class="tcode" id="tcode">0.00 s</div>
+            <img class="stagebg" id="stagebg" src="img/house.jpg" onerror="this.onerror=null;this.src='img/house-example.jpg'" alt="The front of the house at night">
+            <div class="nightwash"></div>
+            <div class="stageground"></div>
+            <canvas class="fxlayer" id="fxFog"></canvas>
+            <canvas class="fxlayer" id="fxLights"></canvas>
+            <svg class="aimline" id="aimline"></svg>
+            <div class="aimhint" id="aimhint" hidden></div>
+          </div>
+          <div class="sub" id="stagelabel" style="padding:8px 4px 2px">Idle — press Play on a scene below</div>
+        </div>
+      </div>
+      <div class="sg-rail">
+        <h2 style="display:flex;align-items:center">Scenes
+          <span style="margin-left:auto;display:flex;gap:8px">
+            <button class="mini" style="flex:none;color:var(--text)" onclick="toggleGen()">✨ Generate</button>
+            <button class="mini primary" style="flex:none;color:var(--accent-ink)" onclick="newScene()">＋ New</button>
+          </span>
+        </h2>
+        <div id="genPanel" class="card" style="display:none;margin-bottom:12px">
+          <div class="field" style="margin-top:0"><label>Describe the scene</label>
+            <textarea id="genDesc" rows="3" placeholder="e.g. a slow green graveyard mist that builds to a screaming strobe hit at the end"></textarea></div>
+          <div class="field"><label>Length <span class="muted" id="genDurVal">30 s</span></label>
+            <input type="range" id="genDur" min="10" max="180" step="5" value="30" oninput="document.getElementById('genDurVal').textContent=this.value+' s'"></div>
+          <div class="field"><label>Intensity flow</label>
+            <select id="genFlow">
+              <option value="flat">Flat — steady</option>
+              <option value="slow_build">Slow build</option>
+              <option value="build_strike" selected>Build &amp; strike</option>
+              <option value="waves">Waves</option>
+              <option value="cold_open">Cold open → bang</option>
+            </select></div>
+          <div class="field"><label>YouTube audio <span class="muted">optional</span></label>
+            <input type="text" id="genYt" placeholder="paste a link — I'll clip the best part to fit"></div>
+          <div class="field toggle" style="margin-top:2px"><label style="margin:0">🎵 Sync lights to the beat <span class="muted">needs a link</span></label>
+            <label class="switch"><input type="checkbox" id="genBeat"><span class="track"></span></label></div>
+          <div class="btns">
+            <button class="primary" id="genGo" style="color:var(--accent-ink)" onclick="generateScene()">✨ Generate</button>
+            <button class="ghost" onclick="toggleGen()">Cancel</button>
+          </div>
+          <div class="sub muted" id="genStat" style="margin-top:8px">The model drafts the lights and fog to match; you can tweak everything in the editor after.</div>
+        </div>
+        <div id="scenes"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-show" class="view">
+    <h2>Output</h2>
+    <div class="card">
+      <div class="row">
+        <div class="grow"><div class="name" style="font-size:15px">Fog output</div>
+          <div class="sub">Off holds the fogger at zero — cues still show on the top strip, the machine never fires.</div></div>
+        <button class="ghost" id="fogTest" onclick="testFog()" title="Fire a short 2 s fog burst">💨 Test</button>
+        <label class="switch" title="Fog output"><input type="checkbox" id="fogEnabled" onchange="setOutput()"><span class="track"></span></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div class="grow"><div class="name" style="font-size:15px">Sound</div>
+          <div class="sub">Off silences all music, voice-over, and effects.</div></div>
+        <label class="switch" title="Sound"><input type="checkbox" id="audioEnabled" onchange="setOutput()"><span class="track"></span></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div class="grow"><div class="name" style="font-size:15px">Volume <span class="muted" id="volVal">100%</span></div>
+          <div class="sub">Master level for everything the Pi plays. Set the outside speaker once, then ride it here.</div></div>
+        <button class="ghost" id="volTest" onclick="testSound()" title="Play a short clip at this volume">🔊 Test</button>
+      </div>
+      <input type="range" id="volume" min="0" max="100" step="1" value="100" style="margin-top:10px" aria-label="Master volume">
+      <div class="row" style="margin-top:14px">
+        <div class="grow"><div class="name" style="font-size:15px">Voice ducking <span class="muted" id="duckVal">9 dB</span></div>
+          <div class="sub">While a voice speaks, music and looping ambience dip by this much, then come back. One-shot effects stay full. 0 turns it off.</div></div>
+      </div>
+      <input type="range" id="duck" min="0" max="18" step="1" value="9" style="margin-top:10px" aria-label="Voice ducking depth">
+    </div>
+    <h2>Show mode</h2>
+    <div class="card">
+      <div class="showstate"><span class="ss-dot" id="showDot"></span>
+        <div class="grow"><div class="name" id="showState">Disarmed</div>
+          <div class="sub" id="showSub">Arm the show to rotate ambient scenes and let the sensor fire scares.</div></div>
+      </div>
+      <div class="btns">
+        <button class="primary" id="armBtn" onclick="toggleArm()">▶ Arm show</button>
+        <button class="ghost" onclick="showTrigger()">⚡ Trigger a scare now</button>
+      </div>
+    </div>
+    <div class="card">
+      <header class="cardhdr"><h3 class="ch">Cooldown</h3><span class="muted" id="cdVal">20 s</span></header>
+      <input type="range" id="cdRange" min="0" max="120" step="5" value="20">
+      <div class="sub">After a scare, ignore new triggers for this long so one guest can't chain scares.</div>
+    </div>
+    <div class="card">
+      <header class="cardhdr"><h3 class="ch">Audio crossfade</h3><span class="muted" id="xfVal">2.0 s</span></header>
+      <input type="range" id="xfRange" min="0" max="8" step="0.5" value="2">
+      <div class="sub">When a scene hands off to the next, its audio fades out over this long instead of cutting. The new scene's audio and lights take over right away. Set to 0 for a hard cut. A scene can override this in its editor.</div>
+    </div>
+    <div class="card">
+      <header class="cardhdr"><h3 class="ch">Schedule</h3>
+        <label class="switch" title="Run on a schedule"><input type="checkbox" id="schedEnabled"><span class="track"></span></label></header>
+      <div class="sub">Auto-arm during these windows. "Dusk" uses your local sunset.</div>
+      <div class="rowline" style="margin-top:10px;gap:10px;flex-wrap:wrap">
+        <div class="field" style="margin:0;flex:1;min-width:120px"><label>Latitude</label><input type="number" id="schedLat" step="0.0001"></div>
+        <div class="field" style="margin:0;flex:1;min-width:120px"><label>Longitude</label><input type="number" id="schedLng" step="0.0001"></div>
+        <div class="field" style="margin:0;flex:none"><label>Dusk today</label><div class="val" id="schedSunset" style="text-align:left;font-size:16px;padding-top:8px">—</div></div>
+      </div>
+      <div id="schedWindows"></div>
+      <div class="btns"><button class="ghost" onclick="addWindow()">＋ Add window</button>
+        <button class="primary" onclick="saveSchedule()">Save schedule</button></div>
+    </div>
+    <div class="card">
+      <header class="cardhdr"><h3 class="ch">Presence sensor</h3><span class="muted" id="gpioStat">not set</span></header>
+      <div class="field"><label>GPIO pin — LD2410 OUT wire (BCM numbering)</label>
+        <input type="number" id="gpioPin" min="0" max="27" placeholder="e.g. 17"></div>
+      <div class="toggle" style="margin-top:4px"><label style="margin:0">Active high (HIGH = presence)</label>
+        <label class="switch"><input type="checkbox" id="gpioAH" checked><span class="track"></span></label></div>
+      <div class="btns"><button class="primary" onclick="saveGpio()">Save sensor</button>
+        <button class="ghost" onclick="clearGpio()">Disable</button></div>
+      <div class="sub">Set the trigger distance (walkway, not the street) in the LD2410's own app over Bluetooth/UART.</div>
+    </div>
+    <div class="card">
+      <header class="cardhdr"><h3 class="ch">Scene roles</h3></header>
+      <div class="sub" id="poolAmb">Ambient: —</div>
+      <div class="sub" id="poolScare" style="margin-top:6px">Scares: —</div>
+      <div class="sub muted" style="margin-top:10px">Set each scene's role (Ambient / Scare) in its editor. Ambient scenes rotate; a scare is picked at random when triggered.</div>
+    </div>
+  </section>
+
+  <section id="view-editor" class="view">
+    <div class="ed-head">
+      <button class="btn-back" onclick="exitEditor()">← Scenes</button>
+      <div class="ed-title" id="edtName">Scene</div>
+      <span class="savestat" id="edtStat" data-k="saved" title="Changes autosave">Saved</span>
+      <button class="btn-mini" id="edtUndo" onclick="undoEdit()" disabled title="Undo (Ctrl/Cmd+Z)">↶ Undo</button>
+      <button class="btn-mini" onclick="revertEdits()" title="Revert to the state when you opened this scene">⤾ Revert</button>
+    </div>
+    <div class="edwrap">
+      <div class="ed-main">
+        <div class="card" style="padding:8px">
+          <div id="stageHost"></div>
+          <div class="transport">
+            <button class="tbtn" id="edtPlay" onclick="edtPlay()">▶ Play</button>
+            <button class="tbtn" onclick="edtStop()">■ Stop</button>
+            <input type="range" id="edtScrub" min="0" max="1000" value="0" aria-label="Scrub timeline">
+            <span class="mono" id="edtTime">0.0 / 0.0s</span>
+            <button class="tbtn" onclick="addLayer()" title="Add a sound layer at the playhead">＋ Sound</button>
+            <button class="tbtn" onclick="addVoice()" title="Add a voice-over line at the playhead — stack as many as you like">＋ Voice</button>
+          </div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="tlpanel" id="tlpanel"></div>
+        </div>
+      </div>
+      <div class="ed-rail">
+        <div class="card">
+          <header class="cardhdr"><h3 class="ch">Event</h3><button class="mini" id="edtDel" onclick="deleteEvent()" hidden>Delete</button></header>
+          <div id="edtEvent"><div class="muted" style="font-size:13px">Tap an event on the timeline to edit it, or use + on a track to add one.</div></div>
+        </div>
+        <div class="card">
+          <header class="cardhdr"><h3 class="ch">Scene settings</h3></header>
+          <div class="field"><label>Name</label><input type="text" id="setName"></div>
+          <div class="field"><label>Blurb</label><input type="text" id="setBlurb"></div>
+          <div class="field"><label>Duration <span class="muted" id="setDurVal">90 s</span></label><input type="number" id="setDur" min="3" max="600"></div>
+          <div class="field"><label>Music</label><select id="setMusic"></select></div>
+          <div class="trimrow" style="margin:-4px 0 4px;flex-wrap:wrap">
+            <button class="mini" type="button" style="color:var(--text)" onclick="toggleYt()">＋ YouTube</button>
+            <button class="mini" type="button" style="color:var(--text)" onclick="toggleUp()">⬆ Upload</button>
+            <button class="mini" type="button" style="color:var(--text)" onclick="trimMusic()">✂ Trim music</button>
+          </div>
+          <div class="field" id="ytRow" style="display:none;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px">
+            <label style="margin-bottom:6px">YouTube URL <span class="muted">audio only, for your own show</span></label>
+            <input type="text" id="ytUrl" placeholder="https://www.youtube.com/watch?v=…">
+            <div class="rowline" style="margin-top:8px">
+              <select id="ytKind" style="flex:none;width:auto"><option value="music">Music</option><option value="sfx">SFX / bed</option><option value="voice">Voice</option></select>
+              <button class="vo-preview" type="button" id="ytGo" style="flex:1" onclick="importYouTube()">Import</button>
+            </div>
+            <div class="muted" id="ytStat" style="font-size:12px;margin-top:8px"></div>
+          </div>
+          <div class="field" id="upRow" style="display:none;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px">
+            <label style="margin-bottom:6px">Upload an audio file <span class="muted">wav, mp3, ogg, m4a, flac</span></label>
+            <input type="file" id="upFile" accept="audio/*,.wav,.mp3,.ogg,.m4a,.flac">
+            <input type="text" id="upTitle" placeholder="Title (optional; defaults to the file name)" style="margin-top:8px">
+            <div class="rowline" style="margin-top:8px">
+              <select id="upKind" style="flex:none;width:auto"><option value="music">Music</option><option value="sfx">SFX / bed</option><option value="voice">Voice</option></select>
+              <button class="vo-preview" type="button" id="upGo" style="flex:1" onclick="uploadAudio()">Upload</button>
+            </div>
+            <div class="muted" id="upStat" style="font-size:12px;margin-top:8px"></div>
+          </div>
+          <div class="field"><label>Voice-over</label><select id="setVo"></select></div>
+          <div class="field" id="setVoWrap"><label>Voice-over at <span class="muted" id="setVoAtVal">0.0 s</span></label>
+            <div class="rowline"><input type="range" id="setVoAt" min="0" max="90" step="0.5" value="0">
+            <button class="vo-preview" type="button" onclick="previewVo2()">▶</button></div></div>
+          <div class="field toggle" style="margin-bottom:2px"><label style="margin:0">Custom audio fade-out <span class="muted" id="setFadeHint">auto</span></label>
+            <label class="switch"><input type="checkbox" id="setFadeOn"><span class="track"></span></label></div>
+          <div class="field" id="setFadeWrap" style="display:none;margin-top:2px">
+            <div class="rowline"><input type="range" id="setFade" min="0" max="8" step="0.5" value="2">
+            <span class="val" id="setFadeVal">2.0 s</span></div>
+            <div class="sub">How long THIS scene's audio fades out when the next scene starts. Off = use the show's global crossfade.</div></div>
+          <div class="field toggle"><label style="margin:0">Include in show</label>
+            <label class="switch"><input type="checkbox" id="setEnabled" checked><span class="track"></span></label></div>
+          <div class="field"><label>Role in Show mode</label><select id="setRole">
+            <option value="">Manual only</option>
+            <option value="ambient">Ambient — rotates as baseline</option>
+            <option value="scare">Scare — fired on presence</option>
+          </select></div>
+          <div class="savebar" style="margin-top:14px">
+            <button class="ghost" onclick="duplicateScene()">⧉ Duplicate</button>
+            <button class="ghost" id="btnDelScene" style="color:var(--danger);border-color:#4a2b2b" onclick="deleteScene()">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-library" class="view">
+    <div class="libwrap">
+      <h2 style="display:flex;align-items:center">Sound Library
+        <button class="mini" style="flex:none;margin-left:auto;color:var(--text)" onclick="loadLibrary()">↻ Refresh</button>
+      </h2>
+      <div class="card" style="margin-bottom:8px">
+        <div class="field" style="margin-top:0"><label>Add from YouTube</label>
+          <div class="libadd">
+            <input type="text" id="libYt" placeholder="paste a link — pulls the audio into the library">
+            <select id="libYtCat">
+              <option value="sfx">Ambience &amp; SFX</option>
+              <option value="music">Music</option>
+              <option value="voice">Voice</option>
+            </select>
+            <button class="primary" id="libYtGo" style="flex:none;width:auto;color:var(--accent-ink)" onclick="libImportYt()">Import</button>
+          </div>
+        </div>
+        <div class="field"><label>Or upload a file <span class="muted">wav · mp3 · ogg · m4a · flac</span></label>
+          <div class="libadd">
+            <input type="file" id="libFile" accept=".wav,.mp3,.ogg,.m4a,.flac">
+            <select id="libUpCat">
+              <option value="sfx">Ambience &amp; SFX</option>
+              <option value="music">Music</option>
+              <option value="voice">Voice</option>
+            </select>
+            <button class="ghost" id="libUpGo" style="flex:none;width:auto" onclick="libUpload()">Upload</button>
+          </div>
+        </div>
+        <div class="sub muted" id="libStat">Clips you add here show up in every scene's audio pickers. Rename, recategorize, preview, or delete below.</div>
+      </div>
+      <div id="libList"></div>
+    </div>
+  </section>
+<section id="view-system" class="view">
+  <div id="sysReconnect" class="card sysreconnect" hidden>
+    <div class="name" style="font-size:15px">Reconnecting…</div>
+    <div class="sub" id="sysReconnectSub">Waiting for the Pi to come back.</div>
+  </div>
+  <h2>FPP health</h2>
+  <div class="card">
+    <div class="sysgrid" id="sysTiles"></div>
+    <div class="sub muted" id="sysUpdated" style="margin-top:10px">Checking…</div>
+  </div>
+  <h2>Setup check</h2>
+  <div class="syssum" id="sysSummary"></div>
+  <div class="card" id="sysChecks"><div class="muted">Checking…</div></div>
+  <h2>Maintenance</h2>
+  <div class="card">
+    <div class="sysbtns">
+      <button class="ghost" data-act="restart_web" onclick="sysAction(this)">↻ Restart FPP web</button>
+      <button class="ghost" data-act="restart_fppd" onclick="sysAction(this)">↻ Restart FPP</button>
+      <button class="ghost" data-act="restart_app" onclick="sysAction(this)">↻ Restart app</button>
+      <button class="ghost danger" data-act="reboot" onclick="sysAction(this)">⏻ Reboot Pi</button>
+    </div>
+    <div class="sub muted" style="margin-top:12px">Every button asks twice. Restarting FPP web services never touches the lights. Restarting FPP or this app drops the lights for a few seconds (they go dark and fog stays off), then everything picks up where it was.</div>
+    <a class="fpplink" id="fppLink" target="_blank" rel="noopener">Open FPP's own settings ↗</a>
+  </div>
+</section>
+</main>
+
+<div class="bottom">
+  <button class="stop" onclick="stopAll()">■ Stop Everything</button>
+  <div class="nav">
+    <button data-tab="live" aria-selected="true" onclick="go('live')">Live</button>
+    <button data-tab="scenes" aria-selected="false" onclick="go('scenes')">Scenes</button>
+    <button data-tab="show" aria-selected="false" onclick="go('show')">Show</button>
+    <button data-tab="library" aria-selected="false" onclick="go('library')">Library</button>
+    <button data-tab="system" aria-selected="false" onclick="go('system')">System</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="app.js?v=20"></script>
+<script src="stage.js?v=12"></script>
+<script src="timeline.js?v=13"></script>
+</body>
+</html>

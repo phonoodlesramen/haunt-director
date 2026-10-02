@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "id": "risen",
+  "name": "Risen",
+  "duration_s": 26.0,
+  "blurb": "A graveyard hush, a warning, then a thunderclap wakes the giant in a burst of lightning.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 0.6,
+    "layers": [
+      {
+        "id": "l0",
+        "file": "sfx-thunder-cc0.mp3",
+        "at_s": 8.4,
+        "gain": 1.0,
+        "loop": false
+      },
+      {
+        "id": "l1",
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 13.0,
+        "gain": 0.9,
+        "loop": false
+      }
+    ]
+  },
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 53,
+  "tag": "scare",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "skelly_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A1440",
+          "brightness": 0.15
+        }
+      },
+      {
+        "id": "skelly_1",
+        "t": 8.5,
+        "type": "strobe",
+        "duration_s": 0.6,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "skelly_2",
+        "t": 9.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#C0D0FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "skelly_3",
+        "t": 10.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#203070",
+          "brightness": 0.7
+        }
+      },
+      {
+        "id": "skelly_4",
+        "t": 13.0,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1,
+          "rate_hz": 10
+        }
+      },
+      {
+        "id": "skelly_5",
+        "t": 13.5,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#300000",
+          "brightness": 0.5
+        }
+      },
+      {
+        "id": "skelly_6",
+        "t": 16.0,
+        "type": "fade_color",
+        "duration_s": 3.5,
+        "params": {
+          "color": "#000000",
+          "brightness": 0
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "path_0",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#0B1A4D",
+          "brightness": 0.5
+        }
+      },
+      {
+        "id": "path_1",
+        "t": 8.5,
+        "type": "strobe",
+        "duration_s": 0.6,
+        "params": {
+          "color": "#DDE8FF",
+          "brightness": 1,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "path_2",
+        "t": 9.2,
+        "type": "fade_color",
+        "duration_s": 1.0,
+        "params": {
+          "color": "#0B1A4D",
+          "brightness": 0.4
+        }
+      },
+      {
+        "id": "path_3",
+        "t": 16.0,
+        "type": "fade_color",
+        "duration_s": 3.5,
+        "params": {
+          "color": "#000000",
+          "brightness": 0
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "porch_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A1030",
+          "brightness": 0.3
+        }
+      },
+      {
+        "id": "porch_1",
+        "t": 8.5,
+        "type": "strobe",
+        "duration_s": 0.5,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "porch_2",
+        "t": 9.2,
+        "type": "fade_color",
+        "duration_s": 1.0,
+        "params": {
+          "color": "#0A1030",
+          "brightness": 0.25
+        }
+      },
+      {
+        "id": "porch_3",
+        "t": 16.0,
+        "type": "fade_color",
+        "duration_s": 3.5,
+        "params": {
+          "color": "#000000",
+          "brightness": 0
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "main_0",
+        "t": 8.7,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.9
+        }
+      }
+    ]
+  }
+}

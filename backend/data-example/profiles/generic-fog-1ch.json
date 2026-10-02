@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "generic-fog-1ch",
+  "vendor": "Generic",
+  "model": "DMX Fog",
+  "mode_name": "1CH",
+  "channel_count": 1,
+  "has_master_dimmer": false,
+  "channels": [
+    { "offset": 0, "role": "fog", "name": "Fog Output", "default": 0,
+      "off_band": { "lo": 0, "hi": 5 } }
+  ]
+}

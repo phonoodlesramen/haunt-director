@@ -1,0 +1,3991 @@
+{
+  "schema_version": 1,
+  "id": "the-haunting",
+  "name": "The Haunting",
+  "duration_s": 90.0,
+  "blurb": "Candlelight gutters behind the windows. Something is home.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "gain": 0.8,
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "layers": [
+      {
+        "id": "L1",
+        "file": "amb-wind-cc0.mp3",
+        "at_s": 0,
+        "gain": 0.5,
+        "loop": true
+      }
+    ]
+  },
+  "enabled": true,
+  "order": 22,
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s0",
+        "t": 0.0,
+        "type": "set_color",
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.3
+        }
+      },
+      {
+        "id": "s1",
+        "t": 0.6,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s2",
+        "t": 1.47,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s3",
+        "t": 2.33,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s4",
+        "t": 2.61,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s5",
+        "t": 3.22,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s6",
+        "t": 4.0,
+        "type": "fade_brightness",
+        "duration_s": 0.52,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s7",
+        "t": 4.68,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s8",
+        "t": 5.22,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s9",
+        "t": 5.66,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s10",
+        "t": 7.26,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s11",
+        "t": 8.1,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s12",
+        "t": 8.97,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s13",
+        "t": 10.57,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s14",
+        "t": 10.87,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s15",
+        "t": 11.47,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s16",
+        "t": 12.36,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s17",
+        "t": 13.96,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s18",
+        "t": 14.69,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s19",
+        "t": 15.28,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s20",
+        "t": 15.63,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s21",
+        "t": 16.24,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s22",
+        "t": 16.72,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s23",
+        "t": 18.32,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s24",
+        "t": 18.85,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s25",
+        "t": 19.55,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s26",
+        "t": 20.22,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s27",
+        "t": 21.82,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s28",
+        "t": 22.09,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s29",
+        "t": 22.76,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s30",
+        "t": 23.39,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s31",
+        "t": 24.02,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s32",
+        "t": 24.27,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s33",
+        "t": 24.65,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s34",
+        "t": 24.95,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s35",
+        "t": 25.52,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s36",
+        "t": 26.08,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s37",
+        "t": 26.69,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s38",
+        "t": 27.02,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s39",
+        "t": 27.62,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s40",
+        "t": 28.03,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s41",
+        "t": 28.63,
+        "type": "fade_brightness",
+        "duration_s": 0.22,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s42",
+        "t": 29.39,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s43",
+        "t": 29.83,
+        "type": "fade_brightness",
+        "duration_s": 0.6,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s44",
+        "t": 30.53,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s45",
+        "t": 30.95,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s46",
+        "t": 31.33,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s47",
+        "t": 31.59,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s48",
+        "t": 32.48,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s49",
+        "t": 33.25,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s50",
+        "t": 34.07,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s51",
+        "t": 34.75,
+        "type": "fade_brightness",
+        "duration_s": 0.48,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s52",
+        "t": 35.23,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s53",
+        "t": 35.72,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s54",
+        "t": 36.12,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s55",
+        "t": 36.43,
+        "type": "fade_brightness",
+        "duration_s": 0.45,
+        "params": {
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s56",
+        "t": 37.25,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s57",
+        "t": 37.74,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s58",
+        "t": 38.45,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s59",
+        "t": 39.27,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.62,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s60",
+        "t": 39.67,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s61",
+        "t": 40.31,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s62",
+        "t": 41.08,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s63",
+        "t": 41.44,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s64",
+        "t": 42.31,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s65",
+        "t": 42.74,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s66",
+        "t": 43.27,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s67",
+        "t": 44.0,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#7A2A08",
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s68",
+        "t": 45.6,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s69",
+        "t": 46.49,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s70",
+        "t": 48.09,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s71",
+        "t": 48.43,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s72",
+        "t": 48.9,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s73",
+        "t": 49.44,
+        "type": "fade_brightness",
+        "duration_s": 0.58,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s74",
+        "t": 50.18,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.61,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s75",
+        "t": 50.93,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s76",
+        "t": 51.82,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s77",
+        "t": 52.5,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s78",
+        "t": 52.88,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s79",
+        "t": 53.77,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s80",
+        "t": 55.37,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s81",
+        "t": 55.81,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s82",
+        "t": 56.16,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s83",
+        "t": 56.63,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.61,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s84",
+        "t": 56.99,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s85",
+        "t": 57.8,
+        "type": "fade_brightness",
+        "duration_s": 0.48,
+        "params": {
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s86",
+        "t": 58.33,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s87",
+        "t": 59.05,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s88",
+        "t": 59.91,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s89",
+        "t": 60.79,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s90",
+        "t": 61.45,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s91",
+        "t": 62.32,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s92",
+        "t": 62.82,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s93",
+        "t": 63.4,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.66,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s94",
+        "t": 63.93,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s95",
+        "t": 64.55,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s96",
+        "t": 65.36,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s97",
+        "t": 66.15,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s98",
+        "t": 66.7,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s99",
+        "t": 67.36,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s100",
+        "t": 68.05,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s101",
+        "t": 68.61,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s102",
+        "t": 69.01,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s103",
+        "t": 69.65,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s104",
+        "t": 71.25,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s105",
+        "t": 71.6,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s106",
+        "t": 72.38,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s107",
+        "t": 72.78,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s108",
+        "t": 73.54,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s109",
+        "t": 73.97,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s110",
+        "t": 75.57,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s111",
+        "t": 76.3,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s112",
+        "t": 76.56,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s113",
+        "t": 77.12,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s114",
+        "t": 77.61,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s115",
+        "t": 78.25,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s116",
+        "t": 79.02,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s117",
+        "t": 79.36,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s118",
+        "t": 80.14,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s119",
+        "t": 80.97,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s120",
+        "t": 81.57,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s121",
+        "t": 82.37,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s122",
+        "t": 83.97,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s123",
+        "t": 84.51,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s124",
+        "t": 85.07,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.62,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s125",
+        "t": 86.67,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s126",
+        "t": 87.01,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#7A2A08",
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.41
+        }
+      },
+      {
+        "id": "p1",
+        "t": 1.0,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 1.47,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 2.08,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 3.68,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 4.28,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 4.86,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p7",
+        "t": 5.42,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p8",
+        "t": 6.2,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p9",
+        "t": 6.74,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p10",
+        "t": 8.34,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p11",
+        "t": 9.0,
+        "type": "fade_brightness",
+        "duration_s": 0.49,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p12",
+        "t": 9.56,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p13",
+        "t": 11.16,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.42,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p14",
+        "t": 11.67,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p15",
+        "t": 12.53,
+        "type": "fade_brightness",
+        "duration_s": 0.2,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p16",
+        "t": 12.9,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p17",
+        "t": 13.22,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p18",
+        "t": 13.67,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p19",
+        "t": 14.47,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p20",
+        "t": 15.16,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p21",
+        "t": 15.98,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p22",
+        "t": 17.58,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p23",
+        "t": 18.39,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p24",
+        "t": 19.99,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p25",
+        "t": 20.68,
+        "type": "fade_brightness",
+        "duration_s": 0.22,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p26",
+        "t": 21.15,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p27",
+        "t": 21.6,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p28",
+        "t": 22.4,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p29",
+        "t": 23.25,
+        "type": "fade_brightness",
+        "duration_s": 0.55,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p30",
+        "t": 23.99,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p31",
+        "t": 24.56,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p32",
+        "t": 25.0,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p33",
+        "t": 25.77,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p34",
+        "t": 26.37,
+        "type": "fade_brightness",
+        "duration_s": 0.2,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p35",
+        "t": 26.77,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p36",
+        "t": 27.09,
+        "type": "fade_brightness",
+        "duration_s": 0.55,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p37",
+        "t": 27.95,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p38",
+        "t": 28.57,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#7A2A08",
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p39",
+        "t": 30.17,
+        "type": "fade_brightness",
+        "duration_s": 0.55,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p40",
+        "t": 30.8,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p41",
+        "t": 31.56,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p42",
+        "t": 32.14,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p43",
+        "t": 33.74,
+        "type": "fade_brightness",
+        "duration_s": 0.48,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p44",
+        "t": 34.6,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p45",
+        "t": 35.37,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p46",
+        "t": 35.97,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p47",
+        "t": 37.57,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p48",
+        "t": 37.83,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p49",
+        "t": 38.12,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p50",
+        "t": 38.55,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p51",
+        "t": 38.9,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p52",
+        "t": 39.53,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p53",
+        "t": 39.97,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p54",
+        "t": 40.38,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p55",
+        "t": 41.24,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.66,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p56",
+        "t": 41.99,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p57",
+        "t": 42.52,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p58",
+        "t": 43.23,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p59",
+        "t": 43.86,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p60",
+        "t": 44.75,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p61",
+        "t": 45.23,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p62",
+        "t": 45.56,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p63",
+        "t": 46.25,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p64",
+        "t": 46.8,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.7,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p65",
+        "t": 47.35,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p66",
+        "t": 48.2,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p67",
+        "t": 48.65,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p68",
+        "t": 49.25,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p69",
+        "t": 49.61,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p70",
+        "t": 50.42,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p71",
+        "t": 52.02,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p72",
+        "t": 52.87,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p73",
+        "t": 53.35,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p74",
+        "t": 54.08,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.62,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p75",
+        "t": 54.87,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p76",
+        "t": 55.59,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p77",
+        "t": 56.3,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p78",
+        "t": 56.63,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p79",
+        "t": 57.43,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p80",
+        "t": 58.11,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p81",
+        "t": 58.38,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p82",
+        "t": 58.81,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p83",
+        "t": 59.15,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p84",
+        "t": 59.42,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p85",
+        "t": 59.85,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p86",
+        "t": 60.58,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p87",
+        "t": 61.45,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p88",
+        "t": 61.83,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p89",
+        "t": 62.09,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p90",
+        "t": 62.84,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p91",
+        "t": 63.12,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p92",
+        "t": 64.0,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p93",
+        "t": 64.76,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p94",
+        "t": 65.08,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.61,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p95",
+        "t": 65.4,
+        "type": "fade_brightness",
+        "duration_s": 0.56,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p96",
+        "t": 66.04,
+        "type": "fade_brightness",
+        "duration_s": 0.2,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p97",
+        "t": 66.45,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p98",
+        "t": 68.05,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p99",
+        "t": 68.37,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p100",
+        "t": 68.64,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p101",
+        "t": 69.15,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p102",
+        "t": 69.52,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p103",
+        "t": 70.15,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p104",
+        "t": 70.52,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p105",
+        "t": 70.85,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p106",
+        "t": 71.34,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p107",
+        "t": 71.94,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p108",
+        "t": 72.76,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p109",
+        "t": 73.56,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p110",
+        "t": 74.08,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p111",
+        "t": 74.94,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p112",
+        "t": 75.74,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p113",
+        "t": 76.21,
+        "type": "fade_brightness",
+        "duration_s": 0.2,
+        "params": {
+          "brightness": 0.66,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p114",
+        "t": 76.98,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p115",
+        "t": 77.31,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p116",
+        "t": 78.91,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p117",
+        "t": 79.39,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p118",
+        "t": 79.86,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p119",
+        "t": 80.51,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p120",
+        "t": 80.85,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p121",
+        "t": 81.45,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p122",
+        "t": 81.87,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p123",
+        "t": 82.48,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p124",
+        "t": 84.08,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p125",
+        "t": 84.6,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p126",
+        "t": 86.2,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p127",
+        "t": 86.72,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.47
+        }
+      },
+      {
+        "id": "p1",
+        "t": 1.4,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 2.19,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 2.95,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 3.61,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.33,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 3.87,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 4.7,
+        "type": "fade_brightness",
+        "duration_s": 0.48,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p7",
+        "t": 5.49,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p8",
+        "t": 6.03,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p9",
+        "t": 6.37,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p10",
+        "t": 6.63,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.7,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p11",
+        "t": 7.19,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p12",
+        "t": 8.79,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p13",
+        "t": 9.43,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p14",
+        "t": 10.14,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p15",
+        "t": 10.95,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p16",
+        "t": 11.57,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p17",
+        "t": 12.01,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p18",
+        "t": 12.81,
+        "type": "fade_brightness",
+        "duration_s": 0.22,
+        "params": {
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p19",
+        "t": 13.47,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p20",
+        "t": 14.16,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.39,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p21",
+        "t": 14.86,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p22",
+        "t": 15.13,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p23",
+        "t": 15.96,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.7,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p24",
+        "t": 16.34,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p25",
+        "t": 16.78,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p26",
+        "t": 17.15,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p27",
+        "t": 17.81,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.53,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p28",
+        "t": 18.48,
+        "type": "fade_brightness",
+        "duration_s": 0.44,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p29",
+        "t": 19.3,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p30",
+        "t": 19.71,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p31",
+        "t": 20.3,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p32",
+        "t": 21.19,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.66,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p33",
+        "t": 21.68,
+        "type": "fade_brightness",
+        "duration_s": 0.48,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p34",
+        "t": 22.47,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p35",
+        "t": 22.77,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p36",
+        "t": 23.43,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p37",
+        "t": 23.73,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p38",
+        "t": 24.08,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p39",
+        "t": 24.46,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.4,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p40",
+        "t": 25.18,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p41",
+        "t": 26.01,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p42",
+        "t": 26.8,
+        "type": "fade_brightness",
+        "duration_s": 0.51,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p43",
+        "t": 27.37,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.52,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p44",
+        "t": 27.98,
+        "type": "fade_brightness",
+        "duration_s": 0.52,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p45",
+        "t": 28.59,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p46",
+        "t": 29.35,
+        "type": "fade_brightness",
+        "duration_s": 0.58,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p47",
+        "t": 30.12,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p48",
+        "t": 30.42,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p49",
+        "t": 31.21,
+        "type": "fade_brightness",
+        "duration_s": 0.22,
+        "params": {
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p50",
+        "t": 31.86,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p51",
+        "t": 32.28,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p52",
+        "t": 33.04,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p53",
+        "t": 33.72,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p54",
+        "t": 34.33,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p55",
+        "t": 34.63,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p56",
+        "t": 34.97,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p57",
+        "t": 35.72,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p58",
+        "t": 35.99,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p59",
+        "t": 36.37,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p60",
+        "t": 37.06,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.62,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p61",
+        "t": 37.4,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p62",
+        "t": 38.29,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p63",
+        "t": 38.74,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#B23C10",
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p64",
+        "t": 40.34,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p65",
+        "t": 40.64,
+        "type": "fade_brightness",
+        "duration_s": 0.6,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p66",
+        "t": 41.3,
+        "type": "fade_brightness",
+        "duration_s": 0.52,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p67",
+        "t": 42.03,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.35,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p68",
+        "t": 42.47,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p69",
+        "t": 43.35,
+        "type": "fade_brightness",
+        "duration_s": 0.21,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p70",
+        "t": 43.88,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p71",
+        "t": 44.26,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.3,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p72",
+        "t": 44.83,
+        "type": "fade_brightness",
+        "duration_s": 0.41,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p73",
+        "t": 45.35,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p74",
+        "t": 45.66,
+        "type": "fade_brightness",
+        "duration_s": 0.31,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p75",
+        "t": 46.02,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p76",
+        "t": 46.84,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p77",
+        "t": 47.6,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.26,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p78",
+        "t": 48.19,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p79",
+        "t": 49.06,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p80",
+        "t": 49.52,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p81",
+        "t": 50.35,
+        "type": "fade_brightness",
+        "duration_s": 0.49,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p82",
+        "t": 50.89,
+        "type": "fade_brightness",
+        "duration_s": 0.6,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p83",
+        "t": 51.65,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#7A2A08",
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p84",
+        "t": 53.25,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.38,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p85",
+        "t": 53.83,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p86",
+        "t": 54.11,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p87",
+        "t": 54.81,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p88",
+        "t": 56.41,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p89",
+        "t": 56.74,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p90",
+        "t": 58.34,
+        "type": "fade_brightness",
+        "duration_s": 0.39,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p91",
+        "t": 58.76,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p92",
+        "t": 59.18,
+        "type": "fade_brightness",
+        "duration_s": 0.47,
+        "params": {
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p93",
+        "t": 59.79,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p94",
+        "t": 60.11,
+        "type": "fade_brightness",
+        "duration_s": 0.57,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p95",
+        "t": 60.9,
+        "type": "fade_brightness",
+        "duration_s": 0.27,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p96",
+        "t": 61.41,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.31,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p97",
+        "t": 62.19,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p98",
+        "t": 63.01,
+        "type": "fade_brightness",
+        "duration_s": 0.38,
+        "params": {
+          "brightness": 0.57,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p99",
+        "t": 63.84,
+        "type": "fade_brightness",
+        "duration_s": 0.43,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p100",
+        "t": 64.63,
+        "type": "fade_brightness",
+        "duration_s": 0.45,
+        "params": {
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p101",
+        "t": 65.13,
+        "type": "fade_brightness",
+        "duration_s": 0.6,
+        "params": {
+          "brightness": 0.7,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p102",
+        "t": 65.84,
+        "type": "fade_brightness",
+        "duration_s": 0.28,
+        "params": {
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p103",
+        "t": 66.32,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p104",
+        "t": 66.59,
+        "type": "fade_brightness",
+        "duration_s": 0.59,
+        "params": {
+          "brightness": 0.69,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p105",
+        "t": 67.37,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p106",
+        "t": 67.7,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.61,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p107",
+        "t": 68.47,
+        "type": "fade_brightness",
+        "duration_s": 0.23,
+        "params": {
+          "brightness": 0.37,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p108",
+        "t": 68.94,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p109",
+        "t": 69.51,
+        "type": "fade_brightness",
+        "duration_s": 0.35,
+        "params": {
+          "brightness": 0.41,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p110",
+        "t": 70.4,
+        "type": "fade_brightness",
+        "duration_s": 0.3,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p111",
+        "t": 71.2,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.34,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p112",
+        "t": 71.69,
+        "type": "fade_brightness",
+        "duration_s": 0.36,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p113",
+        "t": 72.44,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p114",
+        "t": 73.01,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p115",
+        "t": 73.29,
+        "type": "fade_brightness",
+        "duration_s": 0.26,
+        "params": {
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p116",
+        "t": 73.58,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.29,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p117",
+        "t": 74.05,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p118",
+        "t": 74.59,
+        "type": "fade_brightness",
+        "duration_s": 0.54,
+        "params": {
+          "brightness": 0.62,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p119",
+        "t": 75.16,
+        "type": "fade_brightness",
+        "duration_s": 0.29,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p120",
+        "t": 75.86,
+        "type": "fade_brightness",
+        "duration_s": 0.34,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p121",
+        "t": 76.29,
+        "type": "fade_brightness",
+        "duration_s": 0.24,
+        "params": {
+          "brightness": 0.68,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p122",
+        "t": 76.93,
+        "type": "fade_brightness",
+        "duration_s": 0.32,
+        "params": {
+          "brightness": 0.58,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p123",
+        "t": 77.36,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#C85A18",
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p124",
+        "t": 78.96,
+        "type": "fade_brightness",
+        "duration_s": 0.25,
+        "params": {
+          "brightness": 0.67,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p125",
+        "t": 79.57,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p126",
+        "t": 79.95,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p127",
+        "t": 80.46,
+        "type": "fade_brightness",
+        "duration_s": 0.37,
+        "params": {
+          "brightness": 0.63,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p128",
+        "t": 81.21,
+        "type": "fade_brightness",
+        "duration_s": 0.33,
+        "params": {
+          "brightness": 0.61,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p129",
+        "t": 81.83,
+        "type": "fade_brightness",
+        "duration_s": 0.4,
+        "params": {
+          "brightness": 0.32,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p130",
+        "t": 82.7,
+        "type": "fade_brightness",
+        "duration_s": 0.42,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p131",
+        "t": 83.42,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8892C",
+          "brightness": 0.49,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p132",
+        "t": 85.02,
+        "type": "fade_brightness",
+        "duration_s": 0.5,
+        "params": {
+          "brightness": 0.65,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p133",
+        "t": 85.71,
+        "type": "fade_brightness",
+        "duration_s": 0.53,
+        "params": {
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p134",
+        "t": 86.48,
+        "type": "fade_brightness",
+        "duration_s": 0.46,
+        "params": {
+          "brightness": 0.64,
+          "curve": "ease_in_out"
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f0",
+        "t": 4.0,
+        "type": "fog",
+        "duration_s": 5.6,
+        "params": {
+          "intensity": 0.49
+        }
+      },
+      {
+        "id": "f1",
+        "t": 27.55,
+        "type": "fog",
+        "duration_s": 5.8,
+        "params": {
+          "intensity": 0.47
+        }
+      },
+      {
+        "id": "f2",
+        "t": 57.11,
+        "type": "fog",
+        "duration_s": 6.0,
+        "params": {
+          "intensity": 0.42
+        }
+      }
+    ]
+  }
+}

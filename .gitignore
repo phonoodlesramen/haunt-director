@@ -1,0 +1,24 @@
+# secrets and local settings
+backend/.env
+*.env.local
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# your show: created from backend/data-example/ on first start, then yours to edit
+backend/data/
+backend/web/img/house.jpg
+backend/web/audio/_wavcache/
+*.log
+
+# your own audio library (ship only what you have the rights to share)
+backend/web/audio/*
+!backend/web/audio/*-cc0.mp3
+!backend/web/audio/README.md
+
+# OS clutter
+.DS_Store
+Thumbs.db

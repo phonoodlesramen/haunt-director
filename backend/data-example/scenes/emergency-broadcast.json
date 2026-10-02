@@ -1,0 +1,1318 @@
+{
+  "schema_version": 1,
+  "id": "emergency-broadcast",
+  "name": "Emergency Broadcast",
+  "duration_s": 40.0,
+  "blurb": "Cold TV-blue flicker and a full emergency broadcast while red/blue sirens sweep the yard, ending in an alarm-strobe stinger.",
+  "tag": "scare",
+  "order": 51,
+  "enabled": true,
+  "audio_fade_out_s": null,
+  "audio": {
+    "music": null,
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": [
+      {
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 0.5,
+        "gain": 1.0,
+        "loop": false,
+        "id": "l0"
+      },
+      {
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 34.4,
+        "gain": 1.0,
+        "loop": false,
+        "id": "l1"
+      },
+      {
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 34.6,
+        "gain": 0.9,
+        "loop": false,
+        "id": "l2"
+      },
+      {
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 34.9,
+        "gain": 0.9,
+        "loop": false,
+        "id": "l3"
+      }
+    ]
+  },
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "skelly_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0000",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "skelly_1",
+        "t": 1.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_2",
+        "t": 1.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_3",
+        "t": 2.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_4",
+        "t": 2.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_5",
+        "t": 3.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_6",
+        "t": 4.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_7",
+        "t": 4.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_8",
+        "t": 5.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_9",
+        "t": 5.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_10",
+        "t": 6.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_11",
+        "t": 7.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_12",
+        "t": 7.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_13",
+        "t": 8.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_14",
+        "t": 8.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_15",
+        "t": 9.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_16",
+        "t": 10.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_17",
+        "t": 10.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_18",
+        "t": 11.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_19",
+        "t": 11.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_20",
+        "t": 12.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_21",
+        "t": 13.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_22",
+        "t": 13.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_23",
+        "t": 14.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_24",
+        "t": 14.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_25",
+        "t": 15.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_26",
+        "t": 16.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_27",
+        "t": 16.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_28",
+        "t": 17.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_29",
+        "t": 17.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_30",
+        "t": 18.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_31",
+        "t": 19.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_32",
+        "t": 19.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_33",
+        "t": 20.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_34",
+        "t": 20.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_35",
+        "t": 21.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_36",
+        "t": 22.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_37",
+        "t": 22.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_38",
+        "t": 23.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_39",
+        "t": 23.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_40",
+        "t": 24.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_41",
+        "t": 25.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_42",
+        "t": 25.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_43",
+        "t": 26.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_44",
+        "t": 26.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_45",
+        "t": 27.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_46",
+        "t": 28.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_47",
+        "t": 28.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_48",
+        "t": 29.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_49",
+        "t": 29.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_50",
+        "t": 30.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_51",
+        "t": 31.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_52",
+        "t": 31.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_53",
+        "t": 32.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_54",
+        "t": 32.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_55",
+        "t": 33.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_56",
+        "t": 34.4,
+        "type": "strobe",
+        "duration_s": 1.6,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "skelly_57",
+        "t": 36.1,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "skelly_58",
+        "t": 38.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "path_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A2A5A",
+          "brightness": 0.2
+        }
+      },
+      {
+        "id": "path_1",
+        "t": 0.6,
+        "type": "pulse",
+        "duration_s": 33.8,
+        "params": {
+          "color": "#0A4A8A",
+          "brightness": 0.8,
+          "rate_hz": 2.6
+        }
+      },
+      {
+        "id": "path_2",
+        "t": 34.4,
+        "type": "strobe",
+        "duration_s": 1.6,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "path_3",
+        "t": 36.1,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "path_4",
+        "t": 38.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "porch_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#05070A",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "porch_1",
+        "t": 1.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_2",
+        "t": 1.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_3",
+        "t": 2.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_4",
+        "t": 2.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_5",
+        "t": 3.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_6",
+        "t": 4.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_7",
+        "t": 4.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_8",
+        "t": 5.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_9",
+        "t": 5.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_10",
+        "t": 6.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_11",
+        "t": 7.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_12",
+        "t": 7.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_13",
+        "t": 8.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_14",
+        "t": 8.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_15",
+        "t": 9.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_16",
+        "t": 10.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_17",
+        "t": 10.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_18",
+        "t": 11.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_19",
+        "t": 11.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_20",
+        "t": 12.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_21",
+        "t": 13.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_22",
+        "t": 13.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_23",
+        "t": 14.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_24",
+        "t": 14.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_25",
+        "t": 15.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_26",
+        "t": 16.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_27",
+        "t": 16.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_28",
+        "t": 17.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_29",
+        "t": 17.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_30",
+        "t": 18.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_31",
+        "t": 19.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_32",
+        "t": 19.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_33",
+        "t": 20.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_34",
+        "t": 20.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_35",
+        "t": 21.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_36",
+        "t": 22.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_37",
+        "t": 22.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_38",
+        "t": 23.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_39",
+        "t": 23.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_40",
+        "t": 24.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_41",
+        "t": 25.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_42",
+        "t": 25.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_43",
+        "t": 26.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_44",
+        "t": 26.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_45",
+        "t": 27.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_46",
+        "t": 28.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_47",
+        "t": 28.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_48",
+        "t": 29.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_49",
+        "t": 29.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_50",
+        "t": 30.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_51",
+        "t": 31.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_52",
+        "t": 31.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_53",
+        "t": 32.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_54",
+        "t": 32.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_55",
+        "t": 33.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0000FF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_56",
+        "t": 34.4,
+        "type": "strobe",
+        "duration_s": 1.6,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "porch_57",
+        "t": 36.1,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF0000",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "porch_58",
+        "t": 38.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "main_0",
+        "t": 1.0,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "main_1",
+        "t": 17.0,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "main_2",
+        "t": 34.5,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.9
+        }
+      }
+    ]
+  }
+}

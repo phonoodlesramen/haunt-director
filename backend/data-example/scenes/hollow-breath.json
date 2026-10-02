@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "id": "hollow-breath",
+  "name": "Hollow Breath",
+  "duration_s": 30.0,
+  "blurb": "A misty graveyard hush broken by sudden lightning and looming dread.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": []
+  },
+  "enabled": true,
+  "order": 30,
+  "tag": "ambient",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "gf2b3b7",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0
+        }
+      },
+      {
+        "id": "g45deec",
+        "t": 7.0,
+        "type": "strobe",
+        "duration_s": 0.3,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.742,
+          "rate_hz": 12
+        }
+      },
+      {
+        "id": "g5e7c30",
+        "t": 10.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#220022",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "g79b8d0",
+        "t": 17.0,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.325,
+          "rate_hz": 16
+        }
+      },
+      {
+        "id": "gd1f941",
+        "t": 22.0,
+        "type": "fade_brightness",
+        "duration_s": 3.0,
+        "params": {
+          "brightness": 0.012,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g9ac063",
+        "t": 27.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "ge82fd0",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#0a1a12",
+          "brightness": 0.03,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g55147b",
+        "t": 8.0,
+        "type": "fade_brightness",
+        "duration_s": 3.0,
+        "params": {
+          "brightness": 0.138,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g3bc716",
+        "t": 14.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#142a1e",
+          "brightness": 0.212,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "g88ef6a",
+        "t": 17.5,
+        "type": "pulse",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#6a0dad",
+          "brightness": 0.192,
+          "rate_hz": 0.8
+        }
+      },
+      {
+        "id": "gf89254",
+        "t": 22.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#0a140f",
+          "brightness": 0.028,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g23c017",
+        "t": 28.0,
+        "type": "fade_brightness",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.046,
+          "curve": "ease_in"
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "gdb8cfb",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#1a0f2e",
+          "brightness": 0.037,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g6c359a",
+        "t": 7.05,
+        "type": "pulse",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#4b0082",
+          "brightness": 0.498,
+          "rate_hz": 1
+        }
+      },
+      {
+        "id": "gf44322",
+        "t": 14.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#2a0a3a",
+          "brightness": 0.247,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "g6edad5",
+        "t": 17.1,
+        "type": "strobe",
+        "duration_s": 0.3,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.252,
+          "rate_hz": 14
+        }
+      },
+      {
+        "id": "g80f6e0",
+        "t": 22.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#150826",
+          "brightness": 0.035,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g5fa82e",
+        "t": 26.0,
+        "type": "pulse",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#3b0764",
+          "brightness": 0.283,
+          "rate_hz": 0.3
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "g09374b",
+        "t": 0.5,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "id": "geaa37a",
+        "t": 18.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.6
+        }
+      }
+    ]
+  }
+}

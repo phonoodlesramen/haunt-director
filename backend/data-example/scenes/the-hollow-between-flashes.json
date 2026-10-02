@@ -1,0 +1,439 @@
+{
+  "schema_version": 1,
+  "id": "the-hollow-between-flashes",
+  "name": "The Hollow Between Flashes",
+  "duration_s": 180.0,
+  "blurb": "A misty vigil of low dread, broken by sudden lightning and creeping swells of unease.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": [
+      {
+        "id": "c9fjszj",
+        "file": "sfx-thunder-cc0.mp3",
+        "at_s": 41.851656494140634,
+        "gain": 0.8,
+        "loop": false
+      },
+      {
+        "id": "c1caaz4",
+        "file": "sfx-thunder-cc0.mp3",
+        "at_s": 60.03472086588541,
+        "gain": 0.8,
+        "loop": false
+      },
+      {
+        "id": "cxqre2c",
+        "file": "sfx-thunder-cc0.mp3",
+        "at_s": 71.29166564941406,
+        "gain": 0.8,
+        "loop": false
+      },
+      {
+        "id": "cnibt5o",
+        "file": "sfx-thunder-cc0.mp3",
+        "at_s": 147.28,
+        "gain": 0.8,
+        "loop": false
+      }
+    ]
+  },
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 31,
+  "tag": "ambient",
+  "tracks": {
+    "light_porch": [
+      {
+        "id": "g145dd3",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#1a0a2e",
+          "brightness": 0.64,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g91f316",
+        "t": 28.0,
+        "type": "pulse",
+        "duration_s": 10.0,
+        "params": {
+          "color": "#3a2a5e",
+          "brightness": 0.265,
+          "rate_hz": 0.3
+        }
+      },
+      {
+        "id": "g41390f",
+        "t": 42.5,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.709,
+          "rate_hz": 6
+        }
+      },
+      {
+        "id": "g40f8b5",
+        "t": 60.0,
+        "type": "fade_brightness",
+        "duration_s": 10.0,
+        "params": {
+          "brightness": 0.15,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g87edb2",
+        "t": 108.0,
+        "type": "fade_color",
+        "duration_s": 8.0,
+        "params": {
+          "color": "#3a2a5e",
+          "brightness": 0.092,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "gfa28e1",
+        "t": 140.0,
+        "type": "pulse",
+        "duration_s": 15.0,
+        "params": {
+          "color": "#5e2a8e",
+          "brightness": 0.217,
+          "rate_hz": 0.4
+        }
+      },
+      {
+        "id": "ge7b2ab",
+        "t": 148.5,
+        "type": "strobe",
+        "duration_s": 0.5,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.542,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "g0c86db",
+        "t": 165.0,
+        "type": "fade_color",
+        "duration_s": 1.36,
+        "params": {
+          "color": "#1a0a2e",
+          "brightness": 0.175,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g6fda0e",
+        "t": 178.0,
+        "type": "fade_brightness",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.1,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "esaha55",
+        "t": 71.77,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.8,
+          "color": "#424200",
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "eitd2ga",
+        "t": 76.27,
+        "type": "pulse",
+        "duration_s": 14.359720865885416,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.32,
+          "rate_hz": 10.7
+        }
+      },
+      {
+        "id": "ebr6rgu",
+        "t": 167.26722900390624,
+        "type": "pulse",
+        "duration_s": 5.125,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.8,
+          "rate_hz": 1.5
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "g6bf750",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#10241a",
+          "brightness": 0.74,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g3171dc",
+        "t": 43.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#10241a",
+          "brightness": 0.42,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g088006",
+        "t": 75.0,
+        "type": "pulse",
+        "duration_s": 15.0,
+        "params": {
+          "color": "#1f3d1f",
+          "brightness": 0.48,
+          "rate_hz": 0.2
+        }
+      },
+      {
+        "id": "gabb476",
+        "t": 118.0,
+        "type": "fade_color",
+        "duration_s": 8.0,
+        "params": {
+          "color": "#16213e",
+          "brightness": 0.046,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g601e1e",
+        "t": 149.0,
+        "type": "strobe",
+        "duration_s": 0.5,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.497,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "gf137f7",
+        "t": 165.0,
+        "type": "fade_color",
+        "duration_s": 2.68,
+        "params": {
+          "color": "#10241a",
+          "brightness": 0.131,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "emor003",
+        "t": 60.066664632161455,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#c0c0c0",
+          "brightness": 0.8,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "etbyqxe",
+        "t": 71.93,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#92e1ef",
+          "brightness": 0.8,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "e64zfwj",
+        "t": 169.46833333333333,
+        "type": "strobe",
+        "duration_s": 1.5833333333333333,
+        "params": {
+          "color": "#65410c",
+          "brightness": 0.8,
+          "rate_hz": 8
+        }
+      }
+    ],
+    "light_skelly": [
+      {
+        "id": "g86c758",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#400080",
+          "brightness": 0.48,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "gf48ff4",
+        "t": 42.0,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.742,
+          "rate_hz": 6
+        }
+      },
+      {
+        "id": "gb2d8c8",
+        "t": 60.0,
+        "type": "fade_brightness",
+        "duration_s": 10.0,
+        "params": {
+          "brightness": 0.56,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g6eaa7e",
+        "t": 100.0,
+        "type": "pulse",
+        "duration_s": 12.0,
+        "params": {
+          "color": "#4b0082",
+          "brightness": 0.145,
+          "rate_hz": 0.5
+        }
+      },
+      {
+        "id": "gee31bd",
+        "t": 125.0,
+        "type": "strobe",
+        "duration_s": 0.3,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.132,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "gf689d8",
+        "t": 148.0,
+        "type": "strobe",
+        "duration_s": 0.5,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.531,
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "g542286",
+        "t": 155.0,
+        "type": "fade_color",
+        "duration_s": 8.0,
+        "params": {
+          "color": "#2a0a3d",
+          "brightness": 0.205,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "gbde784",
+        "t": 170.0,
+        "type": "fade_brightness",
+        "duration_s": 8.0,
+        "params": {
+          "brightness": 0.047,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "e5cfraf",
+        "t": 70.9875020345052,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.8,
+          "color": "#ffffff",
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "efdl647",
+        "t": 169.42,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.18,
+          "rate_hz": 8
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "g5c880c",
+        "t": 2.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "id": "g90544e",
+        "t": 35.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "ga834f1",
+        "t": 95.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.35
+        }
+      },
+      {
+        "id": "g5328ac",
+        "t": 130.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "gdefc68",
+        "t": 150.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.7
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+# Haunt Director: the exact root actions the app performs (install.sh fills in @USER@).
+# You only need this if your user can't already run `sudo -n true` without a password.
+# (On Raspberry Pi OS the first user you create already can.)
+#
+#   FPP config  read and update the three FPP files the setup checker fixes (+ backups)
+#   services    restart FPP, its web UI (Apache + PHP-FPM) and this app; reboot the Pi
+#   boot fix    a small systemd override so Apache/PHP retry after a slow boot
+#
+# Be clear-eyed about it: anyone who can write a systemd override can run anything
+# as root, so treat this user as root-equivalent. Haunt Director is meant for a Pi
+# on your own trusted network. Prefer to do those fixes by hand? Skip this file
+# (install.sh --no-sudoers); the app still runs, only its Fix/Restart buttons won't.
+
+Cmnd_Alias HD_FPPCFG = \
+  /usr/bin/cat /home/fpp/media/config/model-overlays.json, \
+  /usr/bin/cat /home/fpp/media/config/co-universes.json, \
+  /usr/bin/cat /home/fpp/media/config/ci-universes.json, \
+  /usr/bin/tee /home/fpp/media/config/model-overlays.json, \
+  /usr/bin/tee /home/fpp/media/config/model-overlays.json.haunt-backup, \
+  /usr/bin/tee /home/fpp/media/config/co-universes.json, \
+  /usr/bin/tee /home/fpp/media/config/co-universes.json.haunt-backup, \
+  /usr/bin/tee /home/fpp/media/config/ci-universes.json, \
+  /usr/bin/tee /home/fpp/media/config/ci-universes.json.haunt-backup, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/model-overlays.json, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/model-overlays.json.haunt-backup, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/co-universes.json, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/co-universes.json.haunt-backup, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/ci-universes.json, \
+  /usr/bin/chown fpp\:fpp /home/fpp/media/config/ci-universes.json.haunt-backup, \
+  /usr/bin/rm -f /home/fpp/media/config/model-overlays.json, \
+  /usr/bin/rm -f /home/fpp/media/config/co-universes.json
+
+Cmnd_Alias HD_SVC = \
+  /usr/bin/systemctl reset-failed fppd, /usr/bin/systemctl restart fppd, \
+  /usr/bin/systemctl reset-failed apache2, /usr/bin/systemctl reset-failed apache2 php*-fpm.service, \
+  /usr/bin/systemctl restart apache2, /usr/bin/systemctl restart php*-fpm.service apache2, \
+  /usr/bin/systemctl --no-block restart haunt-director, \
+  /usr/bin/systemctl daemon-reload, /usr/bin/systemctl reboot
+
+Cmnd_Alias HD_BOOT = \
+  /usr/bin/mkdir -p /etc/systemd/system/apache2.service.d, \
+  /usr/bin/mkdir -p /etc/systemd/system/php*-fpm.service.d, \
+  /usr/bin/tee /etc/systemd/system/apache2.service.d/haunt-resilience.conf, \
+  /usr/bin/tee /etc/systemd/system/php*-fpm.service.d/haunt-resilience.conf
+
+@USER@ ALL=(root) NOPASSWD: HD_FPPCFG, HD_SVC, HD_BOOT

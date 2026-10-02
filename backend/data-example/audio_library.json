@@ -1,0 +1,27 @@
+{
+  "music-drone-cc0.mp3": {
+    "title": "Dread Drone (placeholder, CC0)",
+    "category": "music",
+    "source": "file"
+  },
+  "amb-wind-cc0.mp3": {
+    "title": "Graveyard Wind (placeholder, CC0)",
+    "category": "sfx",
+    "source": "file"
+  },
+  "amb-storm-cc0.mp3": {
+    "title": "Storm Bed (placeholder, CC0)",
+    "category": "sfx",
+    "source": "file"
+  },
+  "sfx-thunder-cc0.mp3": {
+    "title": "Thunder Crack (placeholder, CC0)",
+    "category": "sfx",
+    "source": "file"
+  },
+  "sfx-stinger-cc0.mp3": {
+    "title": "Scare Stinger (placeholder, CC0)",
+    "category": "sfx",
+    "source": "file"
+  }
+}

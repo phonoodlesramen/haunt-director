@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "holdlamp-rgbw-8ch",
+  "vendor": "HOLDLAMP",
+  "model": "IP65 RGBW PAR",
+  "mode_name": "8CH",
+  "channel_count": 8,
+  "has_master_dimmer": true,
+  "channels": [
+    { "offset": 0, "role": "dimmer", "name": "Master Dimmer", "default": 0 },
+    { "offset": 1, "role": "red", "name": "Red", "default": 0 },
+    { "offset": 2, "role": "green", "name": "Green", "default": 0 },
+    { "offset": 3, "role": "blue", "name": "Blue", "default": 0 },
+    { "offset": 4, "role": "white", "name": "White", "default": 0 },
+    { "offset": 5, "role": "strobe", "name": "Strobe", "default": 0,
+      "off_band": { "lo": 0, "hi": 0 },
+      "rate_band": { "points": [[0, 0], [1.25, 130], [2.4, 200], [8, 255]] } },
+    { "offset": 6, "role": "function", "name": "Function", "default": 0 },
+    { "offset": 7, "role": "speed", "name": "Speed", "default": 0 }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "id": "mist-among-the-stones",
+  "name": "Mist Among the Stones",
+  "duration_s": 30.0,
+  "blurb": "Cold graveyard fog creeps in silence until the dead scream at the end.",
+  "audio": {
+    "music": null,
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": [
+      {
+        "id": "cca6xle",
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 0.0,
+        "gain": 0.8,
+        "loop": false
+      },
+      {
+        "id": "ck5lbwx",
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 22.013885498046875,
+        "gain": 0.8,
+        "loop": false
+      }
+    ]
+  },
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 28,
+  "tag": "ambient",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "gf8de00",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0a1a2a",
+          "brightness": 0.007
+        }
+      },
+      {
+        "id": "g958e9c",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 10.0,
+        "params": {
+          "color": "#10233a",
+          "brightness": 0.018,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g8bf417",
+        "t": 12.0,
+        "type": "fade_color",
+        "duration_s": 8.0,
+        "params": {
+          "color": "#16314f",
+          "brightness": 0.082,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "ge372a9",
+        "t": 22.0,
+        "type": "pulse",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#2a4e70",
+          "brightness": 0.219,
+          "rate_hz": 0.5
+        }
+      },
+      {
+        "id": "gc435ac",
+        "t": 26.5,
+        "type": "fade_brightness",
+        "duration_s": 1.0,
+        "params": {
+          "brightness": 0.46,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "gbea5f7",
+        "t": 27.8,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.853,
+          "rate_hz": 16
+        }
+      },
+      {
+        "id": "gc5e71b",
+        "t": 29.9,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "light_path": [
+      {
+        "id": "g2b6889",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#081824",
+          "brightness": 0.006
+        }
+      },
+      {
+        "id": "g0a0295",
+        "t": 3.0,
+        "type": "fade_color",
+        "duration_s": 12.0,
+        "params": {
+          "color": "#0e2436",
+          "brightness": 0.021,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g44824d",
+        "t": 16.0,
+        "type": "fade_color",
+        "duration_s": 8.0,
+        "params": {
+          "color": "#153046",
+          "brightness": 0.089,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "gedd382",
+        "t": 24.0,
+        "type": "pulse",
+        "duration_s": 3.5,
+        "params": {
+          "color": "#274a66",
+          "brightness": 0.2,
+          "rate_hz": 0.7
+        }
+      },
+      {
+        "id": "g48df5a",
+        "t": 27.8,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#ff2222",
+          "brightness": 0.853,
+          "rate_hz": 14
+        }
+      },
+      {
+        "id": "g88826b",
+        "t": 29.9,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "g53f476",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#050e16",
+          "brightness": 0.004
+        }
+      },
+      {
+        "id": "g6ba9ca",
+        "t": 5.0,
+        "type": "fade_color",
+        "duration_s": 12.0,
+        "params": {
+          "color": "#0b1d2c",
+          "brightness": 0.021,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g5d197e",
+        "t": 18.0,
+        "type": "fade_color",
+        "duration_s": 7.0,
+        "params": {
+          "color": "#112838",
+          "brightness": 0.081,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "gc13ecd",
+        "t": 25.5,
+        "type": "fade_brightness",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.28,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "gbcd8bf",
+        "t": 27.8,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.853,
+          "rate_hz": 16
+        }
+      },
+      {
+        "id": "g31dc7f",
+        "t": 29.9,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "g26211e",
+        "t": 2.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.25
+        }
+      },
+      {
+        "id": "g8709e1",
+        "t": 11.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.35
+        }
+      },
+      {
+        "id": "g11a28d",
+        "t": 19.0,
+        "type": "fog",
+        "duration_s": 6.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "gb8f459",
+        "t": 26.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.7
+        }
+      }
+    ]
+  }
+}

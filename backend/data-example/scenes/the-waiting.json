@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "id": "the-waiting",
+  "name": "The Waiting",
+  "duration_s": 90.0,
+  "blurb": "A slow, tightening dread with false alarms, then the real one.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 0.8,
+    "layers": []
+  },
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#0B0803",
+          "brightness": 0.03
+        }
+      },
+      {
+        "id": "s1",
+        "t": 10,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.2,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "s2",
+        "t": 22,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "s3",
+        "t": 34,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.2,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "s4",
+        "t": 46,
+        "type": "fade_brightness",
+        "duration_s": 0.9,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "s5",
+        "t": 58,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.2,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "s6",
+        "t": 70,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "sp0",
+        "t": 22.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "spb0",
+        "t": 22.12,
+        "type": "blackout"
+      },
+      {
+        "id": "sp1",
+        "t": 47.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "spb1",
+        "t": 47.12,
+        "type": "blackout"
+      },
+      {
+        "id": "sp2",
+        "t": 82.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "spb2",
+        "t": 82.5,
+        "type": "blackout"
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#0B0803",
+          "brightness": 0.03
+        }
+      },
+      {
+        "id": "p1",
+        "t": 11,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.25,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 22,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 35,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.25,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 46,
+        "type": "fade_brightness",
+        "duration_s": 0.9,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 59,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.25,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 70,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "pp0",
+        "t": 22.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb0",
+        "t": 22.12,
+        "type": "blackout"
+      },
+      {
+        "id": "pp1",
+        "t": 47.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb1",
+        "t": 47.12,
+        "type": "blackout"
+      },
+      {
+        "id": "pp2",
+        "t": 82.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb2",
+        "t": 82.5,
+        "type": "blackout"
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "p0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#0B0803",
+          "brightness": 0.03
+        }
+      },
+      {
+        "id": "p1",
+        "t": 12,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.3,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 22,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 36,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.3,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 46,
+        "type": "fade_brightness",
+        "duration_s": 0.9,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 60,
+        "type": "fade_color",
+        "duration_s": 8,
+        "params": {
+          "color": "#7A4A12",
+          "brightness": 0.3,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 70,
+        "type": "fade_brightness",
+        "duration_s": 5,
+        "params": {
+          "brightness": 0.03,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "pp0",
+        "t": 22.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb0",
+        "t": 22.12,
+        "type": "blackout"
+      },
+      {
+        "id": "pp1",
+        "t": 47.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb1",
+        "t": 47.12,
+        "type": "blackout"
+      },
+      {
+        "id": "pp2",
+        "t": 82.0,
+        "type": "set_color",
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 1.0
+        }
+      },
+      {
+        "id": "ppb2",
+        "t": 82.5,
+        "type": "blackout"
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f0",
+        "t": 81.6,
+        "type": "fog",
+        "duration_s": 3,
+        "params": {
+          "intensity": 0.9
+        }
+      }
+    ]
+  }
+}

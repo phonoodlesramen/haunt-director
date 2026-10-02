@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "id": "creeping-dread",
+  "name": "Creeping Dread",
+  "duration_s": 12.0,
+  "blurb": "",
+  "audio": null,
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 0,
+  "tag": "",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s1",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2A0A3C",
+          "brightness": 0.15
+        }
+      },
+      {
+        "id": "s2",
+        "t": 3.5,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#C81414",
+          "brightness": 0.85,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "s3",
+        "t": 6.2,
+        "type": "strobe",
+        "duration_s": 0.5,
+        "params": {
+          "rate_hz": 12,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s4",
+        "t": 9.0,
+        "type": "fade_brightness",
+        "duration_s": 3.0,
+        "params": {
+          "brightness": 0,
+          "curve": "linear"
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p1",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#101A2E",
+          "brightness": 0.1
+        }
+      },
+      {
+        "id": "p2",
+        "t": 4.0,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#7A1FA0",
+          "brightness": 0.6,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 9.0,
+        "type": "fade_brightness",
+        "duration_s": 3.0,
+        "params": {
+          "brightness": 0,
+          "curve": "linear"
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "o1",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#1A1206",
+          "brightness": 0.08
+        }
+      },
+      {
+        "id": "o2",
+        "t": 4.5,
+        "type": "fade_color",
+        "duration_s": 1.5,
+        "params": {
+          "color": "#E8A33D",
+          "brightness": 0.5,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "o3",
+        "t": 9.0,
+        "type": "fade_brightness",
+        "duration_s": 3.0,
+        "params": {
+          "brightness": 0,
+          "curve": "linear"
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f1",
+        "t": 5.8,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.8
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "id": "graveyard-mist",
+  "name": "Graveyard Mist",
+  "duration_s": 90.0,
+  "blurb": "Ninety seconds of cold, drifting dread: slow color tides and rolling fog.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 0.85,
+    "layers": [
+      {
+        "id": "c6fhb51",
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 83.99416870117187,
+        "gain": 0.95,
+        "loop": false
+      },
+      {
+        "id": "c9hbuv8",
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 74.14,
+        "gain": 0.5,
+        "loop": false
+      }
+    ]
+  },
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 0,
+  "tag": "ambient",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#04120E",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s1",
+        "t": 1.0,
+        "type": "fade_color",
+        "duration_s": 9.71,
+        "params": {
+          "color": "#0E4A3A",
+          "brightness": 0.54,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s2",
+        "t": 12.67,
+        "type": "fade_color",
+        "duration_s": 9.71,
+        "params": {
+          "color": "#123A5A",
+          "brightness": 0.43,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s3",
+        "t": 22.84,
+        "type": "fade_color",
+        "duration_s": 10.07,
+        "params": {
+          "color": "#1A5A7A",
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s4",
+        "t": 33.38,
+        "type": "pulse",
+        "duration_s": 9.68,
+        "params": {
+          "color": "#2A4E8C",
+          "brightness": 0.86,
+          "curve": "ease_in_out",
+          "rate_hz": 11.9
+        }
+      },
+      {
+        "id": "s5",
+        "t": 45.08,
+        "type": "fade_color",
+        "duration_s": 11.16,
+        "params": {
+          "color": "#1C6E5A",
+          "brightness": 0.44,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s6",
+        "t": 57.23,
+        "type": "fade_color",
+        "duration_s": 9.72,
+        "params": {
+          "color": "#1A5A7A",
+          "brightness": 0.45,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s7",
+        "t": 67.34,
+        "type": "fade_color",
+        "duration_s": 3.51,
+        "params": {
+          "color": "#0E4A3A",
+          "brightness": 0.23,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "s8",
+        "t": 74.52,
+        "type": "fade_color",
+        "duration_s": 5.81,
+        "params": {
+          "color": "#0E4A3A",
+          "brightness": 0.21,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "sz",
+        "t": 86.0,
+        "type": "fade_brightness",
+        "duration_s": 4.0,
+        "params": {
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "et49ql8",
+        "t": 73.18416564941407,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.8,
+          "color": "#73a9b3",
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "e1016zc",
+        "t": 84.2,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#e27343",
+          "brightness": 0.8,
+          "rate_hz": 8
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#04120E",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p1",
+        "t": 2.5,
+        "type": "fade_color",
+        "duration_s": 9.64,
+        "params": {
+          "color": "#123A5A",
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 12.73,
+        "type": "fade_color",
+        "duration_s": 9.693329264322916,
+        "params": {
+          "color": "#1C6E5A",
+          "brightness": 0.46,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 22.64,
+        "type": "fade_color",
+        "duration_s": 8.67,
+        "params": {
+          "color": "#0E4A3A",
+          "brightness": 0.6,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 33.41,
+        "type": "fade_color",
+        "duration_s": 11.25,
+        "params": {
+          "color": "#14324A",
+          "brightness": 0.5,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 45.93,
+        "type": "fade_color",
+        "duration_s": 7.18,
+        "params": {
+          "color": "#0E4A3A",
+          "brightness": 0.51,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 54.11,
+        "type": "fade_color",
+        "duration_s": 12.08,
+        "params": {
+          "color": "#3C7A64",
+          "brightness": 0.23,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p7",
+        "t": 68.41222595214843,
+        "type": "strobe",
+        "duration_s": 3.443333333333333,
+        "params": {
+          "color": "#2A4E8C",
+          "brightness": 0.28,
+          "curve": "ease_in_out",
+          "rate_hz": 8
+        }
+      },
+      {
+        "id": "p8",
+        "t": 73.93388854980469,
+        "type": "fade_color",
+        "duration_s": 9.82,
+        "params": {
+          "color": "#1A5A7A",
+          "brightness": 0.36,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "pz",
+        "t": 86.0,
+        "type": "fade_brightness",
+        "duration_s": 4.0,
+        "params": {
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "e19sibt",
+        "t": 84.77,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.8,
+          "color": "#e34242",
+          "rate_hz": 8
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#04120E",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p1",
+        "t": 4.0,
+        "type": "fade_color",
+        "duration_s": 10.78,
+        "params": {
+          "color": "#123A5A",
+          "brightness": 0.47,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 15.62,
+        "type": "fade_color",
+        "duration_s": 8.87,
+        "params": {
+          "color": "#1C6E5A",
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p3",
+        "t": 26.38,
+        "type": "fade_color",
+        "duration_s": 7.71,
+        "params": {
+          "color": "#2A4E8C",
+          "brightness": 0.48,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p4",
+        "t": 34.12,
+        "type": "fade_color",
+        "duration_s": 9.79,
+        "params": {
+          "color": "#3C7A64",
+          "brightness": 0.27,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p5",
+        "t": 45.3,
+        "type": "fade_color",
+        "duration_s": 9.68,
+        "params": {
+          "color": "#2A4E8C",
+          "brightness": 0.59,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p6",
+        "t": 56.91,
+        "type": "fade_color",
+        "duration_s": 9.52,
+        "params": {
+          "color": "#3C7A64",
+          "brightness": 0.25,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p7",
+        "t": 67.48,
+        "type": "fade_color",
+        "duration_s": 8.28,
+        "params": {
+          "color": "#14324A",
+          "brightness": 0.55,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "p8",
+        "t": 78.19,
+        "type": "fade_color",
+        "duration_s": 3.32,
+        "params": {
+          "color": "#1C6E5A",
+          "brightness": 0.28,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "pz",
+        "t": 86.0,
+        "type": "fade_brightness",
+        "duration_s": 4.0,
+        "params": {
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "eillz2q",
+        "t": 83.72555623372396,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "brightness": 0.8,
+          "color": "#de476d",
+          "rate_hz": 8
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f0",
+        "t": 6.0,
+        "type": "fog",
+        "duration_s": 14.322223917643228,
+        "params": {
+          "intensity": 0.76
+        }
+      },
+      {
+        "id": "f1",
+        "t": 24.8,
+        "type": "fog",
+        "duration_s": 9.0,
+        "params": {
+          "intensity": 0.65
+        }
+      },
+      {
+        "id": "f2",
+        "t": 44.87,
+        "type": "fog",
+        "duration_s": 8.3,
+        "params": {
+          "intensity": 0.68
+        }
+      },
+      {
+        "id": "f3",
+        "t": 65.24,
+        "type": "fog",
+        "duration_s": 6.2,
+        "params": {
+          "intensity": 0.62
+        }
+      },
+      {
+        "id": "et63azs",
+        "t": 76.61,
+        "type": "fog",
+        "duration_s": 6.96112060546875,
+        "params": {
+          "intensity": 0.6
+        }
+      }
+    ]
+  }
+}

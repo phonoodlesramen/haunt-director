@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "id": "graveyard-thriller",
+  "name": "Graveyard Thriller",
+  "duration_s": 180.0,
+  "blurb": "A slow creeping dread that erupts into a strobe-lit shock finale.",
+  "audio": null,
+  "enabled": true,
+  "order": 33,
+  "tag": "",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "g5b18a7",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#2e0854",
+          "brightness": 0.045,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "gc4a8ae",
+        "t": 15.0,
+        "type": "pulse",
+        "duration_s": 10.0,
+        "params": {
+          "color": "#1b4d3e",
+          "brightness": 0.082,
+          "rate_hz": 0.5
+        }
+      },
+      {
+        "id": "g23d3eb",
+        "t": 45.0,
+        "type": "fade_color",
+        "duration_s": 0.6,
+        "params": {
+          "color": "#ff4500",
+          "brightness": 0.187,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "gb47441",
+        "t": 46.0,
+        "type": "pulse",
+        "duration_s": 20.0,
+        "params": {
+          "color": "#ff4500",
+          "brightness": 0.221,
+          "rate_hz": 1.0
+        }
+      },
+      {
+        "id": "g962840",
+        "t": 75.0,
+        "type": "fade_color",
+        "duration_s": 5.0,
+        "params": {
+          "color": "#2e0854",
+          "brightness": 0.105,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g2b1837",
+        "t": 115.0,
+        "type": "pulse",
+        "duration_s": 15.0,
+        "params": {
+          "color": "#8b0000",
+          "brightness": 0.282,
+          "rate_hz": 1.5
+        }
+      },
+      {
+        "id": "g4f0464",
+        "t": 150.0,
+        "type": "fade_color",
+        "duration_s": 5.0,
+        "params": {
+          "color": "#ff0000",
+          "brightness": 0.551,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g7ab2bb",
+        "t": 170.0,
+        "type": "strobe",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.889,
+          "rate_hz": 14.0
+        }
+      },
+      {
+        "id": "ga4d00a",
+        "t": 176.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      },
+      {
+        "id": "gf55257",
+        "t": 178.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#8b0000",
+          "brightness": 0.293,
+          "curve": "ease_out"
+        }
+      }
+    ],
+    "light_path": [
+      {
+        "id": "g30615e",
+        "t": 5.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#202020",
+          "brightness": 0.034
+        }
+      },
+      {
+        "id": "gb7e9d3",
+        "t": 20.0,
+        "type": "pulse",
+        "duration_s": 20.0,
+        "params": {
+          "color": "#444444",
+          "brightness": 0.067,
+          "rate_hz": 0.3
+        }
+      },
+      {
+        "id": "g979fff",
+        "t": 60.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#ff8c00",
+          "brightness": 0.183,
+          "curve": "ease_in_out"
+        }
+      },
+      {
+        "id": "g66117a",
+        "t": 90.0,
+        "type": "set_brightness",
+        "duration_s": 0.0,
+        "params": {
+          "brightness": 0.071
+        }
+      },
+      {
+        "id": "gbd918a",
+        "t": 120.0,
+        "type": "pulse",
+        "duration_s": 20.0,
+        "params": {
+          "color": "#660000",
+          "brightness": 0.233,
+          "rate_hz": 1.0
+        }
+      },
+      {
+        "id": "g58a6d2",
+        "t": 155.0,
+        "type": "fade_color",
+        "duration_s": 5.0,
+        "params": {
+          "color": "#ff0000",
+          "brightness": 0.506,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g78e9fb",
+        "t": 172.0,
+        "type": "strobe",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.911,
+          "rate_hz": 12.0
+        }
+      },
+      {
+        "id": "g0b3644",
+        "t": 178.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "g27e1fd",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#1a0033",
+          "brightness": 0.052,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "ge34662",
+        "t": 30.0,
+        "type": "fade_brightness",
+        "duration_s": 5.0,
+        "params": {
+          "brightness": 0.129,
+          "curve": "linear"
+        }
+      },
+      {
+        "id": "g1ac765",
+        "t": 70.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#ff4500",
+          "brightness": 0.241,
+          "curve": "ease_out"
+        }
+      },
+      {
+        "id": "g1b221a",
+        "t": 100.0,
+        "type": "fade_color",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#0b1d3a",
+          "brightness": 0.153,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g851df6",
+        "t": 140.0,
+        "type": "pulse",
+        "duration_s": 15.0,
+        "params": {
+          "color": "#8b0000",
+          "brightness": 0.327,
+          "rate_hz": 1.2
+        }
+      },
+      {
+        "id": "gc3ab5e",
+        "t": 165.0,
+        "type": "fade_color",
+        "duration_s": 4.0,
+        "params": {
+          "color": "#ff0000",
+          "brightness": 0.75,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "g49da66",
+        "t": 174.0,
+        "type": "strobe",
+        "duration_s": 6.0,
+        "params": {
+          "color": "#ffffff",
+          "brightness": 0.933,
+          "rate_hz": 16.0
+        }
+      },
+      {
+        "id": "g92a5ff",
+        "t": 180.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "g9e4544",
+        "t": 10.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.3
+        }
+      },
+      {
+        "id": "g91da8a",
+        "t": 50.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "id": "g0031b4",
+        "t": 120.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.5
+        }
+      },
+      {
+        "id": "gfe1fd5",
+        "t": 170.0,
+        "type": "fog",
+        "duration_s": 6.0,
+        "params": {
+          "intensity": 0.9
+        }
+      }
+    ]
+  }
+}

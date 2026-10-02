@@ -1,0 +1,150 @@
+[
+  {
+    "id": "light_skelly",
+    "name": "Skelly Light",
+    "kind": "dmx_fixture",
+    "profile_id": "holdlamp-rgbw-8ch",
+    "dmx_address": 1,
+    "enabled": true,
+    "sim_position": {
+      "x": 0.6467354308463338,
+      "y": 0.5722265833127097
+    },
+    "aim": {
+      "x": 0.5388282686712108,
+      "y": 0.2958770224381123
+    },
+    "spread": 0.9,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "light_path",
+    "name": "Tree Light",
+    "kind": "dmx_fixture",
+    "profile_id": "holdlamp-rgbw-8ch",
+    "dmx_address": 17,
+    "enabled": true,
+    "sim_position": {
+      "x": 0.9330214272665172,
+      "y": 0.6260508508401192
+    },
+    "aim": {
+      "x": 0.888,
+      "y": 0.155
+    },
+    "spread": 1.15,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "light_porch",
+    "name": "House Light",
+    "kind": "dmx_fixture",
+    "profile_id": "holdlamp-rgbw-8ch",
+    "dmx_address": 33,
+    "enabled": true,
+    "sim_position": {
+      "x": 0.23585119635306745,
+      "y": 0.5765997869594712
+    },
+    "aim": {
+      "x": 0.30431308208690416,
+      "y": 0.25764023025182753
+    },
+    "spread": 1.4,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "fog_main",
+    "name": "Fog Machine",
+    "kind": "dmx_fog",
+    "profile_id": "generic-fog-1ch",
+    "dmx_address": 49,
+    "enabled": true,
+    "sim_position": {
+      "x": 0.4966464220537288,
+      "y": 0.5403400920379181
+    },
+    "spread": 1.0,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "prop_skelly",
+    "name": "12ft Skelly",
+    "kind": "prop",
+    "enabled": true,
+    "sim_position": {
+      "x": 0.58,
+      "y": 0.42
+    },
+    "spread": 1.0,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "spk_main",
+    "name": "Speaker",
+    "kind": "audio_sink",
+    "enabled": true,
+    "sim_position": {
+      "x": 0.5662955934047609,
+      "y": 0.47444131926447153
+    },
+    "spread": 1.0,
+    "static_color": "#ff3030",
+    "static_mode": "fixed",
+    "static_brightness": 1.0,
+    "static_on": true
+  },
+  {
+    "id": "yard_left",
+    "name": "Yard Spot L",
+    "kind": "static_rgb",
+    "enabled": true,
+    "sim_position": {
+      "x": 0.06541095890410958,
+      "y": 0.6634672431728847
+    },
+    "aim": {
+      "x": 0.13047945205479453,
+      "y": 0.3517712228903214
+    },
+    "spread": 1.1,
+    "static_color": "#fff4e0",
+    "static_mode": "fixed",
+    "static_brightness": 0.26,
+    "static_on": true
+  },
+  {
+    "id": "yard_right",
+    "name": "Yard Spot R",
+    "kind": "static_rgb",
+    "enabled": true,
+    "sim_position": {
+      "x": 0.8373287671232876,
+      "y": 0.6367504414343793
+    },
+    "aim": {
+      "x": 0.8106164383561644,
+      "y": 0.3977834925510808
+    },
+    "spread": 1.1,
+    "static_color": "#fff4e0",
+    "static_mode": "fixed",
+    "static_brightness": 0.27,
+    "static_on": true
+  }
+]

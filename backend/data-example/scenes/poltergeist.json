@@ -1,0 +1,2030 @@
+{
+  "schema_version": 1,
+  "id": "poltergeist",
+  "name": "Poltergeist",
+  "duration_s": 90.0,
+  "blurb": "Ninety seconds of chaos. Color snaps and strobe stabs, never the same twice.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": []
+  },
+  "audio_fade_out_s": null,
+  "enabled": true,
+  "order": 0,
+  "tag": "",
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s1",
+        "t": 1.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.77
+        }
+      },
+      {
+        "id": "s1b",
+        "t": 1.63,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s2",
+        "t": 3.38,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.97
+        }
+      },
+      {
+        "id": "s2b",
+        "t": 3.71,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s3",
+        "t": 5.88,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "s3b",
+        "t": 6.44,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s4",
+        "t": 8.19,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.89
+        }
+      },
+      {
+        "id": "s4b",
+        "t": 8.58,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s5",
+        "t": 9.92,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "s5b",
+        "t": 10.55,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s6",
+        "t": 12.78,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.98
+        }
+      },
+      {
+        "id": "s6b",
+        "t": 13.28,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s8",
+        "t": 19.49,
+        "type": "fade_color",
+        "duration_s": 0.48,
+        "params": {
+          "rate_hz": 18,
+          "color": "#39FF14",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s9",
+        "t": 22.91,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.7
+        }
+      },
+      {
+        "id": "s9b",
+        "t": 23.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s10",
+        "t": 24.73,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.91
+        }
+      },
+      {
+        "id": "s10b",
+        "t": 25.38,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s11",
+        "t": 26.85,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.87
+        }
+      },
+      {
+        "id": "s11b",
+        "t": 27.16,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s12",
+        "t": 28.12,
+        "type": "strobe",
+        "duration_s": 0.46,
+        "params": {
+          "rate_hz": 14,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s13",
+        "t": 30.3,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "rate_hz": 18,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s14",
+        "t": 32.95,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.88
+        }
+      },
+      {
+        "id": "s14b",
+        "t": 33.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s15",
+        "t": 36.07,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.84
+        }
+      },
+      {
+        "id": "s15b",
+        "t": 36.49,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s16",
+        "t": 38.96,
+        "type": "strobe",
+        "duration_s": 0.74,
+        "params": {
+          "rate_hz": 14,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s17",
+        "t": 42.05,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "s17b",
+        "t": 42.71,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s18",
+        "t": 45.06,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.73
+        }
+      },
+      {
+        "id": "s18b",
+        "t": 45.58,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s19",
+        "t": 47.93,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.98
+        }
+      },
+      {
+        "id": "s19b",
+        "t": 48.36,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s20",
+        "t": 50.1,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.82
+        }
+      },
+      {
+        "id": "s20b",
+        "t": 50.69,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s21",
+        "t": 52.05,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.73
+        }
+      },
+      {
+        "id": "s21b",
+        "t": 52.39,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s22",
+        "t": 54.69,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.97
+        }
+      },
+      {
+        "id": "s22b",
+        "t": 55.02,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s23",
+        "t": 57.36,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.83
+        }
+      },
+      {
+        "id": "s23b",
+        "t": 57.97,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s24",
+        "t": 60.79,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.9
+        }
+      },
+      {
+        "id": "s24b",
+        "t": 61.06,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s25",
+        "t": 63.45,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.77
+        }
+      },
+      {
+        "id": "s25b",
+        "t": 63.74,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s26",
+        "t": 64.99,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.74
+        }
+      },
+      {
+        "id": "s26b",
+        "t": 65.63,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s27",
+        "t": 66.71,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.98
+        }
+      },
+      {
+        "id": "s27b",
+        "t": 67.31,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s28",
+        "t": 69.28,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.81
+        }
+      },
+      {
+        "id": "s28b",
+        "t": 69.92,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s29",
+        "t": 70.89,
+        "type": "strobe",
+        "duration_s": 0.34,
+        "params": {
+          "rate_hz": 14,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s30",
+        "t": 72.49,
+        "type": "strobe",
+        "duration_s": 0.69,
+        "params": {
+          "rate_hz": 18,
+          "color": "#8B2FFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s31",
+        "t": 75.68,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.94
+        }
+      },
+      {
+        "id": "s31b",
+        "t": 76.26,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s32",
+        "t": 78.95,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.95
+        }
+      },
+      {
+        "id": "s32b",
+        "t": 79.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s33",
+        "t": 79.82,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "s33b",
+        "t": 80.3,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "s34",
+        "t": 82.63,
+        "type": "strobe",
+        "duration_s": 0.49,
+        "params": {
+          "rate_hz": 16,
+          "color": "#39FF14",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "s35",
+        "t": 84.64,
+        "type": "strobe",
+        "duration_s": 0.4,
+        "params": {
+          "rate_hz": 14,
+          "color": "#39FF14",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "sz",
+        "t": 88.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p1",
+        "t": 1.7,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.74
+        }
+      },
+      {
+        "id": "p1b",
+        "t": 2.17,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p2",
+        "t": 3.88,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.77
+        }
+      },
+      {
+        "id": "p2b",
+        "t": 4.14,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p3",
+        "t": 4.93,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "p3b",
+        "t": 5.29,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p4",
+        "t": 7.36,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.83
+        }
+      },
+      {
+        "id": "p4b",
+        "t": 7.78,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p5",
+        "t": 9.06,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.93
+        }
+      },
+      {
+        "id": "p5b",
+        "t": 9.44,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p6",
+        "t": 10.98,
+        "type": "strobe",
+        "duration_s": 0.34,
+        "params": {
+          "rate_hz": 14,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p7",
+        "t": 13.31,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "p7b",
+        "t": 13.86,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p9",
+        "t": 18.39,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "p9b",
+        "t": 19.01,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p10",
+        "t": 21.67,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "p10b",
+        "t": 22.32,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p11",
+        "t": 24.43,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.91
+        }
+      },
+      {
+        "id": "p11b",
+        "t": 24.85,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p12",
+        "t": 26.54,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.81
+        }
+      },
+      {
+        "id": "p12b",
+        "t": 26.99,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p13",
+        "t": 28.26,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.75
+        }
+      },
+      {
+        "id": "p13b",
+        "t": 28.68,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p14",
+        "t": 30.42,
+        "type": "strobe",
+        "duration_s": 0.51,
+        "params": {
+          "rate_hz": 14,
+          "color": "#E05A47",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p15",
+        "t": 33.92,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.97
+        }
+      },
+      {
+        "id": "p15b",
+        "t": 34.58,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p16",
+        "t": 36.55,
+        "type": "strobe",
+        "duration_s": 0.74,
+        "params": {
+          "rate_hz": 14,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p17",
+        "t": 39.37,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.73
+        }
+      },
+      {
+        "id": "p17b",
+        "t": 40.06,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p18",
+        "t": 41.72,
+        "type": "strobe",
+        "duration_s": 0.73,
+        "params": {
+          "rate_hz": 14,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p19",
+        "t": 45.67,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.84
+        }
+      },
+      {
+        "id": "p19b",
+        "t": 46.33,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p20",
+        "t": 47.5,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.75
+        }
+      },
+      {
+        "id": "p20b",
+        "t": 47.97,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p21",
+        "t": 50.89,
+        "type": "strobe",
+        "duration_s": 0.45,
+        "params": {
+          "rate_hz": 16,
+          "color": "#8B2FFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p22",
+        "t": 53.15,
+        "type": "strobe",
+        "duration_s": 0.78,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p23",
+        "t": 55.74,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.81
+        }
+      },
+      {
+        "id": "p23b",
+        "t": 56.04,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p24",
+        "t": 56.72,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "p24b",
+        "t": 57.25,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p25",
+        "t": 60.22,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "p25b",
+        "t": 60.76,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p26",
+        "t": 62.2,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.75
+        }
+      },
+      {
+        "id": "p26b",
+        "t": 62.68,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p27",
+        "t": 63.78,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.72
+        }
+      },
+      {
+        "id": "p27b",
+        "t": 64.22,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p28",
+        "t": 65.58,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.95
+        }
+      },
+      {
+        "id": "p28b",
+        "t": 66.12,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p29",
+        "t": 68.65,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.88
+        }
+      },
+      {
+        "id": "p29b",
+        "t": 69.14,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p30",
+        "t": 70.86,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#E05A47",
+          "brightness": 0.78
+        }
+      },
+      {
+        "id": "p30b",
+        "t": 71.56,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p31",
+        "t": 72.35,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "p31b",
+        "t": 72.77,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p32",
+        "t": 73.72,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.75
+        }
+      },
+      {
+        "id": "p32b",
+        "t": 74.33,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p33",
+        "t": 75.83,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.79
+        }
+      },
+      {
+        "id": "p33b",
+        "t": 76.38,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p34",
+        "t": 76.98,
+        "type": "strobe",
+        "duration_s": 0.77,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p35",
+        "t": 80.31,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "p35b",
+        "t": 80.98,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p36",
+        "t": 83.16,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.99
+        }
+      },
+      {
+        "id": "p36b",
+        "t": 83.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p37",
+        "t": 85.82,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.9
+        }
+      },
+      {
+        "id": "p37b",
+        "t": 86.29,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "pz",
+        "t": 88.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "p0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p1",
+        "t": 2.4,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.76
+        }
+      },
+      {
+        "id": "p1b",
+        "t": 2.8,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p2",
+        "t": 5.14,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.84
+        }
+      },
+      {
+        "id": "p2b",
+        "t": 5.71,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p3",
+        "t": 6.73,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.9
+        }
+      },
+      {
+        "id": "p3b",
+        "t": 7.01,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p4",
+        "t": 8.96,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.93
+        }
+      },
+      {
+        "id": "p4b",
+        "t": 9.45,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p5",
+        "t": 11.01,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.84
+        }
+      },
+      {
+        "id": "p5b",
+        "t": 11.35,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p6",
+        "t": 12.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.88
+        }
+      },
+      {
+        "id": "p6b",
+        "t": 12.5,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p8",
+        "t": 17.650836385091143,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.91
+        }
+      },
+      {
+        "id": "p8b",
+        "t": 18.31,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p9",
+        "t": 19.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.92
+        }
+      },
+      {
+        "id": "p9b",
+        "t": 20.08,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p10",
+        "t": 22.24,
+        "type": "strobe",
+        "duration_s": 0.58,
+        "params": {
+          "rate_hz": 14,
+          "color": "#E05A47",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p11",
+        "t": 24.54,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.99
+        }
+      },
+      {
+        "id": "p11b",
+        "t": 24.85,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p12",
+        "t": 25.69,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.93
+        }
+      },
+      {
+        "id": "p12b",
+        "t": 26.17,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p13",
+        "t": 28.42,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "p13b",
+        "t": 28.89,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p14",
+        "t": 29.65,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.9
+        }
+      },
+      {
+        "id": "p14b",
+        "t": 29.99,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p15",
+        "t": 31.17,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.81
+        }
+      },
+      {
+        "id": "p15b",
+        "t": 31.48,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p16",
+        "t": 33.39,
+        "type": "strobe",
+        "duration_s": 0.77,
+        "params": {
+          "rate_hz": 18,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p17",
+        "t": 36.68,
+        "type": "strobe",
+        "duration_s": 0.57,
+        "params": {
+          "rate_hz": 16,
+          "color": "#39FF14",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p18",
+        "t": 40.3,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.77
+        }
+      },
+      {
+        "id": "p18b",
+        "t": 40.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p19",
+        "t": 42.0,
+        "type": "strobe",
+        "duration_s": 0.31,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p20",
+        "t": 44.15,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.87
+        }
+      },
+      {
+        "id": "p20b",
+        "t": 44.6,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p21",
+        "t": 47.02,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.93
+        }
+      },
+      {
+        "id": "p21b",
+        "t": 47.5,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p22",
+        "t": 48.29,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FF5A1E",
+          "brightness": 0.93
+        }
+      },
+      {
+        "id": "p22b",
+        "t": 48.86,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p23",
+        "t": 51.83,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.81
+        }
+      },
+      {
+        "id": "p23b",
+        "t": 52.11,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p24",
+        "t": 54.44,
+        "type": "strobe",
+        "duration_s": 0.57,
+        "params": {
+          "rate_hz": 16,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p25",
+        "t": 56.74,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.79
+        }
+      },
+      {
+        "id": "p25b",
+        "t": 57.16,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p26",
+        "t": 58.25,
+        "type": "strobe",
+        "duration_s": 0.63,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FF5A1E",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p27",
+        "t": 59.9,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.77
+        }
+      },
+      {
+        "id": "p27b",
+        "t": 60.46,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p28",
+        "t": 61.26,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "p28b",
+        "t": 61.74,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p29",
+        "t": 63.56,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.96
+        }
+      },
+      {
+        "id": "p29b",
+        "t": 64.07,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p30",
+        "t": 65.21,
+        "type": "strobe",
+        "duration_s": 0.73,
+        "params": {
+          "rate_hz": 18,
+          "color": "#2EA6FF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p31",
+        "t": 69.09,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.88
+        }
+      },
+      {
+        "id": "p31b",
+        "t": 69.62,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p32",
+        "t": 72.36,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.7
+        }
+      },
+      {
+        "id": "p32b",
+        "t": 72.61,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p33",
+        "t": 74.28,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.95
+        }
+      },
+      {
+        "id": "p33b",
+        "t": 74.56,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p34",
+        "t": 75.66,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#2EA6FF",
+          "brightness": 0.88
+        }
+      },
+      {
+        "id": "p34b",
+        "t": 75.91,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p35",
+        "t": 78.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#39FF14",
+          "brightness": 0.91
+        }
+      },
+      {
+        "id": "p35b",
+        "t": 78.65,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p36",
+        "t": 79.9,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#FFFFFF",
+          "brightness": 0.74
+        }
+      },
+      {
+        "id": "p36b",
+        "t": 80.35,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "p37",
+        "t": 83.33,
+        "type": "strobe",
+        "duration_s": 0.69,
+        "params": {
+          "rate_hz": 18,
+          "color": "#E05A47",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "p38",
+        "t": 85.47,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#8B2FFF",
+          "brightness": 0.94
+        }
+      },
+      {
+        "id": "p38b",
+        "t": 85.88,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0A0F",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "pz",
+        "t": 88.0,
+        "type": "blackout",
+        "duration_s": 0.0,
+        "params": {}
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f0",
+        "t": 40.0,
+        "type": "fog",
+        "duration_s": 4.0,
+        "params": {
+          "intensity": 0.7
+        }
+      },
+      {
+        "id": "f1",
+        "t": 74.0,
+        "type": "fog",
+        "duration_s": 5.0,
+        "params": {
+          "intensity": 0.9
+        }
+      }
+    ]
+  }
+}

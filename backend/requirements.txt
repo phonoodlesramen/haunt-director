@@ -1,0 +1,12 @@
+# Haunt Director backend. Versions are the ones it was tested with on a Raspberry Pi 5
+# (Raspberry Pi OS Bookworm, Python 3.11). Newer minor versions will probably work.
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+httpx==0.27.2
+pydantic==2.9.2
+pydantic-settings==2.6.1
+python-multipart==0.0.12
+pygame==2.6.1          # the audio engine (one in-process mixer, no PulseAudio/PipeWire needed)
+gpiozero>=2.0.1        # presence sensor
+lgpio>=0.2.2           # gpiozero's pin driver on a Pi 5
+yt-dlp                 # YouTube import (optional). YouTube changes often: `pip install -U yt-dlp` if imports break.

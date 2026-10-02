@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "id": "the-reckoning",
+  "name": "The Reckoning",
+  "duration_s": 90.0,
+  "blurb": "A ninety-second climb from embers to a strobing, fog-drowned finale.",
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 1.0,
+    "layers": []
+  },
+  "tracks": {
+    "light_skelly": [
+      {
+        "id": "s0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#1A0202",
+          "brightness": 0.08
+        }
+      },
+      {
+        "id": "s1",
+        "t": 2,
+        "type": "fade_color",
+        "duration_s": 30,
+        "params": {
+          "color": "#A01010",
+          "brightness": 0.55,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "s2",
+        "t": 35,
+        "type": "pulse",
+        "duration_s": 27,
+        "params": {
+          "rate_hz": 1.2,
+          "color": "#C81414",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "sc0",
+        "t": 63.0,
+        "type": "strobe",
+        "duration_s": 1.9,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "sc1",
+        "t": 71.0,
+        "type": "strobe",
+        "duration_s": 2.9,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "sc2",
+        "t": 79.0,
+        "type": "strobe",
+        "duration_s": 2.0,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "sz",
+        "t": 86,
+        "type": "blackout"
+      }
+    ],
+    "light_path": [
+      {
+        "id": "p0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#1A0202",
+          "brightness": 0.08
+        }
+      },
+      {
+        "id": "p1",
+        "t": 4,
+        "type": "fade_color",
+        "duration_s": 30,
+        "params": {
+          "color": "#A01010",
+          "brightness": 0.55,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 35,
+        "type": "pulse",
+        "duration_s": 27,
+        "params": {
+          "rate_hz": 1.5,
+          "color": "#C81414",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "pc0",
+        "t": 63.2,
+        "type": "strobe",
+        "duration_s": 2.7,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pc1",
+        "t": 71.2,
+        "type": "strobe",
+        "duration_s": 2.8,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pc2",
+        "t": 79.2,
+        "type": "strobe",
+        "duration_s": 2.7,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pz",
+        "t": 86,
+        "type": "blackout"
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "p0",
+        "t": 0,
+        "type": "set_color",
+        "params": {
+          "color": "#1A0202",
+          "brightness": 0.08
+        }
+      },
+      {
+        "id": "p1",
+        "t": 6,
+        "type": "fade_color",
+        "duration_s": 17.4,
+        "params": {
+          "color": "#A01010",
+          "brightness": 0.55,
+          "curve": "ease_in"
+        }
+      },
+      {
+        "id": "p2",
+        "t": 35,
+        "type": "pulse",
+        "duration_s": 27,
+        "params": {
+          "rate_hz": 1.8,
+          "color": "#C81414",
+          "brightness": 0.8
+        }
+      },
+      {
+        "id": "pc0",
+        "t": 63.4,
+        "type": "strobe",
+        "duration_s": 2.2,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pc1",
+        "t": 71.4,
+        "type": "strobe",
+        "duration_s": 2.2,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pc2",
+        "t": 79.4,
+        "type": "strobe",
+        "duration_s": 2.7,
+        "params": {
+          "rate_hz": 16,
+          "color": "#FFFFFF",
+          "brightness": 1
+        }
+      },
+      {
+        "id": "pz",
+        "t": 86,
+        "type": "blackout"
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "f0",
+        "t": 34,
+        "type": "fog",
+        "duration_s": 8,
+        "params": {
+          "intensity": 0.7
+        }
+      },
+      {
+        "id": "f1",
+        "t": 62,
+        "type": "fog",
+        "duration_s": 9,
+        "params": {
+          "intensity": 1.0
+        }
+      }
+    ]
+  }
+}

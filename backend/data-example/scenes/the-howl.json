@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "id": "the-howl",
+  "name": "The Howl",
+  "duration_s": 20.0,
+  "blurb": "Amber eyes wake in the trees, a wolf howls, and the skeleton flares blood-red.",
+  "tag": "scare",
+  "order": 52,
+  "enabled": true,
+  "audio_fade_out_s": null,
+  "audio": {
+    "music": "music-drone-cc0.mp3",
+    "voiceover": null,
+    "voiceover_at_s": 0.0,
+    "gain": 0.7,
+    "layers": [
+      {
+        "file": "amb-wind-cc0.mp3",
+        "at_s": 0.0,
+        "gain": 0.5,
+        "loop": true,
+        "id": "l0"
+      },
+      {
+        "file": "sfx-stinger-cc0.mp3",
+        "at_s": 6.0,
+        "gain": 1.0,
+        "loop": false,
+        "id": "l1"
+      }
+    ]
+  },
+  "tracks": {
+    "light_path": [
+      {
+        "id": "path_0",
+        "t": 0.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#3A1F00",
+          "brightness": 0.35
+        }
+      },
+      {
+        "id": "path_1",
+        "t": 6.0,
+        "type": "fade_color",
+        "duration_s": 1.0,
+        "params": {
+          "color": "#6A2A00",
+          "brightness": 0.6
+        }
+      },
+      {
+        "id": "path_2",
+        "t": 8.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#1A0E00",
+          "brightness": 0.2
+        }
+      },
+      {
+        "id": "path_3",
+        "t": 17.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "light_skelly": [
+      {
+        "id": "skelly_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#0A0000",
+          "brightness": 0.05
+        }
+      },
+      {
+        "id": "skelly_1",
+        "t": 6.5,
+        "type": "fade_color",
+        "duration_s": 0.8,
+        "params": {
+          "color": "#8A0000",
+          "brightness": 0.9
+        }
+      },
+      {
+        "id": "skelly_2",
+        "t": 8.0,
+        "type": "fade_color",
+        "duration_s": 2.0,
+        "params": {
+          "color": "#200000",
+          "brightness": 0.3
+        }
+      },
+      {
+        "id": "skelly_3",
+        "t": 17.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "light_porch": [
+      {
+        "id": "porch_0",
+        "t": 0.0,
+        "type": "set_color",
+        "duration_s": 0.0,
+        "params": {
+          "color": "#050510",
+          "brightness": 0.08
+        }
+      },
+      {
+        "id": "porch_1",
+        "t": 17.0,
+        "type": "fade_color",
+        "duration_s": 3.0,
+        "params": {
+          "color": "#000000",
+          "brightness": 0.0
+        }
+      }
+    ],
+    "fog_main": [
+      {
+        "id": "main_0",
+        "t": 6.5,
+        "type": "fog",
+        "duration_s": 3.0,
+        "params": {
+          "intensity": 0.7
+        }
+      }
+    ]
+  }
+}

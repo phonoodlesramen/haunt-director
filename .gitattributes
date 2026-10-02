@@ -1,0 +1,6 @@
+# Keep Unix line endings everywhere (the Pi runs these files), and never mangle media.
+* text=auto eol=lf
+*.sh text eol=lf
+*.jpg binary
+*.png binary
+*.mp3 binary
