@@ -134,7 +134,8 @@ The simulator draws your lights over a picture of a house. Until you add your ow
 
 On the **Show** tab:
 
-- **Presence sensor:** the GPIO pin (BCM numbering) and whether HIGH means "someone's there".
+- **Presence sensor:** the GPIO pin (BCM numbering), whether HIGH means "someone's there", and an optional **hold before firing** (someone has to stay in range this long).
+- **Sensor fires scares** and **Ambient between scares:** switch the sensor off without losing its pin, or run a sensor-only show that stays dark and quiet between scares.
 - **Cooldown:** how long after a scare before another can fire.
 - **Audio crossfade:** how long sound overlaps between scenes.
 - **Schedule:** auto-arm at dusk (with an offset) and on specific dates. Set your **latitude and longitude** so "dusk" means *your* dusk. The default is Salem, Massachusetts, which is spooky but probably not where you live.

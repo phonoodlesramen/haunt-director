@@ -109,6 +109,7 @@ class ShowPlayer:
         self.default_crossfade_s: float = 2.0     # global default (set from show config)
         self._suppress_audio_stop: bool = False   # a transition is handing the audio off
         self._audio_owner: Scene | None = None     # scene whose audio is sounding now
+        self._last_scene_id: str | None = None     # the scene most recently started
         # ---- global output guards (persisted in data/output.json) ----
         self.audio_muted: bool = False            # True -> no music, voice-over, or cues
         self.volume: int = 100                    # app master volume, 0-100 (slider %)
@@ -251,6 +252,7 @@ class ShowPlayer:
                         self.audio.play_music(au.music, gain=au.gain, loop=True)
             run.start = time.monotonic()
             self._run = run
+            self._last_scene_id = scene.id
             self._seek_pending = None
             store = self.ctrl.store
             self.bus.set_scene(lambda now, r=run: scene_channels(store, r.scene, r.t(now), r.mute))
@@ -262,6 +264,22 @@ class ShowPlayer:
         self._gen += 1
         async with self._lock:
             await self._end_current(0.0, lights_off=True)
+            self._last_scene_id = None
+
+    async def settle(self, scene_id: str | None) -> bool:
+        """Wind down scene `scene_id` if it is still the last thing started:
+        its audio fades out over the crossfade time and the rig goes dark
+        (held frame dropped). Used when a show has nothing to hand off to, e.g.
+        after a scare in a sensor-only show. Anything started after it (a
+        scene played by hand) is left alone. Returns True if it acted."""
+        if scene_id is None:
+            return False
+        async with self._lock:
+            if self._last_scene_id != scene_id:
+                return False
+            await self._end_current(self._resolve_crossfade(None), lights_off=True)
+            self._last_scene_id = None
+            return True
 
     async def _end_current(self, fade_s: float, lights_off: bool) -> None:
         task = self._task

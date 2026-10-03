@@ -4,6 +4,14 @@ Armed, it rotates the ambient-tagged scenes on loop. A presence trigger
 (GPIO / webhook / manual button) interrupts with a RANDOM scare-tagged scene,
 then returns to ambient. A cooldown keeps one guest from chaining scares.
 
+Options (saved in show.json):
+  ambient_enabled   off = a sensor-only show: the yard stays dark and quiet
+                    between scares instead of rotating ambient scenes.
+  sensor_enabled    off = the sensor never fires a scare (it still reads, so
+                    you can watch it); the manual button still works.
+  presence_hold_s   someone has to stay in range this long before a scare
+                    fires (filters a quick pass or a flicker). 0 = instant.
+
 Reliability first: it always returns to ambient, disarm stops everything, and
 the fog watchdog (elsewhere) still guarantees fog can never stick on.
 """
@@ -50,6 +58,19 @@ def _ensure_pin_factory():
     Device.pin_factory = LGPIOFactory(chip=chip) if chip is not None else LGPIOFactory()
 
 
+HOLD_MAX_S = 5.0
+
+
+def _clamp_hold(v) -> float:
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return 0.0
+    if v != v:                                  # NaN
+        return 0.0
+    return round(max(0.0, min(HOLD_MAX_S, v)), 2)
+
+
 def _next_halloween() -> str:
     """This year's Oct 31, or next year's once it has passed."""
     today = datetime.now().date()
@@ -70,6 +91,10 @@ class ShowDirector:
         self.crossfade_s = 2.0            # global default audio crossfade between scenes
         self.gpio_pin = None
         self.gpio_active_high = True
+        self.ambient_enabled = True       # False -> sensor-only: dark & quiet between scares
+        self.sensor_enabled = True        # False -> presence never fires (button still does)
+        self.presence_hold_s = 0.0        # presence must last this long before firing
+        self._hold = None                 # pending hold timer (asyncio TimerHandle)
         self._trigger = asyncio.Event()
         self._task = None
         self._amb_i = 0
@@ -96,6 +121,9 @@ class ShowDirector:
             self.crossfade_s = max(0.0, float(d.get("crossfade_s", self.crossfade_s)))
             self.gpio_pin = d.get("gpio_pin", None)
             self.gpio_active_high = bool(d.get("gpio_active_high", True))
+            self.ambient_enabled = bool(d.get("ambient_enabled", True))
+            self.sensor_enabled = bool(d.get("sensor_enabled", True))
+            self.presence_hold_s = _clamp_hold(d.get("presence_hold_s", 0.0))
             self.schedule_enabled = bool(d.get("schedule_enabled", False))
             self.windows = d.get("windows") or []
             self.lat = d.get("lat", None)
@@ -120,6 +148,9 @@ class ShowDirector:
                 "crossfade_s": self.crossfade_s,
                 "gpio_pin": self.gpio_pin,
                 "gpio_active_high": self.gpio_active_high,
+                "ambient_enabled": self.ambient_enabled,
+                "sensor_enabled": self.sensor_enabled,
+                "presence_hold_s": self.presence_hold_s,
                 "schedule_enabled": self.schedule_enabled,
                 "windows": self.windows,
                 "lat": self.lat,
@@ -146,6 +177,10 @@ class ShowDirector:
             "gpio_active_high": self.gpio_active_high,
             "gpio_ok": self._gpio is not None,
             "presence_active": self.presence_active,
+            "ambient_enabled": self.ambient_enabled,
+            "sensor_enabled": self.sensor_enabled,
+            "presence_hold_s": self.presence_hold_s,
+            "hold_pending": self._hold is not None,
             "last_trigger_at": self._last_trigger_at,
             "schedule_enabled": self.schedule_enabled,
             "windows": self.windows,
@@ -165,10 +200,15 @@ class ShowDirector:
             # override left over from testing (new ones can still be set).
             with contextlib.suppress(Exception):
                 self.ctrl.bus.release_manual()
+            if not self.ambient_enabled and (self._task is None or self._task.done()):
+                # a sensor-only show starts dark and quiet (no leftover preview)
+                with contextlib.suppress(Exception):
+                    await self.player.stop()
             self._trigger.clear()
             if self._task is None or self._task.done():
                 self._task = asyncio.create_task(self._run())
         else:
+            self._cancel_hold()
             await self._stop_task()
             with contextlib.suppress(Exception):
                 await self.player.stop()
@@ -188,9 +228,20 @@ class ShowDirector:
         self._last_trigger_at = time.time()
         self._trigger.set()
 
-    def set_config(self, cooldown_s=None, gpio_pin=..., gpio_active_high=None, crossfade_s=None):
+    def set_config(self, cooldown_s=None, gpio_pin=..., gpio_active_high=None, crossfade_s=None,
+                   ambient_enabled=None, sensor_enabled=None, presence_hold_s=None):
         if cooldown_s is not None:
             self.cooldown_s = max(0.0, float(cooldown_s))
+        if ambient_enabled is not None:
+            self.ambient_enabled = bool(ambient_enabled)   # the show loop picks it up within ~1 s
+        if sensor_enabled is not None:
+            self.sensor_enabled = bool(sensor_enabled)
+            if not self.sensor_enabled:
+                # stand the sensor down NOW: no pending hold, no latched trigger
+                self._cancel_hold()
+                self._trigger.clear()
+        if presence_hold_s is not None:
+            self.presence_hold_s = _clamp_hold(presence_hold_s)
         if crossfade_s is not None:
             self.crossfade_s = max(0.0, min(15.0, float(crossfade_s)))
             with contextlib.suppress(Exception):
@@ -303,6 +354,7 @@ class ShowDirector:
 
     # ---- presence GPIO (LD2410 OUT pin: HIGH when a target is present) ----
     def start_gpio(self):
+        self._cancel_hold()
         with contextlib.suppress(Exception):
             if self._gpio is not None:
                 self._gpio.close()
@@ -316,6 +368,7 @@ class ShowDirector:
                                      active_state=bool(self.gpio_active_high),
                                      bounce_time=0.08)
             dev.when_activated = self._on_presence
+            dev.when_deactivated = self._on_clear
             self._gpio = dev
             log.info("presence GPIO active on pin %s (active_high=%s)",
                      self.gpio_pin, self.gpio_active_high)
@@ -324,11 +377,40 @@ class ShowDirector:
             self._gpio = None
 
     def _on_presence(self):
-        loop = self._loop                      # gpiozero calls this from its own thread
+        self._from_gpio(self._presence_started)
+
+    def _on_clear(self):
+        self._from_gpio(self._cancel_hold)
+
+    def _from_gpio(self, fn):
+        loop = self._loop                      # gpiozero calls back from its own thread
         if loop is not None:
-            loop.call_soon_threadsafe(self.trigger)
+            with contextlib.suppress(RuntimeError):     # loop closed during shutdown
+                loop.call_soon_threadsafe(fn)
         else:
+            fn()
+
+    def _presence_started(self):
+        """Sensor went PRESENT (runs on the event loop)."""
+        if not self.sensor_enabled:
+            return                             # sensor is switched off: watch, don't fire
+        self._cancel_hold()
+        if self.presence_hold_s <= 0 or self._loop is None:
             self.trigger()
+            return
+        self._hold = self._loop.call_later(self.presence_hold_s, self._hold_elapsed)
+
+    def _hold_elapsed(self):
+        self._hold = None
+        # still there, and still allowed to fire? (re-read the pin rather than
+        # trusting that we saw every edge)
+        if self.sensor_enabled and self.presence_active:
+            self.trigger()
+
+    def _cancel_hold(self):
+        h, self._hold = self._hold, None
+        if h is not None:
+            h.cancel()
 
     @property
     def presence_active(self):
@@ -367,16 +449,16 @@ class ShowDirector:
                     self._trigger.clear()            # drop triggers that arrived mid-scare
                     self.state = "cooldown"
                     continue
-                amb = self._pool("ambient")
+                amb = self._pool("ambient") if self.ambient_enabled else []
                 if not amb:
-                    # Stop only a scene WE started, once, on entering idle. (This
-                    # used to call player.stop() every second, blacking out any
-                    # scene or Live setting the user had going.)
-                    if self.current is not None and not self.player.is_playing:
-                        self.current = None
-                    elif self.current is not None:
+                    # Nothing to hand off to (sensor-only show, or no ambient
+                    # scenes): wind down the scene WE started, once, so its
+                    # sustained audio fades out and the rig goes dark. A scene
+                    # the user started by hand is left alone (settle checks),
+                    # and Live-card overrides are untouched.
+                    if self.current is not None:
                         with contextlib.suppress(Exception):
-                            await self.player.stop()
+                            await self.player.settle(self.current)
                         self.current = None
                     self.state = "idle"
                     with contextlib.suppress(asyncio.TimeoutError):
@@ -390,7 +472,8 @@ class ShowDirector:
                 # NEXT scene's play() crossfades it out instead of a hard cut.
                 with contextlib.suppress(Exception):
                     await self.player.play(sc, loop=False, sustain_on_end=True)
-                while self.armed and self.player.is_playing and not self._should_scare():
+                while (self.armed and self.ambient_enabled and self.player.is_playing
+                       and not self._should_scare()):
                     await asyncio.sleep(0.1)
                 # If a scare is due, DON'T stop here — fall through so the scare's
                 # play() crossfades over this still-playing ambient bed.

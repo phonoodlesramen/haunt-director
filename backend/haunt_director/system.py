@@ -368,6 +368,11 @@ def run_checks(ctx):
     if sh.get("gpio_pin") is None:
         out.append(_c("sensor", "Presence sensor", "warn", "No sensor pin set, so scares only fire by hand.",
                       help="Set the GPIO pin under Show → Presence sensor."))
+    elif sh.get("gpio_ok") and sh.get("sensor_enabled") is False:
+        out.append(_c("sensor", "Presence sensor", "warn",
+                      f"GPIO {sh.get('gpio_pin')} is reading {'PRESENT' if sh.get('presence_active') else 'CLEAR'}, "
+                      "but sensor triggers are switched off, so scares only fire by hand.",
+                      help="Turn on \"Sensor fires scares\" under Show when you want it back."))
     elif sh.get("gpio_ok"):
         out.append(_c("sensor", "Presence sensor", "ok",
                       f"GPIO {sh.get('gpio_pin')}, reading {'PRESENT' if sh.get('presence_active') else 'CLEAR'}."))

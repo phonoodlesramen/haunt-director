@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Show: **Sensor fires scares** switch. Stops the sensor firing without forgetting its pin; it keeps reading, and the button still fires
+- Show: **Ambient between scares** switch for sensor-only shows that sit dark and quiet between scares
+- Show: **Hold before firing** (0 to 5 s) so a scare only fires if someone stays in range
+- Fix: with no ambient scene to hand off to, a finished scare's sound no longer keeps looping and its last look no longer stays on the rig
+- Fix: Show tab card headers and schedule rows lay out properly on phones
+- System tab: a switched-off sensor shows as a yellow reminder
+
 ## 0.1.0 (October 2026)
 
 The first public release. 🎃

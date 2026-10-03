@@ -37,7 +37,7 @@ Some fixtures need a few frames with the strobe channel at "off" before they act
 
 ## Scares fire when nobody's there
 
-24 GHz radar sees **motion**, not people: swinging props, flapping fabric, branches and fog plumes all count, and it can see through thin walls and windows. Re-aim it along the approach path and away from the decorations, shorten its range and sensitivity in the vendor's phone app, and keep it away from the fogger. A longer **cooldown** under Show helps too. (If it never fires, check you're testing in front of the sensor's face, not behind it.)
+24 GHz radar sees **motion**, not people: swinging props, flapping fabric, branches and fog plumes all count, and it can see through thin walls and windows. Re-aim it along the approach path and away from the decorations, shorten its range and sensitivity in the vendor's phone app, and keep it away from the fogger. A longer **cooldown** under Show helps too, and so does **Hold before firing** (Show → Presence sensor), which ignores anything that doesn't stay in range for a second or two. (If it never fires, check you're testing in front of the sensor's face, not behind it.)
 
 ## Voices are hard to understand
 

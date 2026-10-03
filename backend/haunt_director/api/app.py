@@ -1193,7 +1193,8 @@ async def play_state():
     d = _show(app)
     if d is not None:
         pa = d.presence_active
-        out["presence"] = {"active": pa, "connected": pa is not None, "armed": bool(d.armed)}
+        out["presence"] = {"active": pa, "connected": pa is not None, "armed": bool(d.armed),
+                           "enabled": bool(d.sensor_enabled)}
     return out
 
 
@@ -1213,6 +1214,9 @@ class ShowConfig(BaseModel):
     gpio_pin: int | None = None
     gpio_active_high: bool | None = None
     clear_gpio: bool = False
+    ambient_enabled: bool | None = None       # False = sensor-only show (dark between scares)
+    sensor_enabled: bool | None = None        # False = the sensor never fires a scare
+    presence_hold_s: float | None = Field(None, ge=0, le=5)
 
 
 def _show(app_):
@@ -1241,7 +1245,8 @@ async def show_config(body: ShowConfig):
         raise HTTPException(503, "show director unavailable")
     pin = None if body.clear_gpio else (body.gpio_pin if body.gpio_pin is not None else ...)
     d.set_config(cooldown_s=body.cooldown_s, gpio_pin=pin, gpio_active_high=body.gpio_active_high,
-                 crossfade_s=body.crossfade_s)
+                 crossfade_s=body.crossfade_s, ambient_enabled=body.ambient_enabled,
+                 sensor_enabled=body.sensor_enabled, presence_hold_s=body.presence_hold_s)
     return d.status()
 
 

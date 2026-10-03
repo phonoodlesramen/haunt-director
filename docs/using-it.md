@@ -68,11 +68,16 @@ What the model sends back is always **sanitized**: event types and parameters ar
 2. When the **presence sensor** goes HIGH, it picks a random **scare** scene and fires it immediately. Scare audio is loaded into memory when the app starts, so there's no lag. A scene you newly tag as a scare loads on its first trigger, which takes a moment longer.
 3. After the scare, it returns to ambient. A trigger that arrives during the **cooldown** waits until the cooldown ends, so one lingering visitor gets at most one scare per cooldown instead of six in a row.
 
+Two switches under the Arm button change how the night runs. Both are saved, so they survive a restart:
+
+- **Sensor fires scares.** Turn it off and the sensor stops firing scares but keeps reading, so the top strip still shows PRESENT and CLEAR (its pill says OFF). Handy while you're working in the yard with the show running, or for a lights-only night. **⚡ Trigger a scare now** still works. The System tab shows a yellow reminder while it's off.
+- **Ambient between scares.** Turn it off for a **sensor-only show**: the yard sits dark and quiet, a visitor sets off a scare, and when the scare ends its sound fades out and the yard goes dark again. Arming in this mode starts from a dark, quiet rig too. Lights you set by hand on the Live card after arming are left alone.
+
 Also here:
 
 - **⚡ Trigger a scare now** fires one by hand.
 - **Schedule** auto-arms during windows you define. The defaults are a nightly window starting at dusk and a long one for Halloween night. "Dusk" is computed from today's sunset at your **latitude and longitude**, so set those.
-- **Presence sensor** sets the GPIO pin, which level means "present", and lets you disable it.
+- **Presence sensor** sets the GPIO pin and which level means "present". **Remove pin** forgets the pin entirely (to keep it and just stop it firing, use the switch above). **Hold before firing** makes someone stay in range for up to 5 seconds before a scare fires, which filters out a quick pass, a passing car's reflection or a flicker. It's off (0) by default, and 1 to 2 seconds suits a walkway. Range and sensitivity still live in the sensor's own phone app.
 - **Scene roles** shows which scenes are in the ambient and scare pools.
 
 ## 📚 Library

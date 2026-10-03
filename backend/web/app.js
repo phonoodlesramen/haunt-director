@@ -294,11 +294,15 @@ function renderSignal(st){
     const connected = !!(pr && pr.connected);
     const active = !!(pr && pr.active);
     const armed = !!(pr && pr.armed);
+    const off = !!(pr && pr.enabled === false);      // reading, but not allowed to fire
     PRESEL.pill.classList.toggle("nosensor", !connected);
     PRESEL.pill.classList.toggle("clear", connected && !active);
     PRESEL.pill.classList.toggle("present", connected && active);
-    PRESEL.pill.classList.toggle("armed", armed);
-    PRESEL.lab.textContent = !connected ? "SENSOR" : (active ? "PRESENT" : "CLEAR");
+    PRESEL.pill.classList.toggle("armed", armed && !off);
+    PRESEL.pill.classList.toggle("off", connected && off);
+    PRESEL.lab.textContent = !connected ? "SENSOR" : off ? "OFF" : (active ? "PRESENT" : "CLEAR");
+    PRESEL.pill.title = !connected ? "Presence sensor (LD2410)"
+      : "Presence sensor: " + (active ? "PRESENT" : "CLEAR") + (off ? " · triggers off (only the button fires)" : "");
   }
 }
 
@@ -804,6 +808,8 @@ async function libDelete(file, label){
 let SHOW = {armed:false, state:"disarmed"};
 let SHOW_CDDRAG = false;
 let SHOW_XFDRAG = false;
+let SHOW_HOLDDRAG = false;
+function holdText(v){ v = +v || 0; return v <= 0 ? "off" : (v.toFixed(2).replace(/0$/,"").replace(/\.0$/,"") + " s"); }
 async function loadShow(){
   try{ SHOW = await api("/api/show"); renderShow(); }catch(e){}
 }
@@ -813,20 +819,33 @@ function renderShow(){
   if(!dot) return;
   const st = SHOW.state||"disarmed";
   dot.className = "ss-dot" + (st==="scare"?" scare":st==="cooldown"?" cooldown":(SHOW.armed?" armed":""));
+  const ambOn = SHOW.ambient_enabled !== false, sensOn = SHOW.sensor_enabled !== false;
+  const hasSensor = SHOW.gpio_pin != null, noScares = !(SHOW.scares||[]).length;
   const label = !SHOW.armed ? "Disarmed"
     : st==="scare" ? "SCARE — "+nameOf(SHOW.current)
     : st==="cooldown" ? "Cooldown"
     : st==="ambient" ? "Ambient — "+nameOf(SHOW.current)
-    : st==="idle" ? "Armed — no ambient scenes yet"
+    : st==="idle" ? (ambOn ? "Armed — no ambient scenes yet" : "Armed · waiting in the dark")
     : "Armed";
   stEl.textContent = label;
-  sub.textContent = SHOW.armed
-    ? (SHOW.in_cooldown ? "In cooldown. A new trigger waits until it ends." : "Running. A presence trigger fires a random scare, then returns to ambient.")
-    : "Arm the show to rotate ambient scenes and let the sensor fire scares.";
+  const after = ambOn ? "then returns to ambient." : "then the yard goes dark again.";
+  const base = ambOn ? "Arm the show to rotate ambient scenes" : "Arm the show to wait in the dark";
+  sub.textContent = !SHOW.armed
+    ? ((sensOn && hasSensor) ? base + " and let the sensor fire scares." : base + ". Scares fire from the button only.")
+    : noScares ? "No scenes are tagged Scare yet, so nothing will fire. Set a scene's role in its editor."
+    : SHOW.in_cooldown ? "In cooldown. A new trigger waits until it ends."
+    : SHOW.hold_pending ? "Someone's there. A scare fires if they stay " + holdText(SHOW.presence_hold_s) + "."
+    : !sensOn ? "Running. The sensor is switched off, so only the button fires a scare, " + after
+    : !hasSensor ? "Running. No sensor pin is set, so only the button fires a scare, " + after
+    : "Running. A presence trigger fires a random scare, " + after;
+  const se=$("#sensorEnabled"); if(se) se.checked = sensOn;
+  const ae=$("#ambientEnabled"); if(ae) ae.checked = ambOn;
+  if(!SHOW_HOLDDRAG && $("#holdRange") && SHOW.presence_hold_s!=null){ $("#holdRange").value = SHOW.presence_hold_s; $("#holdVal").textContent = holdText(SHOW.presence_hold_s); }
   if(armBtn){ armBtn.textContent = SHOW.armed ? "■ Disarm show" : "▶ Arm show"; armBtn.classList.toggle("on", SHOW.armed); }
   if(!SHOW_CDDRAG && SHOW.cooldown_s!=null){ $("#cdRange").value = SHOW.cooldown_s; $("#cdVal").textContent = SHOW.cooldown_s + " s"; }
   if(!SHOW_XFDRAG && SHOW.crossfade_s!=null && $("#xfRange")){ $("#xfRange").value = SHOW.crossfade_s; $("#xfVal").textContent = (+SHOW.crossfade_s).toFixed(1) + " s"; }
-  const gs=$("#gpioStat"); if(gs) gs.textContent = SHOW.gpio_pin==null ? "not set" : ("pin "+SHOW.gpio_pin+" · "+(SHOW.gpio_ok?"reading":"not connected"));
+  const gs=$("#gpioStat"); if(gs) gs.textContent = SHOW.gpio_pin==null ? "not set"
+    : ("pin "+SHOW.gpio_pin+" · "+(!SHOW.gpio_ok ? "not connected" : (SHOW.presence_active ? "PRESENT" : "clear")) + (sensOn ? "" : " · triggers off"));
   if(SHOW.gpio_pin!=null && $("#gpioPin") && document.activeElement!==$("#gpioPin")) $("#gpioPin").value = SHOW.gpio_pin;
   const amb=(SHOW.ambient||[]).map(nameOf), scare=(SHOW.scares||[]).map(nameOf);
   $("#poolAmb").innerHTML = "<b>Ambient ("+amb.length+"):</b> " + (amb.join(", ")||"none tagged yet");
@@ -897,8 +916,8 @@ async function showTrigger(){
   catch(e){ toast("Error: "+e.message); }
 }
 async function showConfig(body){
-  try{ SHOW = await api("/api/show/config", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)}); renderShow(); }
-  catch(e){ toast("Error: "+e.message); }
+  try{ SHOW = await api("/api/show/config", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)}); renderShow(); return true; }
+  catch(e){ toast("Error: "+e.message); renderShow(); return false; }
 }
 async function saveGpio(){
   const pin = parseInt($("#gpioPin").value, 10);
@@ -906,14 +925,20 @@ async function saveGpio(){
   await showConfig({gpio_pin: pin, gpio_active_high: $("#gpioAH").checked});
   toast("Sensor saved");
 }
-async function clearGpio(){ await showConfig({clear_gpio:true}); toast("Sensor disabled"); }
+async function clearGpio(){ await showConfig({clear_gpio:true}); toast("Sensor pin removed"); }
 document.addEventListener("input", e=>{
   if(e.target && e.target.id==="cdRange"){ SHOW_CDDRAG=true; $("#cdVal").textContent = e.target.value + " s"; }
   if(e.target && e.target.id==="xfRange"){ SHOW_XFDRAG=true; $("#xfVal").textContent = (+e.target.value).toFixed(1) + " s"; }
+  if(e.target && e.target.id==="holdRange"){ SHOW_HOLDDRAG=true; $("#holdVal").textContent = holdText(e.target.value); }
 });
 document.addEventListener("change", e=>{
   if(e.target && e.target.id==="cdRange"){ SHOW_CDDRAG=false; showConfig({cooldown_s: +e.target.value}); }
   if(e.target && e.target.id==="xfRange"){ SHOW_XFDRAG=false; showConfig({crossfade_s: +e.target.value}); }
+  if(e.target && e.target.id==="holdRange"){ SHOW_HOLDDRAG=false; showConfig({presence_hold_s: +e.target.value}); }
+  if(e.target && e.target.id==="sensorEnabled"){ const on=e.target.checked;
+    showConfig({sensor_enabled: on}).then(ok=>ok && toast(on ? "Sensor will fire scares" : "Sensor off: only the button fires a scare")); }
+  if(e.target && e.target.id==="ambientEnabled"){ const on=e.target.checked;
+    showConfig({ambient_enabled: on}).then(ok=>ok && toast(on ? "Ambient scenes between scares" : "Sensor-only show: dark and quiet between scares")); }
 });
 
 // ---- scenes init (boot() above already set up Live + health) ----
