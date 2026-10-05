@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Scenes: **⛶ Full screen** play view. The house, a whole-scene bar with a song show's sections, and a lane per light, fogger and sound sliding past a NOW line, so you can follow every trigger. Works in Sim and Live
+- Scenes: **🖥 Sim / 🏠 Live** switch. Sim plays a scene on the stage and this device's speaker only, never the yard; while the show is armed, Play is always Sim
 - Generate: **🎸 Song show** replaces beat sync. Drums, bass and rhythm guitar each drive a light, sections come from timed lyrics (LRCLIB) or the music, and the AI picks colors from what the words mean. Only timings and colors are saved, never lyrics. Extend works on song shows too
 - Output: **Light timing** (-300 to +300 ms) and a **⏱ Sync test** to line the lights up with the sound
 - Playback: long, busy scenes take about half the work per frame (only events that have started are replayed)

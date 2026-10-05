@@ -268,8 +268,10 @@ def _save_output_settings():
 
 
 def _output_state(p):
+    from ..domain import resolve as _rs
     return {"fog_enabled": p.fog_enabled, "audio_muted": p.audio_muted, "volume": p.volume,
-            "duck_db": p.duck_db, "light_delay_ms": int(round(p.light_delay_s * 1000))}
+            "duck_db": p.duck_db, "light_delay_ms": int(round(p.light_delay_s * 1000)),
+            "strobe_max_hz": _rs.STROBE_MAX_HZ or 0}       # the simulator caps its strobes the same way
 
 
 @app.get("/api/output")
@@ -1854,12 +1856,23 @@ class PlayOpts(BaseModel):
     mute: list[str] = []          # lane keys to silence: device ids, 'music', 'voiceover', cue ids
 
 
+def _refuse_while_armed():
+    """While the show is armed the yard belongs to it: playing, seeking or
+    muting a scene from the editor would cut into the show. (The app plays it
+    in the simulator instead.)"""
+    d = _show(app)
+    if d is not None and d.armed:
+        raise HTTPException(409, "The show is armed, so Play runs in the simulator only. "
+                                 "Disarm the show to play on the yard.")
+
+
 @app.post("/api/scenes/{scene_id}/play")
 async def play_scene(scene_id: str, opts: PlayOpts | None = None):
     ctrl = _ctrl(app)
     sc = ctrl.store.scenes.get(scene_id)
     if not sc:
         raise HTTPException(404, f"no scene {scene_id}")
+    _refuse_while_armed()
     await app.state.player.play(sc, loop=(opts.loop if opts else False), mute=(opts.mute if opts else []))
     return {"playing": scene_id}
 
@@ -1871,6 +1884,7 @@ class PlayMute(BaseModel):
 @app.post("/api/play/mute")
 async def play_mute(body: PlayMute):
     """Silence/restore lanes on the currently-playing scene, live."""
+    _refuse_while_armed()
     app.state.player.set_mute(body.mute)
     return {"ok": True, "mute": body.mute}
 
@@ -1882,6 +1896,7 @@ class PlaySeek(BaseModel):
 @app.post("/api/play/seek")
 async def play_seek(body: PlaySeek):
     """Jump the currently-playing scene to time t."""
+    _refuse_while_armed()
     app.state.player.seek(body.t)
     return {"ok": True, "t": body.t}
 

@@ -254,6 +254,37 @@ button.primary:disabled{opacity:.45;cursor:not-allowed}
   font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .transport{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .tbtn{flex:none;min-width:0;width:auto;padding:9px 14px}
+/* Sim / Live: where Play runs (one setting per device; Sim only while the show is armed) */
+.pmode{display:inline-flex;align-items:center;flex:none;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface2);overflow:hidden;text-transform:none;letter-spacing:0}
+.pmode button{flex:none;min-width:0;width:auto;border:0;border-radius:0;background:transparent;color:var(--muted);
+  padding:6px 11px;font-size:12px;font-weight:600}
+.pmode button.on[data-mode=sim]{background:#24405f;color:#dcebff}
+.pmode button.on[data-mode=live]{background:var(--accent);color:var(--accent-ink)}
+.pmode button:disabled{opacity:.4;cursor:not-allowed}
+.pmode .pmnote{font-size:10px;font-weight:600;color:var(--warn);padding:0 9px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+.pmode .pmnote:empty{display:none}
+.stagewrap.sim{box-shadow:inset 0 0 0 2px #3c6a9a}
+/* full-screen play view (fullview.js): the house, a whole-scene bar, lanes sliding past the playhead */
+.fsview{position:fixed;inset:0;z-index:35;background:#06070B;display:flex;flex-direction:column;gap:8px;
+  padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.fsview[hidden]{display:none}
+body.fs-on{overflow:hidden}
+.fs-top,.fs-ctl{display:flex;align-items:center;gap:8px;flex:none}
+.fs-title{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden}
+.fs-title #fsName{overflow:hidden;text-overflow:ellipsis}
+.fs-mode{flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:999px;background:#24405f;color:#dcebff}
+.fs-mode.live{background:var(--accent);color:var(--accent-ink)}
+.fs-time{flex:none;font-family:ui-monospace,SFMono-Regular,monospace;font-size:12px;color:var(--muted)}
+.fs-btn{flex:none;min-width:0;width:auto;padding:8px 12px;font-size:15px}
+.fs-play{min-width:58px}
+.fs-stop{flex:none;width:auto;min-width:0;padding:8px 12px;font-size:12px;letter-spacing:.04em;
+  background:linear-gradient(180deg,#e05a47,#c2412f);border-color:transparent;color:#fff}
+.fs-stagehost{flex:none;display:flex;justify-content:center}
+.fs-stagehost .stagewrap{width:min(100%,calc(54vh * 2.167));min-height:0;border-radius:10px}
+.fs-over{flex:1;min-width:0;height:30px;border-radius:8px;cursor:pointer;touch-action:none}
+.fs-lanes{flex:1;min-height:110px;width:100%;border-radius:10px;background:#0E1016;border:1px solid var(--line)}
+@media (max-height:520px){.fs-stagehost .stagewrap{width:min(100%,calc(44vh * 2.167))}.fs-lanes{min-height:80px}.fsview{gap:5px}}
 .transport input[type=range]{flex:1;min-width:120px}
 .mono{font-family:ui-monospace,SFMono-Regular,monospace;font-size:12px;color:var(--muted);min-width:96px;text-align:right}
 .tlpanel{overflow-x:auto;overflow-y:hidden;background:var(--surface);-webkit-overflow-scrolling:touch}
@@ -374,8 +405,10 @@ button.primary:disabled{opacity:.45;cursor:not-allowed}
   <section id="view-scenes" class="view">
     <div class="scenes-grid">
       <div class="sg-main">
-        <h2 style="display:flex;align-items:center">Stage
-          <button id="editLayout" onclick="toggleLayout()" style="flex:none;margin-left:auto;font-size:11px;padding:6px 10px">Edit layout</button>
+        <h2 style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">Stage
+          <span class="pmode" data-pm role="group" aria-label="Where Play runs"><button type="button" data-mode="sim" onclick="setPlayMode('sim')" title="Play in this browser only: the stage and this device's speaker. The yard isn't touched">🖥 Sim</button><button type="button" data-mode="live" onclick="setPlayMode('live')">🏠 Live</button><span class="pmnote"></span></span>
+          <button onclick="fsOpenCurrent()" title="Full screen: the house and the scene's lanes" aria-label="Full screen" style="flex:none;margin-left:auto;font-size:13px;padding:5px 9px">⛶</button>
+          <button id="editLayout" onclick="toggleLayout()" style="flex:none;font-size:11px;padding:6px 10px">Edit layout</button>
         </h2>
         <div class="card" style="padding:8px">
           <div class="stagewrap" id="stage">
@@ -536,10 +569,12 @@ button.primary:disabled{opacity:.45;cursor:not-allowed}
         <div class="card" style="padding:8px">
           <div id="stageHost"></div>
           <div class="transport">
+            <span class="pmode" data-pm role="group" aria-label="Where Play runs"><button type="button" data-mode="sim" onclick="setPlayMode('sim')" title="Play in this browser only: the stage and this device's speaker. The yard isn't touched">🖥 Sim</button><button type="button" data-mode="live" onclick="setPlayMode('live')">🏠 Live</button><span class="pmnote"></span></span>
             <button class="tbtn" id="edtPlay" onclick="edtPlay()">▶ Play</button>
             <button class="tbtn" onclick="edtStop()">■ Stop</button>
             <input type="range" id="edtScrub" min="0" max="1000" value="0" aria-label="Scrub timeline">
             <span class="mono" id="edtTime">0.0 / 0.0s</span>
+            <button class="tbtn" onclick="fsOpen(__editScene())" title="Full screen: the house and the lanes">⛶</button>
             <button class="tbtn" onclick="addLayer()" title="Add a sound layer at the playhead">＋ Sound</button>
             <button class="tbtn" onclick="addVoice()" title="Add a voice-over line at the playhead — stack as many as you like">＋ Voice</button>
           </div>
@@ -689,8 +724,10 @@ button.primary:disabled{opacity:.45;cursor:not-allowed}
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="app.js?v=24"></script>
-<script src="stage.js?v=12"></script>
-<script src="timeline.js?v=14"></script>
+<script src="sim.js?v=2"></script>
+<script src="fullview.js?v=1"></script>
+<script src="app.js?v=26"></script>
+<script src="stage.js?v=13"></script>
+<script src="timeline.js?v=16"></script>
 </body>
 </html>

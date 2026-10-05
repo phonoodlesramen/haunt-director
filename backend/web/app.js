@@ -177,6 +177,7 @@ async function fogBurst(id){
   catch(e){ toast("Error: "+e.message); }
 }
 async function stopAll(){
+  if(window.simStop) simStop();
   stopAudio();
   try{ await api("/api/stop",{method:"POST"});
     for(const id in state){ state[id].on=false; renderOnState(id); setManual(id, false); }
@@ -491,6 +492,7 @@ function renderScenes(){
         <div class="sub">${s.duration_s}s · ${s.devices.length} fixtures</div></div>
         <button class="iconbtn" title="Move up" onclick="reorderScene('${s.id}',-1)" ${i===0?'disabled':''}>↑</button>
         <button class="iconbtn" title="Move down" onclick="reorderScene('${s.id}',1)" ${i===SCENES.length-1?'disabled':''}>↓</button>
+        <button class="iconbtn" title="Watch full screen" aria-label="Watch full screen" onclick="fsOpen('${s.id}',{autoplay:true})">⛶</button>
         <button class="iconbtn" title="Edit scene + timeline" onclick="enterEditor('${s.id}')">✎</button>
       </div>
       <div class="sw">${s.devices.map(d=>`<i id="sw_${s.id}_${d}"></i>`).join("")}</div>
@@ -505,6 +507,14 @@ function renderScenes(){
 }
 async function playScene(id, loop){
   const s = SCENES.find(x=>x.id===id);
+  if(window.playMode && playMode()==="sim"){        // this browser only: the yard isn't touched
+    try{ const full = await api(`/api/scenes/${id}`);
+         simPlay(full, {loop});
+         toast((loop?"Looping ":"Playing ") + (full.name||id) + " in the simulator"); }
+    catch(e){ toast("Error: "+e.message); }
+    return;
+  }
+  if(window.simStop) simStop();
   try{ await api(`/api/scenes/${id}/play`, {method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({loop})});
        if(s) playAudio(s, loop);      // browser plays the score in sync with the rig
@@ -512,6 +522,8 @@ async function playScene(id, loop){
   catch(e){ toast("Error: "+e.message); }
 }
 async function stopScene(){
+  if(window.playMode && playMode()==="sim"){ simStop(); toast("Stopped"); return; }   // never the yard's scene
+  if(window.simStop) simStop();
   stopAudio();
   try{ await api("/api/play/stop", {method:"POST"}); toast("Stopped"); }
   catch(e){ toast("Error: "+e.message); }
@@ -590,21 +602,25 @@ async function pollPlay(){
     const st = await api("/api/play/state");
     window.__playing = !!st.playing;
     window.__playScene = st.playing ? st.scene : null;
+    if(window.simSetArmed) simSetArmed(!!(st.presence && st.presence.armed));
+    window.__liveClock = {scene: st.scene, t: +st.t || 0, at: performance.now(), playing: !!st.playing};   // the full-screen view follows this
+    const simOn = !!(window.simActive && simActive());   // the simulator owns the stage and this device's sound
     renderSignal(st);
     renderOverrides(st.overrides);
     // when the scene ends server-side, stop its audio too (guard the startup race)
-    if(AUDIO.scene){
+    if(AUDIO.scene && !simOn){
       if(st.playing && st.scene===AUDIO.scene) AUDIO.confirmed = true;
       else if(AUDIO.confirmed) stopAudio();
     }
     // while the user is dragging the playhead, let the local scrub preview drive the stage
-    if(window.stageUpdate && !(window.__editing && !st.playing) && !window.__scrubbing){
+    if(window.stageUpdate && !simOn && !window.__fsOpen && !(window.__editing && !st.playing) && !window.__scrubbing){
       const s2 = (window.__editing && window.__stripMuted) ? window.__stripMuted(st) : st;
       window.stageUpdate(s2, SCENES.find(s=>s.id===st.scene));
     }
-    if(window.__editing && st.playing && window.__edtSync) window.__edtSync(st.t);
+    if(window.__editing && st.playing && window.__edtSync && !simOn) window.__edtSync(st.t);
     $("#s-play").textContent = st.playing ? (SCENES.find(s=>s.id===st.scene)?.name || st.scene) : "Manual";
     SCENES.forEach(s=>{
+      if(simOn && window.__simScene===s.id) return;    // the simulator draws its own progress
       const on = st.playing && st.scene===s.id;
       const card = $("#sc_"+s.id); if(card) card.classList.toggle("playing", on);
       const pg = $("#pg_"+s.id); if(pg) pg.style.width = on ? Math.min(100, st.t/s.duration_s*100)+"%" : "0";

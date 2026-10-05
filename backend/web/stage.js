@@ -227,15 +227,17 @@
       drawFog();
     }
     const tc = document.getElementById("tcode");
-    if(tc) tc.textContent = (STATE.t||0).toFixed(2) + " s";
+    if(tc) tc.textContent = (STATE.sim ? "SIM  " : "") + (STATE.t||0).toFixed(2) + " s";
     requestAnimationFrame(frame);
   }
 
   window.stageUpdate = function(st, scene){
     STATE = (st && st.devices) ? st : {devices:{}, playing:false, t:0};
+    const wrap = document.getElementById("stage");
+    if(wrap) wrap.classList.toggle("sim", !!(st && st.sim));
     const lbl = document.getElementById("stagelabel");
     if(lbl) lbl.textContent = (st && st.playing)
-      ? ((scene?scene.name:"Playing") + "  ·  " + (st.t||0).toFixed(1) + "s")
+      ? ((st.sim ? "Simulator only  ·  " : "") + (scene?scene.name:"Playing") + "  ·  " + (st.t||0).toFixed(1) + "s")
       : (editMode ? "Drag a fixture to place it, drag its dot to aim" : "Idle — press Play on a scene below");
   };
 

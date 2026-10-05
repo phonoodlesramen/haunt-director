@@ -21,7 +21,24 @@ Hands-on control of each fixture, for testing and for "make the porch purple rig
 
 ## 🎬 Scenes and the editor
 
-The **Scenes** tab has the **stage**, a simulator that draws your lights and fog over a photo of your house, above the list of scenes. Press **▶ Play** to run a scene on the real rig and the stage at the same time, or **↻ Loop** to keep it going.
+The **Scenes** tab has the **stage**, a simulator that draws your lights and fog over a photo of your house, above the list of scenes. Press **▶ Play** to run a scene, or **↻ Loop** to keep it going.
+
+The **🖥 Sim / 🏠 Live** switch above the stage (and next to Play in the editor) decides where Play runs:
+
+- **🏠 Live** plays on the real lights, fogger and the Pi's speaker, with the stage following along.
+- **🖥 Sim** plays only on the stage, with the sound coming from the phone or laptop you're holding. The yard isn't touched, so it's the way to try out a new scene before the night.
+- **While the show is armed, Play is always Sim** (the switch says ARMED), so you can work on scenes at your desk while the show runs outside. The app also refuses to play, seek or mute a scene on the rig while armed.
+
+Each phone or laptop remembers its own setting. Switching takes effect at once: whatever was playing the other way stops.
+
+**⛶ Full screen** (on each scene card, above the stage, and in the editor) opens a play view made for following along:
+
+- The house fills the top of the screen.
+- Under it, a bar of the whole scene shows a song show's sections (intro, verse, chorus...). Tap it to jump.
+- Below that, a lane for each light, the fogger and the sound slides past a fixed **NOW** line, about 15 seconds at a time, so you can see each trigger coming. Each event flashes as it fires, and the dot by each light's name shows its color right now. Strobes and pulses show their individual flashes.
+- ⏪ ⏩ jump 5 seconds (or use the arrow keys), and Space plays and pauses. Pause only works in Sim, since the rig has no pause.
+- It follows the Sim / Live switch. In Live it plays on the yard and the view keeps time with it, so you can stand outside with your phone and watch. Opening it from a scene card starts the scene in Sim, but it never starts the yard by itself.
+- **✕** or Esc closes it, and **■ STOP** is STOP EVERYTHING. Turn a phone sideways for a bigger house.
 
 Press ✎ on a scene to open the **editor**:
 

@@ -54,6 +54,8 @@ FPP's Pixel Overlay Models are how outside programs claim channels. Haunt Direct
 
 A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, each a list of timed **events** (`set_color`, `fade_color`, `pulse`, `strobe`, `fog` and friends), plus optional audio. `evaluate(scene, t)` turns that into each device's state at time `t`: color, brightness, strobe rate and fog level. A fixture's [profile](fixture-profiles.md) then turns the state into channel values. That's the only code that knows about channels, and it's where the safety bands and strobe cap are enforced.
 
+The **simulator** in the browser (`web/sim.js`) carries a line-for-line copy of `evaluate()`, so a scene played in Sim looks exactly like it would on the rig. A test runs both on random and real scenes and checks every frame matches.
+
 ## The player and the show director
 
 - **The player** (`player.py`) runs one scene at a time. When a new scene is requested, it loads that scene's sound files in a worker thread *before* switching, so the switch itself is instant. If several requests overlap, the newest wins.
@@ -98,6 +100,7 @@ A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, e
 | Fixtures pinned out of auto modes | Profile `required_band` |
 | AI output sanitized: types, ranges, fog length and count | `generate.py` |
 | Disruptive fixes refused while the show is armed or playing | System API |
+| Editor playback can't cut into an armed show | Play, seek and mute refuse while armed; the page plays in the simulator (`sim.js`) |
 | STOP EVERYTHING | Clears the scene, every override, fog and sound |
 
 ## Project layout
@@ -119,7 +122,7 @@ backend/
     fpp/              FPP client and provisioning
   data-example/       example devices, profiles and scenes (copied to data/ on first start)
   data/               your show (git-ignored): devices, profiles, scenes, settings
-  web/                the app: index.html, app.js, timeline.js, stage.js
+  web/                the app: index.html, app.js, timeline.js, stage.js, sim.js, fullview.js
   tests/              pytest suite (no hardware needed)
 deploy/               installer, systemd unit, sudoers rule
 docs/                 you are here

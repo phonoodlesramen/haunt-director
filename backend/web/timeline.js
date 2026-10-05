@@ -85,7 +85,8 @@
     window.__scrubbing=false;
     // only seek if the scene being edited is the one actually playing (a seek used
     // to jump whatever scene was live, e.g. the armed show)
-    if(doSeek && window.__playing && SC && window.__playScene===SC.id){
+    if(doSeek && SC && window.simActive && simActive(SC.id)){ simSeek(scrubT); return; }   // the simulator
+    if(doSeek && window.__playing && SC && window.__playScene===SC.id && !(window.simActive && simActive())){
       fetch('/api/play/seek',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:+scrubT.toFixed(2)})}).catch(()=>{});
       if(typeof playAudio==='function') playAudio(SC,false,[...MUTE],scrubT);
     }
@@ -133,7 +134,8 @@
     buildTimeline(); previewAt(scrubT);
     const arr=[...MUTE];
     // apply live to a scene that's already playing: server (lights + Pi audio) + browser audio
-    if(SC && window.__playScene===SC.id)   // never mute lanes on some other live scene
+    if(window.simSetMute) simSetMute(arr);
+    if(SC && window.__playScene===SC.id && !(window.simActive && simActive()))   // never mute lanes on some other live scene
       fetch('/api/play/mute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mute:arr})}).catch(()=>{});
     if(typeof setAudioMute==='function') setAudioMute(arr);
   }
@@ -314,8 +316,12 @@
     $('#edtTime').textContent=scrubT.toFixed(1)+' / '+dur.toFixed(0)+'s';
     movePlayhead(); previewAt(scrubT);
   }
+  window.__editSceneId=function(){ return SC ? SC.id : null; };
+  window.__editScene=function(){ return SC; };
+  window.__editMute=function(){ return [...MUTE]; };
   function previewAt(t){
     clearTimeout(previewTimer);
+    if(SC && window.simActive && simActive(SC.id)) return;   // the simulator is drawing this scene
     previewTimer=setTimeout(async()=>{
       try{ const st=await jget('/api/scenes/'+SC.id+'/state?t='+(+t).toFixed(2)); st.playing=true; if(window.stageUpdate) window.stageUpdate(stripMuted(st),SC); }catch(e){}
     },45);
@@ -460,8 +466,14 @@
   function setScrubUi(){ const dur=SC.duration_s||90; $('#edtScrub').value=Math.round(scrubT/dur*1000); $('#edtTime').textContent=scrubT.toFixed(1)+' / '+dur.toFixed(0)+'s'; movePlayhead(); }
 
   // ---- transport ----
-  window.edtPlay=async function(){ if(window.edtPlay._busy) return; window.edtPlay._busy=true; try{ await jget('/api/scenes/'+SC.id+'/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loop:false,mute:[...MUTE]})}); if(typeof playAudio==='function') playAudio(SC,false,[...MUTE]); if(typeof toast==='function') toast('Playing'); }catch(e){ if(typeof toast==='function') toast('Error: '+e.message); } finally { window.edtPlay._busy=false; } };
-  window.edtStop=async function(){ try{ await jget('/api/play/stop',{method:'POST'}); }catch(e){} if(typeof stopAudio==='function') stopAudio(); previewAt(scrubT); };
+  window.edtPlay=async function(){
+    if(window.playMode && playMode()==='sim'){ simPlay(SC,{loop:false,mute:[...MUTE]}); if(typeof toast==='function') toast('Playing in the simulator'); return; }
+    if(window.simStop) simStop();
+    if(window.edtPlay._busy) return; window.edtPlay._busy=true; try{ await jget('/api/scenes/'+SC.id+'/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loop:false,mute:[...MUTE]})}); if(typeof playAudio==='function') playAudio(SC,false,[...MUTE]); if(typeof toast==='function') toast('Playing'); }catch(e){ if(typeof toast==='function') toast('Error: '+e.message); } finally { window.edtPlay._busy=false; } };
+  window.edtStop=async function(){
+    if(window.playMode && playMode()==='sim'){ if(window.simStop) simStop(); previewAt(scrubT); return; }   // never the yard's scene
+    if(window.simStop) simStop();
+    try{ await jget('/api/play/stop',{method:'POST'}); }catch(e){} if(typeof stopAudio==='function') stopAudio(); previewAt(scrubT); };
 
   // settings inputs -> live SC + autosave (handles both input + change so selects/checkbox fire)
   function onSettings(e){
@@ -523,7 +535,7 @@
     if(e.key==='Delete'||e.key==='Backspace'){ if(sel){ e.preventDefault(); window.deleteEvent(); } return; }
     if(e.key==='ArrowLeft'){ if(sel&&!sel.kind){ e.preventDefault(); nudgeSel(-1,e.shiftKey); } return; }
     if(e.key==='ArrowRight'){ if(sel&&!sel.kind){ e.preventDefault(); nudgeSel(1,e.shiftKey); } return; }
-    if(e.key===' '||e.code==='Space'){ if(e.repeat){ e.preventDefault(); return; } const ae=document.activeElement; if(ae&&/^(BUTTON|INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)) return; e.preventDefault(); if(window.__playing) window.edtStop(); else window.edtPlay(); return; }
+    if(e.key===' '||e.code==='Space'){ if(e.repeat){ e.preventDefault(); return; } const ae=document.activeElement; if(ae&&/^(BUTTON|INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)) return; e.preventDefault(); const on=(window.playMode && playMode()==='sim') ? simActive() : window.__playing; if(on) window.edtStop(); else window.edtPlay(); return; }
   });
   window.previewVo2=function(){ const vo=$('#setVo').value; if(!vo){ if(typeof toast==='function') toast('No voice-over selected'); return; } try{ const a=new Audio('/audio/'+vo); a.play().catch(()=>{}); }catch(e){} };
 
