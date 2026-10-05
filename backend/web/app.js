@@ -8,9 +8,16 @@ function toast(msg){
 }
 async function api(path, opts){
   const r = await fetch(API + path, opts);
-  if(!r.ok) throw new Error((await r.text()).slice(0,120) || r.status);
+  if(!r.ok){
+    const t = await r.text();
+    let msg = t;
+    try{ const j = JSON.parse(t); if(j && typeof j.detail === "string") msg = j.detail; }catch(_){}
+    throw new Error((msg || String(r.status)).slice(0, 240));
+  }
   return r.status === 204 ? null : r.json();
 }
+// "45 s" under a minute, "2:30" above
+function fmtLen(s){ s = Math.round(+s || 0); return s < 60 ? s + " s" : Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
 function hexToRgb(h){
   const n = parseInt(h.slice(1),16);
   return [(n>>16)&255,(n>>8)&255,n&255];
@@ -241,7 +248,7 @@ const saveStatic = debounce(async (id)=>{
 
 // ---- boot ----
 // ---- global output guards + top signal strip ----
-let OUTPUT = {fog_enabled:true, audio_muted:false, volume:100, duck_db:9};
+let OUTPUT = {fog_enabled:true, audio_muted:false, volume:100, duck_db:9, light_delay_ms:0};
 let SIGDEVS = [];
 const SIGEL = {};   // device id -> {pill, sw, fog}
 let PRESEL = null;  // presence-sensor pill refs {pill, sw, lab}
@@ -315,6 +322,8 @@ function applyOutputUi(){
   if(vv && OUTPUT.volume != null && !_vol.dragging && !_vol.busy){ vv.value = OUTPUT.volume; _volLabel(OUTPUT.volume); }
   const dv = $("#duck");
   if(dv && OUTPUT.duck_db != null && !_duck.dragging && !_duck.busy){ dv.value = OUTPUT.duck_db; _duckLabel(OUTPUT.duck_db); }
+  const lg = $("#lag");
+  if(lg && OUTPUT.light_delay_ms != null && !_lag.dragging && !_lag.busy){ lg.value = OUTPUT.light_delay_ms; _lagLabel(OUTPUT.light_delay_ms); }
   updateFogBanner();
 }
 async function loadOutput(){ try{ OUTPUT = await api("/api/output"); applyOutputUi(); }catch(e){} }
@@ -364,6 +373,37 @@ function onDuck(e){ _duck.val = +e.target.value; _duck.dirty = true; _duckLabel(
   d.addEventListener("pointerdown", ()=>{ _duck.dragging = true; });
   ["pointerup", "pointercancel", "change"].forEach(ev => d.addEventListener(ev, ()=>{ _duck.dragging = false; }));
 })();
+// ---- light timing (same single-flight pattern; applies live, even mid sync test) ----
+const _lag = {busy:false, dirty:false, val:null, dragging:false};
+function _lagLabel(v){ const l = $("#lagVal"); v = +v || 0;
+  if(l) l.textContent = v === 0 ? "0 ms" : (v > 0 ? "+" + v + " ms (lights later)" : "\u2212" + (-v) + " ms (lights earlier)"); }
+async function _pumpLag(){
+  if(_lag.busy) return; _lag.busy = true;
+  try{
+    while(_lag.dirty){
+      _lag.dirty = false;
+      try{ OUTPUT = await api("/api/output", {method:"POST", headers:{"Content-Type":"application/json"},
+                                               body: JSON.stringify({light_delay_ms:_lag.val})}); }
+      catch(e){ toast("Light timing failed: "+e.message); break; }
+    }
+  } finally { _lag.busy = false; }
+}
+function onLag(e){ _lag.val = +e.target.value; _lag.dirty = true; _lagLabel(_lag.val); _pumpLag(); }
+(function(){
+  const d = $("#lag"); if(!d) return;
+  d.addEventListener("input", onLag);
+  d.addEventListener("pointerdown", ()=>{ _lag.dragging = true; });
+  ["pointerup", "pointercancel", "change"].forEach(ev => d.addEventListener(ev, ()=>{ _lag.dragging = false; }));
+})();
+async function syncTest(){
+  const b = $("#syncTest"); if(b && b.disabled) return;
+  try{
+    const r = await api("/api/output/sync-test", {method:"POST"});
+    const d = SIGDEVS.find(x=>x.id===r.light);
+    toast("Sync test: watch " + (d && d.name ? d.name : "the light") + ", listen for the click");
+    if(b){ b.disabled = true; b.textContent = "⏱ Testing…"; setTimeout(()=>{ b.disabled = false; b.textContent = "⏱ Sync test"; }, (r.seconds||12) * 1000); }
+  }catch(e){ toast("Sync test: " + e.message); }
+}
 // ---- fog test (Output panel) ----
 // A short burst through the same capped, self-expiring path as the Live card's
 // Fog Burst. The server refuses it while Fog output is off, so a stale toggle
@@ -602,6 +642,13 @@ function toggleGen(){
   p.style.display = show ? "" : "none";
   if(show){ const d = $("#genDesc"); if(d) d.focus(); }
 }
+function genDurLabel(){ const r = $("#genDur"), v = $("#genDurVal"); if(r && v) v.textContent = fmtLen(r.value); }
+function songToggle(){
+  const on = !!($("#genBeat") && $("#genBeat").checked);
+  ["#songHint", "#songRow"].forEach(id => { const el = $(id); if(el) el.style.display = on ? "" : "none"; });
+  const r = $("#genDur");
+  if(on && r && +r.value <= 30){ r.value = 300; genDurLabel(); }        // default to the whole song
+}
 async function generateScene(){
   const desc = ($("#genDesc").value || "").trim();
   const dur = +($("#genDur").value || 30);
@@ -609,22 +656,28 @@ async function generateScene(){
   const yt = ($("#genYt") ? $("#genYt").value : "").trim();
   const beat = !!($("#genBeat") && $("#genBeat").checked);
   const stat = $("#genStat"), btn = $("#genGo");
-  if(!desc){ stat.textContent = "Describe the scene first."; $("#genDesc").focus(); return; }
-  if(beat && !yt){ stat.textContent = "Beat sync needs a YouTube link to sync to."; $("#genYt").focus(); return; }
+  if(!desc && !beat){ stat.textContent = "Describe the scene first."; $("#genDesc").focus(); return; }
+  if(beat && !yt){ stat.textContent = "A song show needs a YouTube link to the song."; $("#genYt").focus(); return; }
   btn.disabled = true;
-  stat.textContent = beat ? "Fetching the clip, finding the beat, and locking the lights… (up to a minute)."
+  const parts = Math.ceil(dur / 60);
+  stat.textContent = beat ? "Downloading the song, finding the beat and the band, reading the lyrics… (about a minute)."
+                    : parts > 1 ? "Writing a " + fmtLen(dur) + " scene in " + parts + " parts" + (yt ? " while the song downloads" : "") + "… (about a minute)."
                     : yt  ? "Generating the scene and clipping the audio… (this can take up to a minute)."
                           : "Generating… the model is composing your scene (a few seconds).";
   try{
     const body = {description:desc, duration_s:dur, intensity_flow:flow};
     if(yt) body.youtube_url = yt;
-    if(beat) body.beat_sync = true;
+    if(beat){ body.song_show = true; const sg = ($("#genSong") ? $("#genSong").value : "").trim(); if(sg) body.song = sg; }
     const r = await api("/api/generate", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)});
     let msg;
-    if(r.tempo){ msg = "Locked “" + (r.name||"scene") + "” to ~" + Math.round(r.tempo) + " BPM — " + (r.events||0) + " beat-synced events."; }
+    if(r.song){ msg = "Built “" + (r.name||"song") + "”: ~" + Math.round(r.tempo||0) + " BPM, " + r.song.sections + " sections, "
+        + (r.song.lyrics ? "colors from the lyrics" : "colors from the music (no timed lyrics found)")
+        + (r.song.whole_song ? "" : "; cut at " + fmtLen((r.audio&&r.audio.dur)||dur)) + "."; }
+    else if(r.tempo){ msg = "Locked “" + (r.name||"scene") + "” to ~" + Math.round(r.tempo) + " BPM — " + (r.events||0) + " beat-synced events."; }
     else {
       msg = "Created “" + (r.name||"scene") + "” — " + (r.events||0) + " events across " + ((r.devices||[]).length) + " fixtures.";
-      if(r.audio && r.audio.file) msg += " Audio clipped (" + (r.audio.via==="captions" ? "matched to captions" : "best passage") + ").";
+      if(r.audio && r.audio.file) msg += " Audio clipped (" + (r.audio.via==="captions" ? "matched to captions" : "best passage")
+        + (r.audio.dur && r.audio.dur < dur - 1 ? "; the song is only " + fmtLen(r.audio.dur) + ", so it loops" : "") + ").";
       else if(r.audio && r.audio.error) msg += " (Audio import failed: " + r.audio.error + ".)";
     }
     stat.textContent = msg + " Opening…";

@@ -53,6 +53,9 @@ class Scene(BaseModel):
     order: int = 0                 # display order in the scene list
     tag: str = ""                  # show role: "ambient" | "scare" | "" (manual only)
     tracks: dict[str, list[Event]] = Field(default_factory=dict)
+    # how the generator made this scene (idea, flow, beat sync, YouTube source and
+    # the exact clip start), so Extend can continue it. None for hand-made scenes.
+    gen: dict | None = None
 
 
 class DeviceState(BaseModel):
@@ -100,8 +103,8 @@ def _evaluate_track(events: list[Event], t: float) -> DeviceState:
     evs = sorted(events, key=lambda x: x.t)
     for idx, e in enumerate(evs):
         p = e.params
-        if e.t > t and e.type in INSTANT:
-            continue
+        if e.t > t:
+            break           # sorted: nothing from here on has started (a long song show replays half as much)
         active = e.t <= t <= e.t + max(e.duration_s, 0)
         done = t > e.t + max(e.duration_s, 0)
         # fade length, capped so the fade lands before the next event begins

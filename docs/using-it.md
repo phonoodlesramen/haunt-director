@@ -39,11 +39,22 @@ The example scenes are a good place to start: *Lightning Storm*, *Zombie Horde*,
 
 ### ✨ Generate (optional, needs your own AI key)
 
-Type something like *"a slow green graveyard mist that builds to a screaming strobe hit at the end"*, pick a length and a **flow** (flat, slow build, build to a strike, waves, cold open), and an AI model drafts the light and fog tracks. Paste a YouTube link and it'll clip a fitting section as the scene's music.
+Type something like *"a slow green graveyard mist that builds to a screaming strobe hit at the end"*, pick a length (10 seconds to 5 minutes) and a **flow** (flat, slow build, build to a strike, waves, cold open), and an AI model drafts the light and fog tracks. Paste a YouTube link and it'll clip a fitting section of the same length as the scene's music. If the song is shorter than the scene, the song loops.
 
-Turn on **🎵 Sync lights to the beat** with a link, and it finds the song's tempo and lands events on the beats instead.
+Scenes over a minute are written in parts: the model plans a beginning, middle and end first, then writes each part knowing the whole arc, so a 4-minute scene develops instead of repeating one idea. The amount of action grows with the length. A long scene takes about a minute to write.
 
-What the model sends back is always **sanitized**: event types and parameters are checked, fog bursts are capped in length and count, and strobe and pulse rates are clamped. Your global strobe cap still applies on top. Everything stays fully editable afterwards. Set `HD_LLM_PROVIDER`, `HD_LLM_API_KEY` and `HD_LLM_MODEL` in `backend/.env` to turn it on. It works with Anthropic or OpenAI keys, and you pay your provider per request.
+Turn on **🎸 Song show** with a link to a song, and the lights follow the band instead:
+
+- **Listening.** It finds the beat and the downbeats, then what the drums, bass and rhythm guitar are doing on every 16th note. It splits the song by frequency band (no AI and no heavy downloads) and runs in a few seconds on the Pi.
+- **Reading.** It looks up timed lyrics on [LRCLIB](https://lrclib.net) (free, community-made). Repeated lines become choruses, wordless stretches become the intro, solos and outro, and the AI picks a palette for each section from what the words mean, plus a few accent moments on key lines. Only the timings and colors are saved, never the words. No lyrics found? The sections come from the music instead.
+- **Playing.** The first light plays the drums (kick punches, snare flashes), the second the bass (a throb on every 8th note), the third the rhythm guitar (it hits on the chord stabs and drops dark in the gaps). Section changes crash into the new colors, choruses get a burst of fog, solos chase around the yard, and the song ends on a final hit. Change anything afterwards in the timeline.
+- It starts on the song's first note. Leave **Length** at 5:00 for the whole song. Describing the scene is optional (it steers the colors), and if the video title is odd, type *Artist - Title* in the Song box.
+
+Song shows work best on rock and pop with a steady drum beat in 4/4. They assume the classic backbeat (kick on 1 and 3, snare on 2 and 4), so a half-time or swung song will look a bit off.
+
+**✨ Extend** (in a scene's settings) adds 30, 60 or 90 seconds to a scene you already have, up to 5 minutes. The part you already have isn't changed, with one exception: a song show's ending (the strobe run-up, the last hit and the fade to dark) is lifted so it doesn't land mid-song. Anything you added there by hand stays, and a lane you cleared stays clear. The new part picks up from where each light ends and keeps the scene's colors and mood, and you can type what should happen next (*"build to a big finish"*). If the music is a YouTube clip, it fetches a longer clip of the same song from the same spot, so everything already on the timeline still lines up. Beat-synced scenes keep going on the beat, and a song show reads the rest of the song on the same bar lines, so a returning chorus gets the chorus's colors. **Undo** takes an Extend back.
+
+What the model sends back is always **sanitized**: event types and parameters are checked, fog bursts are capped in length and count with at least 10 seconds of clear air between them, strobes are capped at 8 seconds each, and strobe and pulse rates are clamped. Your global strobe cap still applies on top. Everything stays fully editable afterwards. Set `HD_LLM_PROVIDER`, `HD_LLM_API_KEY` and `HD_LLM_MODEL` in `backend/.env` to turn it on. It works with Anthropic or OpenAI keys, and you pay your provider per request.
 
 ## 🎃 Show (and Output)
 
@@ -59,6 +70,8 @@ What the model sends back is always **sanitized**: event types and parameters ar
 | **Volume** | The master level for everything the Pi plays. It's a perceptual curve, so 50% sounds about half as loud. Set the speaker once, then ride it here |
 | **🔊 Test** | A short clip at the current volume |
 | **Voice ducking** | While a voice plays, music and looping beds dip by this many dB (default 9), then ease back. One-shot hits stay full so scares keep their punch. 0 turns it off |
+| **Light timing** | Lines the lights up with the sound for every scene, from 300 ms early to 300 ms late. Sound out of the Pi and light through FPP don't arrive at exactly the same moment, and on a song show you can see it. Set early, a scene holds its sound back instead of skipping its first moments, and either way the lights play the scene to its end |
+| **⏱ Sync test** | 12 seconds of clicks through the speaker while a light flashes on each one (the first one not set by hand on the Live tab). Stand where visitors will, then slide Light timing until flash and click land together (it changes live) |
 
 ### Show mode
 

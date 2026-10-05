@@ -11,11 +11,11 @@ Here's what's actually been proven, what we'd recommend, and what nobody has tri
 | DMX devices | 4 (3 PARs + fogger) | A handful to a couple dozen | One universe. Beyond about 10 fixtures, nobody has tried it yet |
 | Channel block | 1 to 64 | Up to 512 (one universe) | Set `HD_DMX_CHANNEL_COUNT`; the output frame and FPP overlay model follow it. Keep FPP's DMX output count to match. Only 64 has been tested |
 | Frame rate | 25 fps | 25 fps | `HD_OUTPUT_FPS`. Fades look smooth at 25, and higher just means more USB traffic |
-| Scene length | up to 180 s | 30 to 180 s | Ambient scenes loop the rotation, so long isn't necessary |
-| Events per scene | about 400 (*Seance*) | a few hundred | The AI generator caps itself at 120 (beat sync allows more) |
+| Scene length | up to 300 s | 30 to 300 s | The generator and Extend stop at 5 minutes. Ambient scenes loop the rotation, so long isn't required |
+| Events per scene | about 2,200 (a 5-minute beat-sync test scene) | a few hundred to about 2,500 | The AI generator caps itself at 120, or 1.5 per second for longer scenes. Beat sync and song shows allow about 7 per second for each light (6,000 at most), and thin out evenly if they'd go over, so the ending stays. A song show on 3 lights is about 1,500 for a 3 1/2-minute song. A 2,000-event scene opens in the editor in about 3 seconds on a slow phone |
 | Scenes | 25 | as many as you like | They're small JSON files |
 | Strobe rate | up to ~8 flashes/s (the reference PAR's maximum) | **4 or less** for a public-facing yard | `HD_STROBE_MAX_HZ` caps everything. See [Safety](safety.md#strobes-and-photosensitivity) |
-| Fog burst | 8 s cap | 2 to 6 s bursts, with rests between | `HD_FOG_MAX_SECONDS`. Follow your fogger's duty cycle. The AI generator caps itself at 6 s bursts and 6 per scene |
+| Fog burst | 8 s cap | 2 to 6 s bursts, with rests between | `HD_FOG_MAX_SECONDS`. Follow your fogger's duty cycle. The AI generator caps itself at 6 s bursts, at least 10 s apart, and 6 per scene (1 per 30 s for scenes over 3 minutes) |
 | Sounds playing at once | music + voice + several layers | up to 13 layers | 16 mixer channels in total |
 | Audio library | about 65 files, 1.6 GB | whatever fits on the card | Very long files take memory once decoded (roughly 10 MB per stereo minute) |
 | Sensor range | LD2410B: about 6 m maximum by spec | aim it along the approach path | Configure range and sensitivity with the vendor's app |
@@ -47,6 +47,8 @@ Honest list. Nobody has tried any of these with Haunt Director yet:
 
 ## Known quirks
 
+- **Song shows have been tuned on one song so far** (a 4/4 rock song at about 115 BPM). Expect other genres to need a tweak in the editor, and songs without a clear drum beat to be refused.
+- **yt-dlp may warn about a JavaScript runtime.** Newer yt-dlp wants [deno](https://deno.com) for YouTube. Downloads still work without it for now, but some formats may be missing; installing deno on the Pi silences the warning.
 - **YouTube import breaks sometimes.** YouTube changes often. Run `backend/.venv/bin/pip install -U yt-dlp` and restart the app.
 - **Browser preview audio isn't the real mix.** When you play a scene from the editor, your phone or laptop can play the sound too, but without the Pi's ducking or master volume. Judge levels on the real speaker.
 - **The stage simulator is approximate.** Beams are soft glows painted over a photo. It's for choreography, not color matching.

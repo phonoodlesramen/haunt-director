@@ -78,6 +78,7 @@ async def lifespan(app: FastAPI):
                 from ..audio import AudioEngine
                 eng = AudioEngine(_P(__file__).resolve().parents[2] / settings.audio_dir,
                                   device=settings.audio_device)
+                eng.prune_cache()                            # copies of clips that are gone
                 _warm = []
                 for _sc in store.scenes.values():
                     _warm += scene_audio_files(_sc)          # music, voice-over AND layer cues
@@ -110,6 +111,7 @@ async def lifespan(app: FastAPI):
             app.state.player.audio_muted = bool(_od.get("audio_muted", False))
             app.state.player.set_volume(_od.get("volume", 100))
             app.state.player.set_duck(_od.get("duck_db", DUCK_DEFAULT_DB))
+            app.state.player.set_light_delay(_od.get("light_delay_ms", 0))
     bus.start()
     if director.gpio_pin is None and settings.presence_gpio_pin is not None:
         director.gpio_pin = settings.presence_gpio_pin
@@ -251,6 +253,7 @@ class OutputConfig(BaseModel):
     audio_muted: bool | None = None
     volume: int | None = Field(None, ge=0, le=100)   # app master volume, %
     duck_db: int | None = Field(None, ge=0, le=18)   # voice ducking depth, dB (0 = off)
+    light_delay_ms: int | None = Field(None, ge=-300, le=300)   # + = lights later than the sound
 
 
 def _save_output_settings():
@@ -260,14 +263,18 @@ def _save_output_settings():
         p = app.state.player
         (DATA_DIR / "output.json").write_text(_json.dumps(
             {"fog_enabled": p.fog_enabled, "audio_muted": p.audio_muted,
-             "volume": p.volume, "duck_db": p.duck_db}, indent=2))
+             "volume": p.volume, "duck_db": p.duck_db,
+             "light_delay_ms": int(round(p.light_delay_s * 1000))}, indent=2))
+
+
+def _output_state(p):
+    return {"fog_enabled": p.fog_enabled, "audio_muted": p.audio_muted, "volume": p.volume,
+            "duck_db": p.duck_db, "light_delay_ms": int(round(p.light_delay_s * 1000))}
 
 
 @app.get("/api/output")
 async def get_output():
-    p = app.state.player
-    return {"fog_enabled": p.fog_enabled, "audio_muted": p.audio_muted, "volume": p.volume,
-            "duck_db": p.duck_db}
+    return _output_state(app.state.player)
 
 
 @app.post("/api/output")
@@ -284,9 +291,10 @@ async def set_output(body: OutputConfig):
         p.set_volume(body.volume)                # live: everything already playing follows
     if body.duck_db is not None:
         p.set_duck(body.duck_db)                 # live: the envelope eases to the new depth
+    if body.light_delay_ms is not None:
+        p.set_light_delay(body.light_delay_ms)   # live: the next frame uses it
     _save_output_settings()
-    return {"fog_enabled": p.fog_enabled, "audio_muted": p.audio_muted, "volume": p.volume,
-            "duck_db": p.duck_db}
+    return _output_state(p)
 
 
 # Short clip for setting the outside speaker's level without starting a scene.
@@ -320,6 +328,73 @@ async def output_test_sound():
     await asyncio.to_thread(eng.preload, [f])    # never decode on the event loop
     eng.play_cue(f, gain=1.0, loop=False, key="__voltest")
     return {"playing": f, "volume": p.volume}
+
+
+SYNC_CLICK = ".sync-click.wav"      # hidden from the library (dot file)
+SYNC_EVERY_S, SYNC_FIRST_S, SYNC_LEN_S = 0.5, 0.5, 12.5
+
+
+def _sync_click_file(audio_dir):
+    """A click every half second (made once with ffmpeg) for the sync test."""
+    from pathlib import Path as _P
+    f = _P(audio_dir) / SYNC_CLICK
+    if f.exists() and f.stat().st_size > 1000:
+        return f.name
+    ff = shutil.which("ffmpeg")
+    if not ff:
+        return None
+    expr = (f"0.9*sin(2*PI*1800*t)*exp(-90*mod(t-{SYNC_FIRST_S},{SYNC_EVERY_S}))*gte(t,{SYNC_FIRST_S})")
+    try:
+        subprocess.run([ff, "-v", "quiet", "-y", "-f", "lavfi", "-i",
+                        f"aevalsrc='{expr}':s=44100:d={SYNC_LEN_S}", "-ac", "1", str(f)],
+                       check=True, timeout=30)
+    except Exception:
+        return None
+    return f.name if f.exists() else None
+
+
+@app.post("/api/output/sync-test")
+async def output_sync_test():
+    """Light/sound sync check: a click every half second through the speaker
+    while the first light flashes white on each click. Slide Light timing
+    until they land together (it applies live)."""
+    p = app.state.player
+    d = _show(app)
+    if d is not None and d.armed:
+        raise HTTPException(409, "Disarm the show first.")
+    if p.is_playing:
+        raise HTTPException(409, "Stop the scene that's playing first.")
+    eng = getattr(app.state, "audio", None)
+    if eng is None or not eng.available:
+        raise HTTPException(503, "audio not available")
+    if p.audio_muted:
+        raise HTTPException(409, "Sound is off. Turn it on to hear the clicks.")
+    store = _ctrl(app).store
+    lights = [x.id for x in store.devices.values()
+              if x.kind.value == "dmx_fixture" and x.enabled and x.dmx_address is not None]
+    if not lights:
+        raise HTTPException(404, "no lights to flash")
+    held = set()
+    with contextlib.suppress(Exception):
+        held = set(p.bus.manual_devices())          # a Live card would hide the flash
+    lights = [x for x in lights if x not in held]
+    if not lights:
+        raise HTTPException(409, "Every light is set by hand on the Live tab. Release one first.")
+    f = await asyncio.to_thread(_sync_click_file, eng.audio_dir)
+    if not f:
+        raise HTTPException(500, "couldn't make the click track (ffmpeg missing?)")
+    evs, t = [], SYNC_FIRST_S
+    i = 0
+    while t < SYNC_LEN_S - 0.2:
+        evs.append(Event(id=f"c{i}", t=round(t, 3), type="set_color",
+                         params={"color": "#ffffff", "brightness": 1.0}))
+        evs.append(Event(id=f"o{i}", t=round(t + 0.09, 3), type="set_brightness", params={"brightness": 0.0}))
+        t += SYNC_EVERY_S; i += 1
+    sc = Scene(id="__sync_test", name="Sync test", duration_s=SYNC_LEN_S,
+               audio=SceneAudio(music=f, gain=1.0), tracks={lights[0]: evs})
+    await p.play(sc)
+    return {"playing": True, "light": lights[0], "seconds": SYNC_LEN_S,
+            "light_delay_ms": int(round(p.light_delay_s * 1000))}
 
 
 class Placement(BaseModel):
@@ -436,6 +511,142 @@ class GenReq(BaseModel):
     name: str | None = None
     youtube_url: str | None = None   # optional: auto-clip a segment as the scene's audio
     beat_sync: bool = False          # lock the light events to the clip's detected beats
+    song_show: bool = False          # drums/bass/guitar drive the lights, the lyrics pick the colours
+    song: str | None = Field(None, max_length=160)   # "Artist - Title" when the video title is odd
+
+
+async def _song_show(body, desc, key, model, provider, devices, store):
+    """A song show: download the song, read the band and the lyrics, colour it
+    with the AI, lay the lights on the beat. Saves and returns the scene."""
+    from pathlib import Path as _P
+    from .. import songshow as SS
+    from ..generate import MAX_SCENE_S, _ask_json, sanitize_scene as _san, friendly_error
+    yt = (body.youtube_url or "").strip()
+    if not yt:
+        raise HTTPException(400, "A song show needs a YouTube link to the song.")
+    lights = [d for d, k in devices.items() if k == "dmx_fixture"]
+    fogs = [d for d, k in devices.items() if k == "dmx_fog"]
+    if not lights:
+        raise HTTPException(400, "A song show needs at least one light.")
+    ad = _P(__file__).resolve().parents[2] / settings.audio_dir
+    with contextlib.suppress(Exception):
+        ad.mkdir(parents=True, exist_ok=True)
+    clip = await asyncio.to_thread(youtube_songclip, yt, min(float(body.duration_s), MAX_SCENE_S), ad)
+    if not clip.get("ok"):
+        raise HTTPException(502, "Couldn't fetch the song: " + clip.get("error", "download failed"))
+    clipfile, cdur = clip["file"], float(clip["dur"])
+    try:
+        artist, track = SS.split_title(body.song or clip.get("title") or "")
+        song_len = float(clip["full_dur"]) - float(clip["start"])
+        ly = await asyncio.to_thread(SS.find_lyrics, artist, track, song_len)
+        # The clip starts at the song's first note, like the album track the
+        # timings were made against, so the times line up as they are.
+        lines = list(ly["lines"]) if ly else []
+        ask = lambda system, user: _ask_json(system, user, key, model, provider, max_tokens=4096)
+        try:
+            res = await asyncio.to_thread(SS.build, ad / clipfile, cdur, lines, track or clip.get("title"),
+                                          artist, lights, fogs, ask, desc)
+        except ValueError as e:
+            raise HTTPException(502, "Couldn't find a steady beat in that song. Song shows work best on "
+                                     "rock and pop with a clear drum beat.") from e
+
+        def _safe():                               # thousands of events: off the event loop
+            tr, _n, _b = _san({"tracks": res["tracks"]}, devices, cdur, "flat", settings.fog_max_seconds,
+                              events_max=_beat_events_cap(cdur, len(lights)))
+            return tr, {dev: [Event(**e) for e in evs] for dev, evs in tr.items()}
+        tracks, ev_tracks = await asyncio.to_thread(_safe)
+        if not tracks:
+            raise HTTPException(502, "The song show came out empty. Try a different link.")
+    except BaseException:
+        with contextlib.suppress(Exception):
+            (ad / clipfile).unlink()               # don't leave an unused clip behind
+        raise
+    _lib_upsert(clipfile, title=clip.get("title") or "YouTube clip", category="music", source="youtube", url=yt)
+    _DUR_CACHE.pop(clipfile, None)
+    eng = getattr(app.state, "audio", None)
+    if eng is not None:
+        with contextlib.suppress(Exception):
+            await asyncio.to_thread(eng.warm_cache, [clipfile])
+    name = (body.name or track or clip.get("title") or "Song Show")[:60]
+    blurb = ("Lights follow the drums, bass and guitar; colours follow "
+             + ("the lyrics" if res["lyrics_used"] else "the music")
+             + (f" (~{round(res['tempo'])} BPM)." if res.get("tempo") else "."))
+    base = _slug(name); sid = base; n = 2
+    while sid in store.scenes:
+        sid = f"{base}-{n}"; n += 1
+    order = 1 + max([getattr(s, "order", 0) for s in store.scenes.values()] or [0])
+    sc = Scene(id=sid, name=name, duration_s=round(cdur, 2), blurb=blurb, order=order,
+               audio=SceneAudio(music=clipfile, gain=1.0), tracks=ev_tracks,
+               gen={"mode": "song", "beat_sync": True, "description": desc, "youtube_url": yt,
+                    "clip_file": clipfile, "clip_start": clip.get("start"), "tempo": res.get("tempo"),
+                    "song": {"artist": artist, "track": track},
+                    "lyrics": ({"source": "lrclib", "id": ly.get("id"), "lines": len(lines)} if ly else None),
+                    "sections": res["sections"], "roles": res["roles"], "theme": res.get("theme"),
+                    "downbeats": res.get("downbeats") or [],
+                    "ending": _ending_tag(tracks, res.get("ending_from")),
+                    "fogs": {f: sum(1 for e in tracks.get(f, []) if e["type"] == "fog") for f in fogs}})
+    store.save_scene(sc)
+    return {"id": sid, "name": sc.name, "blurb": blurb, "devices": list(tracks.keys()),
+            "events": sum(len(v) for v in tracks.values()), "tempo": res.get("tempo"),
+            "song": {"sections": len(res["sections"]), "lyrics": res["lyrics_used"],
+                     "colors_from_ai": res["colors_from_ai"], "theme": res.get("theme"),
+                     "whole_song": clip["full_dur"] - clip["start"] <= cdur + 1.0},
+            "audio": {"file": clipfile, "title": clip.get("title"), "dur": cdur}}
+
+
+BEAT_EVENTS_PER_LIGHT_S = 7                  # a busy drummer at ~150 BPM is about 5/s on one light
+BEAT_EVENTS_MAX = 6000                       # a safety ceiling, well above any real song
+
+
+def _beat_events_cap(dur, lights=3):
+    """Beat sync and song shows lay a few events a second on each light (more
+    on fast, busy songs); allow that with headroom. If it's ever exceeded, the
+    sanitizer thins every fixture evenly across the scene, so the ending stays."""
+    per_s = BEAT_EVENTS_PER_LIGHT_S * max(1, int(lights))
+    return max(400, min(BEAT_EVENTS_MAX, int(float(dur) * per_s) + 200))
+
+
+def _ending_tag(tracks, ending_from):
+    """Which events are the song show's ending (the run-up strobe, the last
+    hit, the fade to dark), so Extend can lift exactly those and nothing you
+    added by hand. tracks: sanitized {device: [event dicts]}."""
+    if not isinstance(ending_from, (int, float)):
+        return None
+    lo = round(float(ending_from), 2) - 0.011              # the sanitizer rounds times to 0.01 s
+    ids = [e["id"] for evs in tracks.values() for e in evs if e["t"] >= lo]
+    return {"from": round(max(0.0, lo), 3), "ids": ids} if ids else None
+
+
+def _extend_events_cap(sc, span_s, lights, drop_ids, old):
+    """Events the new part may add: the usual allowance for its length, but
+    never taking the whole scene past BEAT_EVENTS_MAX."""
+    kept = sum(1 for evs in sc.tracks.values() for e in evs if e.t < old and e.id not in drop_ids)
+    return max(100, min(_beat_events_cap(span_s, lights), BEAT_EVENTS_MAX - kept))
+
+
+def _merge_extension(data, add_tr, drop_ids, devices, old=None):
+    """Fold Extend's new events into a scene dump (in place): lift the old
+    events in drop_ids, and any past the old end (a scene shortened with the
+    length slider keeps them, unplayable; they mustn't come back mid-song),
+    keep clear air between the fog that's already there and the new part's,
+    add the rest. Returns how many events were added."""
+    from ..generate import FOG_GAP_S
+    tracks = data["tracks"]
+    for dev in list(tracks):
+        tracks[dev] = [e for e in tracks[dev]
+                       if e.get("id") not in drop_ids and (old is None or e["t"] < old)]
+    added = 0
+    for dev, evs in add_tr.items():
+        if devices.get(dev) == "dmx_fog":
+            olds = [(e["t"], e["t"] + e.get("duration_s", 0.0)) for e in tracks.get(dev, []) if e["type"] == "fog"]
+            clear = lambda e: all(e["t"] >= b + FOG_GAP_S or e["t"] + e["duration_s"] + FOG_GAP_S <= a
+                                  for a, b in olds)
+            evs = [e for e in evs if e["type"] != "fog" or clear(e)]
+        tracks.setdefault(dev, []).extend(evs)
+        added += len(evs)
+    for dev in tracks:
+        tracks[dev].sort(key=lambda e: e["t"])
+    return added
 
 
 @app.post("/api/generate")
@@ -448,13 +659,16 @@ async def generate_scene(body: GenReq):
     from ..generate import generate as _gen, resolve_key
     store = _ctrl(app).store
     desc = (body.description or "").strip()
-    if not desc:
+    if not desc and not body.song_show:
         raise HTTPException(400, "Describe the scene you want.")
     key, provider, model = resolve_key(settings)
     if not key:
         raise HTTPException(400, "No LLM API key configured (set HD_LLM_API_KEY in backend/.env).")
     devices = {d.id: d.kind.value for d in store.devices.values()
                if d.kind.value in ("dmx_fixture", "dmx_fog")}
+
+    if body.song_show:
+        return await _song_show(body, desc, key, model, provider, devices, store)
 
     # ---- beat-sync mode: lock the light show to the clip's detected beats ----
     if body.beat_sync:
@@ -466,22 +680,30 @@ async def generate_scene(body: GenReq):
         ad = _P(__file__).resolve().parents[2] / settings.audio_dir
         with contextlib.suppress(Exception):
             ad.mkdir(parents=True, exist_ok=True)
-        bdur = min(float(body.duration_s), 60.0)
-        clip = await asyncio.to_thread(youtube_autoclip, body.youtube_url.strip(), bdur, desc, ad, 60.0)
+        from ..generate import MAX_SCENE_S
+        bdur = min(float(body.duration_s), MAX_SCENE_S)
+        clip = await asyncio.to_thread(youtube_autoclip, body.youtube_url.strip(), bdur, desc, ad)
         if not clip.get("ok"):
             raise HTTPException(502, "Couldn't fetch the audio to sync to: " + clip.get("error", "download failed"))
         clipfile = clip["file"]
-        cdur = min(_probe_dur(ad / clipfile) or bdur, 60.0)
-        det = await asyncio.to_thread(detect_beats, str(ad / clipfile), cdur)
-        if not det.get("beats"):
-            raise HTTPException(502, "Couldn't find a clear beat in that clip. Try a different link, or use the non-synced generator.")
-        pal, acc, mood = await asyncio.to_thread(palette_from, desc, key, model, provider)
-        light_ids = [d for d, k in devices.items() if k == "dmx_fixture"]
-        fog_ids = [d for d, k in devices.items() if k == "dmx_fog"]
-        raw_tracks = compose_beatsync(det, pal, acc, light_ids, fog_ids, cdur, mood)
-        bt, _bn, _bb = _san({"tracks": raw_tracks}, devices, cdur, "flat", settings.fog_max_seconds, events_max=400)
-        if not bt:
-            raise HTTPException(502, "Beat sync produced no events. Try a different clip.")
+        try:
+            cdur = min((await asyncio.to_thread(_probe_dur, ad / clipfile)) or bdur, bdur)
+            det = await asyncio.to_thread(detect_beats, str(ad / clipfile), cdur)
+            if not det.get("beats"):
+                raise HTTPException(502, "Couldn't find a clear beat in that clip. Try a different link, or use the non-synced generator.")
+            pal, acc, mood = await asyncio.to_thread(palette_from, desc, key, model, provider)
+            light_ids = [d for d, k in devices.items() if k == "dmx_fixture"]
+            fog_ids = [d for d, k in devices.items() if k == "dmx_fog"]
+            raw_tracks = compose_beatsync(det, pal, acc, light_ids, fog_ids, cdur, mood)
+            bt, _bn, _bb = await asyncio.to_thread(_san, {"tracks": raw_tracks}, devices, cdur, "flat",
+                                                   settings.fog_max_seconds,
+                                                   events_max=_beat_events_cap(cdur, len(light_ids)))
+            if not bt:
+                raise HTTPException(502, "Beat sync produced no events. Try a different clip.")
+        except BaseException:
+            with contextlib.suppress(Exception):
+                (ad / clipfile).unlink()           # don't leave an unused clip behind
+            raise
         _lib_upsert(clipfile, title=clip.get("title") or "YouTube clip", category="music",
                     source="youtube", url=body.youtube_url.strip())
         _DUR_CACHE.pop(clipfile, None)
@@ -497,35 +719,59 @@ async def generate_scene(body: GenReq):
         order = 1 + max([getattr(s, "order", 0) for s in store.scenes.values()] or [0])
         sc = Scene(id=sid, name=(bname or "Beat Sync"), duration_s=round(cdur, 2), blurb=bblurb,
                    order=order, audio=SceneAudio(music=clipfile, gain=1.0),
-                   tracks={dev: [Event(**e) for e in evs] for dev, evs in bt.items()})
+                   tracks={dev: [Event(**e) for e in evs] for dev, evs in bt.items()},
+                   gen={"description": desc, "beat_sync": True, "youtube_url": body.youtube_url.strip(),
+                        "clip_file": clipfile, "clip_start": clip.get("start"),
+                        "palette": pal, "accent": acc, "mood": mood})
         store.save_scene(sc)
         return {"id": sid, "name": sc.name, "blurb": bblurb, "devices": list(bt.keys()),
                 "events": sum(len(v) for v in bt.values()), "tempo": det.get("tempo"),
                 "audio": {"file": clipfile, "via": clip.get("via"), "title": clip.get("title")}}
 
-    try:
-        tracks, gname, blurb = await asyncio.to_thread(
-            _gen, desc, body.duration_s, body.intensity_flow, devices,
-            key, model, provider, settings.fog_max_seconds)
-    except Exception as e:
-        raise HTTPException(502, f"Generation failed: {type(e).__name__}: {str(e)[:200]}")
-    if not tracks:
-        raise HTTPException(502, "The model returned no usable events. Try again or reword the description.")
-    # optional: pull a YouTube clip, auto-pick a segment, attach it as the scene's audio
-    audio_obj = None
-    audio_note = None
-    if body.youtube_url and body.youtube_url.strip():
+    # The model writes the lights while the YouTube clip (if any) downloads.
+    yt = (body.youtube_url or "").strip()
+    ad = None
+    if yt:
         from pathlib import Path as _P
         ad = _P(__file__).resolve().parents[2] / settings.audio_dir
         with contextlib.suppress(Exception):
             ad.mkdir(parents=True, exist_ok=True)
-        clip = await asyncio.to_thread(youtube_autoclip, body.youtube_url.strip(),
-                                       body.duration_s, desc, ad)
+
+    async def _clip():
+        if not yt:
+            return None
+        try:
+            return await asyncio.to_thread(youtube_autoclip, yt, body.duration_s, desc, ad)
+        except Exception as e:                       # audio is optional: report, don't fail
+            return {"ok": False, "error": f"{type(e).__name__}"}
+
+    gen_task = asyncio.to_thread(_gen, desc, body.duration_s, body.intensity_flow, devices,
+                                 key, model, provider, settings.fog_max_seconds)
+    gen_res, clip = await asyncio.gather(gen_task, _clip(), return_exceptions=True)
+    if isinstance(clip, BaseException):
+        clip = {"ok": False, "error": type(clip).__name__}
+    def _drop_clip():
+        if clip and clip.get("ok"):                  # don't leave an orphan clip behind
+            with contextlib.suppress(Exception):
+                (ad / clip["file"]).unlink()
+    if isinstance(gen_res, BaseException):
+        _drop_clip()
+        from ..generate import friendly_error
+        raise HTTPException(502, friendly_error(gen_res))
+    tracks, gname, blurb = gen_res
+    if not tracks:
+        _drop_clip()
+        raise HTTPException(502, "The model returned no usable events. Try again or reword the description.")
+    # optional: the YouTube clip becomes the scene's music
+    audio_obj = None
+    audio_note = None
+    if yt:
         if clip.get("ok"):
             audio_obj = SceneAudio(music=clip["file"], gain=1.0)
-            audio_note = {"file": clip["file"], "via": clip.get("via"), "title": clip.get("title")}
+            audio_note = {"file": clip["file"], "via": clip.get("via"), "title": clip.get("title"),
+                          "dur": clip.get("dur")}
             _lib_upsert(clip["file"], title=clip.get("title") or "YouTube clip",
-                        category="music", source="youtube", url=body.youtube_url.strip())
+                        category="music", source="youtube", url=yt)
             _DUR_CACHE.pop(clip["file"], None)
             eng = getattr(app.state, "audio", None)
             if eng is not None:
@@ -537,13 +783,413 @@ async def generate_scene(body: GenReq):
     while sid in store.scenes:
         sid = f"{base}-{n}"; n += 1
     order = 1 + max([getattr(s, "order", 0) for s in store.scenes.values()] or [0])
+    clip_ok = bool(yt and clip and clip.get("ok"))
     sc = Scene(id=sid, name=(body.name or gname or "Generated Scene"),
                duration_s=float(body.duration_s), blurb=blurb, order=order, audio=audio_obj,
-               tracks={dev: [Event(**e) for e in evs] for dev, evs in tracks.items()})
+               tracks={dev: [Event(**e) for e in evs] for dev, evs in tracks.items()},
+               gen={"description": desc, "flow": body.intensity_flow, "beat_sync": False,
+                    "youtube_url": yt or None, "clip_file": clip["file"] if clip_ok else None,
+                    "clip_start": clip.get("start") if clip_ok else None})
     store.save_scene(sc)
     return {"id": sid, "name": sc.name, "blurb": blurb,
             "devices": list(tracks.keys()), "events": sum(len(v) for v in tracks.values()),
             "audio": audio_note}
+
+
+# ---- Extend: make an existing scene longer --------------------------------
+_CLIP_TAG = re.compile(r"^(?P<base>.+?)-t(?P<s>\d+)_(?P<e>\d+)(?:-\d+)?$")
+_YT_ID = re.compile(r"^(?:yt|sfx-yt|vo-yt)-([A-Za-z0-9_-]{11})$")
+
+
+def _pcm(path, start, length, sr=8000):
+    """Mono 16-bit PCM of [start, start+length] of an audio file (b"" on failure)."""
+    ff = shutil.which("ffmpeg")
+    if not ff:
+        return b""
+    try:
+        r = subprocess.run([ff, "-v", "quiet", "-ss", f"{max(0.0, float(start)):.3f}",
+                            "-t", f"{float(length):.3f}", "-i", str(path), "-ac", "1",
+                            "-ar", str(sr), "-f", "s16le", "-"], capture_output=True, timeout=60)
+        return r.stdout or b""
+    except Exception:
+        return b""
+
+
+def _refine_clip_start(clip_path, src_path, approx, probe=2.0, search=1.0, sr=8000):
+    """A clip's file name only records its start to the nearest second. Find the
+    exact start by matching the clip's opening against the source around there,
+    so the longer clip lines up with the lights already written (to the beat, for
+    beat sync). Returns (start, matched)."""
+    try:
+        import audioop                        # stdlib through Python 3.12
+    except ImportError:
+        return float(approx), False
+    ref = _pcm(clip_path, 0.0, probe, sr)
+    lo = max(0.0, float(approx) - search)
+    frag = _pcm(src_path, lo, probe + 2 * search, sr)
+    if len(ref) < sr or len(frag) <= len(ref) or audioop.rms(ref, 2) < 30:
+        return float(approx), False
+    off, factor = audioop.findfit(frag, ref)
+    seg = frag[off * 2: off * 2 + len(ref)]
+    if len(seg) != len(ref):
+        return float(approx), False
+    resid = audioop.add(seg, audioop.mul(ref, 2, -factor), 2)
+    if audioop.rms(resid, 2) > 0.35 * max(1, audioop.rms(seg, 2)):
+        return float(approx), False          # not a confident match: keep the name's start
+    return round(lo + off / sr, 3), True
+
+
+def _music_origin(sc, d):
+    """Where a scene's music came from, if a longer clip can be cut:
+    {clip, local, url, start, exact, base}, or None (a whole song, or a file we
+    can't trace back to its source)."""
+    from pathlib import Path as _P
+    mus = sc.audio.music if sc.audio else None
+    if not mus or _P(mus).name != mus or mus.startswith("."):
+        return None                           # only plain files in the audio folder
+    clip = _P(d) / mus
+    if not clip.exists():
+        return None
+    gen = sc.gen or {}
+    m = _CLIP_TAG.match(_P(mus).stem)
+    if gen.get("clip_file") == mus and gen.get("clip_start") is not None:
+        start, exact = float(gen["clip_start"]), True
+        base = m.group("base") if m else _P(mus).stem
+    elif m:
+        start, exact, base = float(m.group("s")), False, m.group("base")
+    else:
+        return None
+    local = next((_P(d) / (base + ext) for ext in _AUD_EXT if (_P(d) / (base + ext)).exists()), None)
+    lib = _load_audio_lib()
+    url = ((gen.get("youtube_url") if gen.get("clip_file") == mus else None)
+           or (lib.get(mus) or {}).get("url")
+           or next(((lib.get(base + ext) or {}).get("url") for ext in _AUD_EXT
+                    if (lib.get(base + ext) or {}).get("url")), None))
+    if not url:
+        # imports are named after the video id (yt-<id>, sfx-yt-<id>, vo-yt-<id>), so an
+        # older clip whose library entry lost its link can still find its way back
+        vid = _YT_ID.match(base)
+        if vid:
+            url = "https://www.youtube.com/watch?v=" + vid.group(1)
+    if local is None and not url:
+        return None
+    return {"clip": clip, "local": local, "url": url, "start": start, "exact": exact, "base": base}
+
+
+def extend_music(sc, new_dur, d):
+    """A longer clip of the same song from the same start: the part the lights
+    were written to plays exactly as before, and the song keeps going. Returns
+    {ok, file, dur, start, url, title} | {ok: False, reason}. Stops at the end
+    of the song if it's shorter than asked (dur says how long it really is)."""
+    import shutil as _sh
+    o = _music_origin(sc, d)
+    if o is None:
+        return {"ok": False, "reason": "not_extendable"}
+    work = _work_dir(d)
+    try:
+        src, title = o["local"], None
+        if src is None:
+            dl = _yt_download(o["url"], "music", work)
+            if not dl.get("ok"):
+                return {"ok": False, "reason": "download", "error": dl.get("error")}
+            src, title = work / dl["file"], dl.get("title")
+        start, aligned = o["start"], True
+        if not o["exact"]:
+            start, aligned = _refine_clip_start(o["clip"], src, start)
+        tmp = work / "ext.mp3"
+        if not _ff_cut(src, start, new_dur, tmp):
+            return {"ok": False, "reason": "trim"}
+        dur = _probe_dur(tmp) or float(new_dur)
+        name = _place(tmp, d, _clip_name(o["base"], start, start + dur))
+        return {"ok": True, "file": name, "dur": dur, "start": start, "url": o["url"],
+                "title": title, "aligned": aligned}
+    finally:
+        _sh.rmtree(work, ignore_errors=True)
+
+
+def _beat_palette(sc, gen):
+    """Palette for continuing a beat-sync scene: what it was made with, or (for
+    older scenes) read back off its own events: the full-brightness downbeat
+    flashes give the accent, the groove pops give the palette."""
+    if gen.get("palette") or gen.get("accent"):
+        return gen.get("palette"), gen.get("accent"), gen.get("mood") or "driving"
+    from collections import Counter
+    flashes, groove, gb = Counter(), [], []
+    for evs in sc.tracks.values():
+        for e in evs:
+            c = (e.params or {}).get("color")
+            if e.type != "set_color" or not c:
+                continue
+            b = float((e.params or {}).get("brightness", 1.0))
+            if b >= 0.99:
+                flashes[c.lower()] += 1
+            else:
+                gb.append(b)
+                if c.lower() not in groove:
+                    groove.append(c.lower())
+    acc = flashes.most_common(1)[0][0] if flashes else None
+    mood = "eerie" if gb and max(gb) <= 0.85 else "driving"
+    return (groove[:5] or None), acc, mood
+
+
+def _extend_context(sc, old, new_dur, note, devices, fog_left):
+    """What the model needs to pick up where the scene leaves off."""
+    from collections import Counter
+    from ..domain.scenes import evaluate
+    st = evaluate(sc, old)
+    end_state = {}
+    for dev, kind in devices.items():
+        x = st.get(dev)
+        if kind == "dmx_fog":
+            end_state[dev] = "fog " + ("on" if x and x.fog else "off")
+        elif x is None or x.brightness == 0:
+            end_state[dev] = "dark"
+        else:
+            end_state[dev] = "#%02x%02x%02x at %d%%" % (*x.rgb, round(x.brightness / 2.55))
+    colors, recent = Counter(), {}
+    for dev, evs in sc.tracks.items():
+        lines = []
+        for e in sorted(evs, key=lambda x: x.t):
+            c = (e.params or {}).get("color")
+            if c:
+                colors[c.lower()] += 1
+            if e.t >= old - 20:
+                b = (e.params or {}).get("brightness")
+                lines.append(f"{e.t:.1f}s {e.type}" + (f" {c}" if c else "")
+                             + (f" {int(round(float(b) * 100))}%" if b is not None else ""))
+        if dev in devices:
+            recent[dev] = lines[-8:]
+    gen = sc.gen or {}
+    return {"name": sc.name, "blurb": sc.blurb, "description": gen.get("description"),
+            "note": note, "start": old, "end": new_dur, "end_state": end_state,
+            "recent": recent, "palette": [c for c, _ in colors.most_common(6)], "fog_left": fog_left}
+
+
+def _fmt_len(s):
+    s = int(round(float(s)))
+    return f"{s} s" if s < 60 else f"{s // 60}:{s % 60:02d}"
+
+
+class ExtendReq(BaseModel):
+    seconds: float = Field(60.0, ge=5, le=120)
+    note: str | None = Field(None, max_length=300)
+    from_s: float | None = None              # the length the editor saw; a mismatch means a stale copy
+
+
+_EXT_LOCKS: dict = {}                        # scene id -> asyncio.Lock (one Extend at a time per scene)
+
+
+@app.post("/api/scenes/{scene_id}/extend")
+async def extend_scene(scene_id: str, body: ExtendReq):
+    """Make a scene longer. New lights continue it (beat-locked for a beat-sync
+    scene); YouTube music becomes a longer clip of the same song from the same
+    start. The part of the scene that already exists is kept as it is, except
+    a song show's ending (its run-up strobe, last hit and fade to dark): those
+    exact events are lifted and the song carries on from where they began."""
+    lock = _EXT_LOCKS.setdefault(scene_id, asyncio.Lock())
+    if lock.locked():
+        raise HTTPException(409, "This scene is already being extended. Give it a moment.")
+    async with lock:
+        return await _extend(scene_id, body)
+
+
+async def _extend(scene_id, body):
+    from pathlib import Path as _P
+    from ..generate import MAX_SCENE_S, extend_tracks, fog_bursts_max, resolve_key, friendly_error
+    from ..generate import sanitize_scene as _san
+    store = _ctrl(app).store
+    sc = store.scenes.get(scene_id)
+    if not sc:
+        raise HTTPException(404, f"no scene {scene_id}")
+    old = round(float(sc.duration_s), 2)
+    if body.from_s is not None and abs(float(body.from_s) - old) > 0.01:
+        raise HTTPException(409, "This scene changed somewhere else (another tab?). Reopen it and try again.")
+    room = MAX_SCENE_S - old
+    if room < 5:
+        raise HTTPException(400, f"This scene is already {_fmt_len(old)} long, and scenes stop at 5 minutes.")
+    want = round(old + min(float(body.seconds), room), 2)
+    fingerprint = sc.model_dump_json()          # to spot an edit or delete while we work
+    gen = dict(sc.gen or {})
+    beat = bool(gen.get("beat_sync")) or (sc.blurb or "").startswith("Lights locked to the beat")
+    devices = {d.id: d.kind.value for d in store.devices.values()
+               if d.kind.value in ("dmx_fixture", "dmx_fog")}
+    lights = [d for d, k in devices.items() if k == "dmx_fixture"]
+    fogs = [d for d, k in devices.items() if k == "dmx_fog"]
+    ad = _P(__file__).resolve().parents[2] / settings.audio_dir
+    mus = sc.audio.music if sc.audio else None
+    if mus and (_P(mus).name != mus or mus.startswith(".")):
+        mus = None                              # only plain files in the audio folder
+    cur_len = (await asyncio.to_thread(_probe_dur, ad / mus) or 0.0) if mus and (ad / mus).exists() else 0.0
+    need_music = bool(mus) and cur_len < want - 0.5
+    fog_used = max([sum(1 for e in sc.tracks.get(d, []) if e.type == "fog") for d in fogs] or [0])
+    # Only the lights and fog this scene still uses: a lane you cleared stays clear.
+    lights_in = [d for d in lights if sc.tracks.get(d)]
+    made_fogs = gen.get("fogs") if isinstance(gen.get("fogs"), dict) else {}
+    fogs_in = [d for d in fogs if any(e.type == "fog" for e in sc.tracks.get(d) or [])
+               or made_fogs.get(d) == 0]           # it just never had a loud chorus to fog yet
+    seam = old                                  # new events start here
+    drop_ids: set = set()                       # old events to lift (a song show's ending)
+    song = None                                 # a song show's new sections/roles/bar lines/ending
+    m = None                                    # a NEW clip we made; dropped unless the scene is saved
+    saved = False
+
+    async def _music():
+        if not need_music:
+            return None
+        try:
+            return await asyncio.to_thread(extend_music, sc, want, ad)
+        except Exception as e:
+            return {"ok": False, "reason": type(e).__name__}
+
+    try:
+        if beat:
+            m = await _music()
+            if m and m.get("ok") and not m.get("aligned", True):
+                raise HTTPException(409, "Couldn't line the longer clip up exactly with the old one, so the "
+                                         "beat would drift. Nothing was changed.")
+            if m and m.get("ok"):
+                clip_file, clen = m["file"], (m.get("dur") or want)
+            elif mus and cur_len > old + 3:
+                clip_file, clen = mus, cur_len   # no more to fetch, but the song itself runs on
+            elif not mus:
+                raise HTTPException(400, "This beat-synced scene has no music to follow.")
+            else:
+                why = (m or {}).get("reason")
+                raise HTTPException(400, {
+                    "download": "Couldn't download the song again: " + str((m or {}).get("error") or "download failed"),
+                    "trim": "Couldn't cut a longer clip of the song.",
+                }.get(why, "This scene's song can't be made longer here (it's a whole track already, "
+                           "or I can't tell where it came from), so there's no more beat to follow."))
+            new_dur = round(min(want, clen), 2)
+            if new_dur < old + 3:
+                raise HTTPException(400, "The song ends here, so there's nothing left to sync to.")
+            if gen.get("mode") == "song":
+                # A song show keeps its sections, colours and light roles. The
+                # band is read again on the longer clip, on the same bar lines,
+                # and the rest of the song gets sections of its own (coloured
+                # like the scene's own verse, chorus and so on).
+                from .. import songshow as SS
+                stored = [x for x in (gen.get("sections") if isinstance(gen.get("sections"), list) else [])
+                          if isinstance(x, dict)]
+                hint = gen.get("downbeats") if isinstance(gen.get("downbeats"), list) else []
+                hint = hint or [x.get("start") for x in stored]
+                ly = gen.get("lyrics") if isinstance(gen.get("lyrics"), dict) else {}
+                lines = await asyncio.to_thread(SS.lyrics_by_id, ly.get("id")) if ly.get("id") is not None else []
+                sm = await asyncio.to_thread(SS.analyze, str(ad / clip_file), new_dur, None, False, hint)
+                if len(sm.get("beats") or []) < 8:
+                    raise HTTPException(502, "No steady beat was found in the rest of the song.")
+                stored_roles = gen.get("roles") if isinstance(gen.get("roles"), dict) else {}
+                band = [d for d in stored_roles if d in lights_in] or lights_in
+                roles = {d: stored_roles.get(d) for d in band}
+                if not all(isinstance(r, str) and r in SS.ROLES for r in roles.values()):
+                    roles = {}                          # garbled: hand the band out afresh (rig order)
+                if not band:
+                    raise HTTPException(400, "This song show has no lights left to play the band.")
+
+                def _lay():
+                    secs = SS.extend_sections(stored, sm, lines, old, new_dur)
+                    raw, rl = SS.compose(sm, secs, [], band, fogs_in, new_dur, roles=roles or None)
+                    return raw, {"sections": secs, "roles": rl, "downbeats": [round(x, 3) for x in sm["downbeats"]],
+                                 "ending_from": SS.ending_from(sm, secs, new_dur)}
+                raw, song = await asyncio.to_thread(_lay)
+                # The old ending (a strobe run-up, the last hit, the fade to
+                # dark) mustn't land mid-song: lift exactly those events, and
+                # lay the song on from where they started. Anything you added
+                # there by hand stays.
+                tag = gen.get("ending") if isinstance(gen.get("ending"), dict) else {}
+                f = tag.get("from")
+                if isinstance(f, (int, float)) and not isinstance(f, bool) and 0 < f < old:
+                    seam = round(float(f), 3)
+                    ids = tag.get("ids") if isinstance(tag.get("ids"), list) else []
+                    drop_ids = {i for i in ids if isinstance(i, str)}
+                elif not tag:
+                    # no record of the ending (an older song show): lift the
+                    # generated events of the last three and a half bars (the
+                    # run-up starts two bars before the last downbeat)
+                    seam = max(0.0, round(old - 3.5 * 4 * (sm.get("period_s") or 0.5), 3))
+                    drop_ids = {e.id for evs in sc.tracks.values() for e in evs
+                                if e.t >= seam and str(e.id).startswith("g")}
+            else:
+                # plain beat sync has no ending to undo: the old part stays as it is
+                from ..beats import detect_beats, compose_beatsync
+                det = await asyncio.to_thread(detect_beats, str(ad / clip_file), new_dur)
+                pal, acc, mood = _beat_palette(sc, gen)
+                raw = await asyncio.to_thread(compose_beatsync, det, pal, acc, lights_in, fogs_in, new_dur, mood)
+            fog_before = max([sum(1 for e in sc.tracks.get(d, []) if e.type == "fog" and e.id not in drop_ids
+                                  and e.t < old) for d in fogs] or [0])
+            add_tr, _n, _b = await asyncio.to_thread(
+                _san, {"tracks": raw}, devices, new_dur, "flat", settings.fog_max_seconds,
+                events_max=_extend_events_cap(sc, new_dur - seam, len(lights_in), drop_ids, old),
+                fog_bursts=max(0, fog_bursts_max(new_dur) - fog_before), window=(seam, new_dur))
+            if not any(add_tr.values()):
+                raise HTTPException(502, "No beats were found in the rest of the song.")
+        else:
+            key, provider, model = resolve_key(settings)
+            if not key:
+                raise HTTPException(400, "No LLM API key configured (set HD_LLM_API_KEY in backend/.env).")
+            new_dur = want
+            ctx = _extend_context(sc, old, new_dur, body.note, devices,
+                                  max(0, fog_bursts_max(new_dur) - fog_used))
+            add_tr, m = await asyncio.gather(
+                asyncio.to_thread(extend_tracks, ctx, devices, key, model, provider, settings.fog_max_seconds),
+                _music(), return_exceptions=True)
+            if isinstance(m, BaseException):
+                m = {"ok": False, "reason": type(m).__name__}
+            if isinstance(add_tr, BaseException):
+                raise HTTPException(502, friendly_error(add_tr))
+            if not any(add_tr.values()):
+                raise HTTPException(502, "Nothing usable came back for the new part. Try again.")
+        # Someone edited or deleted the scene while we worked? Then don't save
+        # over their change; they can extend again from the new version.
+        cur = store.scenes.get(scene_id)
+        if cur is None:
+            raise HTTPException(404, "The scene was deleted while it was being extended.")
+        if cur.model_dump_json() != fingerprint:
+            raise HTTPException(409, "The scene was edited while it was being extended, so nothing was "
+                                     "saved. Try Extend again.")
+
+        # Build the longer scene as a NEW object: if this scene is playing right
+        # now, the running copy finishes untouched and the next play picks this up.
+        data = cur.model_dump()
+        added = _merge_extension(data, add_tr, drop_ids, devices, old)
+        data["duration_s"] = new_dur
+        if song:
+            gen.update({"sections": song["sections"], "roles": song["roles"], "downbeats": song["downbeats"],
+                        "ending": _ending_tag(add_tr, song["ending_from"]),
+                        "fogs": {f: sum(1 for e in data["tracks"].get(f, []) if e["type"] == "fog")
+                                 for f in fogs_in}})
+        music_note = None
+        if m and m.get("ok"):
+            data["audio"]["music"] = m["file"]
+            gen.update({"clip_file": m["file"], "clip_start": m["start"]})
+            if m.get("url"):
+                gen["youtube_url"] = m["url"]
+            music_note = {"extended": True, "file": m["file"], "dur": m.get("dur"),
+                          "loops": (m.get("dur") or 0) < new_dur - 0.5}
+        elif mus:
+            music_note = {"extended": False, "loops": cur_len < new_dur - 0.5}
+        if gen:
+            data["gen"] = gen
+        new_sc = Scene.model_validate(data)
+        store.save_scene(new_sc)
+        saved = True
+    finally:
+        if not saved and m and m.get("ok"):
+            with contextlib.suppress(Exception):
+                (ad / m["file"]).unlink()      # don't leave an unused clip behind
+
+    if m and m.get("ok"):
+        entry = _load_audio_lib().get(mus) or {}
+        _lib_upsert(m["file"], title=entry.get("title") or m.get("title") or _prettify_title(m["file"]),
+                    category=entry.get("category") or "music",
+                    source=entry.get("source") or ("youtube" if m.get("url") else None), url=m.get("url"))
+        _DUR_CACHE.pop(m["file"], None)
+        eng = getattr(app.state, "audio", None)
+        if eng is not None:
+            with contextlib.suppress(Exception):
+                await asyncio.to_thread(eng.warm_cache, [m["file"]])
+    return {"id": scene_id, "duration_s": new_dur, "added_s": round(new_dur - old, 2),
+            "events": added, "beat": beat, "music": music_note}
 
 
 @app.post("/api/scenes/{scene_id}/duplicate")
@@ -1081,35 +1727,113 @@ def _energy_start(path, target_s):
     return (random.choice(chosen) if chosen else 0) * 0.5
 
 
-def youtube_autoclip(url, target_s, description, d, cap=40.0):
+def _work_dir(d):
+    """A private scratch folder inside the audio folder (same disk, so finished
+    clips move into place instantly). Stale ones from a crash are swept."""
+    import tempfile, shutil as _sh
+    from pathlib import Path as _P
+    with contextlib.suppress(Exception):
+        for old in _P(d).glob(".clip-*"):
+            if old.is_dir() and time.time() - old.stat().st_mtime > 3600:
+                _sh.rmtree(old, ignore_errors=True)
+    return _P(tempfile.mkdtemp(prefix=".clip-", dir=str(d)))
+
+
+def _place(src, d, name):
+    """Move a finished clip into the audio folder under `name`, never
+    overwriting a file that's already there (adds -2, -3, ...)."""
+    from pathlib import Path as _P
+    stem, ext = _P(name).stem, (_P(name).suffix or ".mp3")
+    out = _P(d) / (stem + ext); i = 2
+    while out.exists():
+        out = _P(d) / f"{stem}-{i}{ext}"; i += 1
+    shutil.move(str(src), str(out))
+    return out.name
+
+
+def _ff_cut(src, start, length, out):
+    """Encode [start, start+length] of src to an mp3 at out (stops at the end of src)."""
+    ff = shutil.which("ffmpeg")
+    if not ff:
+        return False
+    try:
+        subprocess.run([ff, "-y", "-ss", f"{max(0.0, float(start)):.3f}", "-i", str(src),
+                        "-t", f"{float(length):.3f}", "-c:a", "libmp3lame", "-q:a", "2", str(out)],
+                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)
+        return out.exists() and out.stat().st_size > 0
+    except Exception:
+        return False
+
+
+def _clip_name(base, start, end):
+    return f"{base}-t{int(round(start))}_{int(round(end))}.mp3"
+
+
+def youtube_songclip(url, target_s, d):
+    """For a song show: the song from its first note, the whole song if it
+    fits in target_s, else its first target_s seconds. Same private scratch
+    folder as youtube_autoclip. Returns {ok, file, title, start, dur, full_dur}."""
+    import shutil as _sh
+    from pathlib import Path as _P
+    from ..songshow import music_start
+    work = _work_dir(d)
+    try:
+        dl = _yt_download(url, "music", work)
+        if not dl.get("ok"):
+            return dl
+        src = work / dl["file"]
+        full = _probe_dur(src)
+        if not full:
+            return {"ok": False, "error": "couldn't read the song"}
+        start = music_start(src)
+        length = max(4.0, min(float(target_s), full - start))
+        tmp = work / "cut.mp3"
+        if not _ff_cut(src, start, length, tmp):
+            return {"ok": False, "error": "trim failed"}
+        dur = _probe_dur(tmp) or round(length, 2)
+        name = _place(tmp, d, _clip_name(_P(dl["file"]).stem, start, start + dur))
+        return {"ok": True, "file": name, "title": dl.get("title", ""), "start": round(float(start), 3),
+                "dur": dur, "full_dur": full}
+    finally:
+        _sh.rmtree(work, ignore_errors=True)
+
+
+def youtube_autoclip(url, target_s, description, d, cap=None):
     """Download a YouTube clip and auto-pick a segment to fit the scene: use a
     caption line that matches the description if one exists, else the most intense
-    passage. Trims to target_s and cleans up the full download. Not user-editable
-    by design; re-generating re-picks. Returns {ok, file, title, via} | {ok:False, error}."""
-    import contextlib as _c, glob, os as _os
-    dl = _yt_download(url, "music", d)
-    if not dl.get("ok"):
-        return dl
-    src = dl["file"]
-    target_s = max(4.0, min(float(target_s), float(cap)))
-    start, via = None, "energy"
-    caps = _yt_captions(url, d)
-    if caps:
-        kws = _gen_keywords(description)
-        for ts, txt in _parse_vtt(caps):
-            if any(k in txt for k in kws):
-                start, via = max(0.0, ts - 1.0), "captions"; break
-    if start is None:
-        start = _energy_start(d / src, target_s)
-    tr = _audio_trim(src, start, start + target_s, d)
-    with _c.suppress(Exception):
-        (d / src).unlink()                       # drop the full download; keep only the clip
-    for f in glob.glob(str(d / "cap-*.vtt")):
-        with _c.suppress(Exception):
-            _os.remove(f)
-    if not tr.get("ok"):
-        return tr
-    return {"ok": True, "file": tr["file"], "title": dl.get("title", ""), "via": via, "dur": tr.get("dur")}
+    passage. Trims to target_s (the whole song if it's shorter). Everything happens
+    in a private scratch folder, so an existing full import of the same video
+    (which other scenes may use) is never touched. Returns
+    {ok, file, title, via, dur, start} | {ok: False, error}."""
+    import shutil as _sh
+    from pathlib import Path as _P
+    from ..generate import MAX_SCENE_S
+    cap = MAX_SCENE_S if cap is None else float(cap)
+    work = _work_dir(d)
+    try:
+        dl = _yt_download(url, "music", work)
+        if not dl.get("ok"):
+            return dl
+        src = work / dl["file"]
+        target_s = max(4.0, min(float(target_s), cap))
+        start, via = None, "energy"
+        caps = _yt_captions(url, work)
+        if caps:
+            kws = _gen_keywords(description)
+            for ts, txt in _parse_vtt(caps):
+                if any(k in txt for k in kws):
+                    start, via = max(0.0, ts - 1.0), "captions"; break
+        if start is None:
+            start = _energy_start(src, target_s)
+        tmp = work / "cut.mp3"
+        if not _ff_cut(src, start, target_s, tmp):
+            return {"ok": False, "error": "trim failed"}
+        dur = _probe_dur(tmp) or round(target_s, 2)
+        name = _place(tmp, d, _clip_name(_P(dl["file"]).stem, start, start + dur))
+        return {"ok": True, "file": name, "title": dl.get("title", ""), "via": via,
+                "dur": dur, "start": round(float(start), 3)}
+    finally:
+        _sh.rmtree(work, ignore_errors=True)
 
 
 @app.get("/api/audio/devices")

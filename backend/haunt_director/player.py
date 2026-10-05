@@ -74,7 +74,7 @@ class _Run:
     """One playback of one scene: the clock the bus and the cue task share.
     `start` and `mute` are plain attribute swaps, safe to read from the bus."""
 
-    __slots__ = ("scene", "loop", "mute", "start", "sustain", "roles")
+    __slots__ = ("scene", "loop", "mute", "start", "sustain", "roles", "audio_lag")
 
     def __init__(self, scene: Scene, loop: bool, mute: set, sustain: bool, roles=None):
         self.scene = scene
@@ -83,6 +83,9 @@ class _Run:
         self.mute = set(mute)
         self.sustain = bool(sustain)
         self.start = time.monotonic()
+        # lights set to run AHEAD of the sound: rather than skip the start of the
+        # lights, the sound starts this much later (fixed for the run)
+        self.audio_lag = 0.0
 
     def raw(self, now: float) -> float:
         return max(0.0, now - self.start)
@@ -93,6 +96,9 @@ class _Run:
         if self.loop and d > 0:
             return r % d
         return min(r, d)
+
+
+LIGHT_DELAY_MAX_MS = 300
 
 
 class ShowPlayer:
@@ -114,9 +120,22 @@ class ShowPlayer:
         self.audio_muted: bool = False            # True -> no music, voice-over, or cues
         self.volume: int = 100                    # app master volume, 0-100 (slider %)
         self.duck_db: int = DUCK_DEFAULT_DB       # voice ducking depth, dB (0 = off)
+        # light timing: + delays the lights behind the sound (the sound reaches
+        # the yard later than the light), - runs them ahead. Read every frame, so
+        # the sync test can be tuned while it plays. A scene that starts with a
+        # - setting holds its sound back by that much instead, so the start of
+        # the lights is never skipped; either way the lights finish the scene.
+        self.light_delay_s: float = 0.0
         # files -> the subset that are spoken lines (the app wires this to the
         # audio library's categories, the same ones the editor's VOICE lanes use)
         self.voice_files = None
+
+    def set_light_delay(self, ms) -> None:
+        try:
+            v = float(ms)
+        except (TypeError, ValueError):
+            v = 0.0
+        self.light_delay_s = max(-LIGHT_DELAY_MAX_MS, min(LIGHT_DELAY_MAX_MS, v)) / 1000.0
 
     # ---- the fog guard lives on the bus (it must cover manual fog too) ----
     @property
@@ -174,7 +193,7 @@ class ShowPlayer:
     @property
     def _t(self) -> float:
         r = self._run
-        return r.t(time.monotonic()) if r is not None else 0.0
+        return r.t(time.monotonic() - r.audio_lag) if r is not None else 0.0
 
     @property
     def _scene_id(self) -> str | None:
@@ -205,7 +224,7 @@ class ShowPlayer:
         if not self.is_playing or r is None:
             return
         tgt = max(0.0, min(float(t), r.scene.duration_s))
-        r.start = time.monotonic() - tgt
+        r.start = time.monotonic() - tgt - r.audio_lag
         self._seek_pending = tgt
 
     def _resolve_crossfade(self, override) -> float:
@@ -243,19 +262,21 @@ class ShowPlayer:
             # scene until set_scene() below swaps in the new one -- no dark gap.
             await self._end_current(xf, lights_off=False)
             run = _Run(scene, loop, set(mute or []), sustain_on_end, roles)
+            run.audio_lag = max(0.0, -self.light_delay_s)
             au = getattr(scene, "audio", None)
             self._audio_owner = scene if (au is not None and self.audio is not None) else None
             if au and self.audio is not None:
                 with contextlib.suppress(Exception):
                     self.audio.set_mute(run.mute)
-                    if au.music and not self.audio_muted:
+                    if au.music and not self.audio_muted and run.audio_lag <= 0:
                         self.audio.play_music(au.music, gain=au.gain, loop=True)
             run.start = time.monotonic()
             self._run = run
             self._last_scene_id = scene.id
             self._seek_pending = None
             store = self.ctrl.store
-            self.bus.set_scene(lambda now, r=run: scene_channels(store, r.scene, r.t(now), r.mute))
+            self.bus.set_scene(lambda now, r=run: scene_channels(
+                store, r.scene, r.t(now - r.audio_lag - self.light_delay_s), r.mute))
             self._task = asyncio.create_task(self._cues(run), name=f"cues:{scene.id}")
 
     async def stop(self) -> None:
@@ -311,6 +332,8 @@ class ShowPlayer:
         fired: set = set()
         lap = 0
         ended = False
+        music_due = bool(au and au.music and run.audio_lag > 0)   # held back (lights run ahead)
+        sound_over = False
         try:
             while True:
                 sp = self._seek_pending
@@ -318,8 +341,9 @@ class ShowPlayer:
                     self._seek_pending = None
                     vo_fired = bool(au and au.voiceover and au.voiceover_at_s <= sp)
                     fired = set()
+                    music_due = sound_over = False
                     d = run.scene.duration_s
-                    lap = int(run.raw(time.monotonic()) // d) if (run.loop and d > 0) else 0
+                    lap = int(max(0.0, run.raw(time.monotonic()) - run.audio_lag) // d) if (run.loop and d > 0) else 0
                     if au and self.audio is not None:
                         with contextlib.suppress(Exception):
                             self.audio.stop()
@@ -333,8 +357,16 @@ class ShowPlayer:
                                         self.audio.play_cue(cue.file, gain=cue.gain,
                                                             loop=cue.loop, key=cue.id,
                                                             role=run.roles.get(cue.id))
-                raw = run.raw(time.monotonic())
+                raw = run.raw(time.monotonic()) - run.audio_lag      # the sound's clock
                 d = run.scene.duration_s
+                if raw < 0:
+                    await asyncio.sleep(CUE_TICK_S)                  # sound not started yet
+                    continue
+                if music_due:
+                    music_due = False
+                    if self.audio is not None and not self.audio_muted:
+                        with contextlib.suppress(Exception):
+                            self.audio.play_music(au.music, gain=au.gain, loop=True)
                 if run.loop and d > 0:
                     cur = int(raw // d)
                     if cur != lap:                 # wrapped: re-arm this lap's cues
@@ -344,8 +376,18 @@ class ShowPlayer:
                     t = raw - cur * d
                 else:
                     if raw >= d:
-                        ended = True
-                        break
+                        # the sound is over; lights running behind it get to
+                        # reach the end before the final frame is held
+                        if not sound_over:
+                            sound_over = True
+                            if self.audio is not None and not (self._suppress_audio_stop or run.sustain):
+                                with contextlib.suppress(Exception):
+                                    self.audio.stop()   # (a looping bed would start over)
+                        if raw - max(0.0, self.light_delay_s) >= d:
+                            ended = True
+                            break
+                        await asyncio.sleep(CUE_TICK_S)
+                        continue
                     t = raw
                 if au and self.audio is not None:
                     if au.voiceover and not vo_fired and t >= au.voiceover_at_s:

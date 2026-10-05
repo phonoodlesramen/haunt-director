@@ -563,6 +563,28 @@ class AudioEngine:
             if f:
                 self._wav(f)
 
+    def prune_cache(self) -> int:
+        """Delete converted copies whose source clip is gone from the audio
+        folder (a 5-minute song's copy is ~50 MB). Only touches *.norm.wav
+        files in the cache folder, and does nothing if the audio folder can't
+        be read. Returns how many were removed."""
+        try:
+            stems = {p.stem for p in self.audio_dir.iterdir() if p.is_file()}
+            cached = list(self.cache_dir.glob("*.norm.wav"))
+        except Exception:
+            return 0
+        if not stems:
+            return 0                                # an empty or unmounted folder: leave the cache alone
+        gone = 0
+        for c in cached:
+            if c.name[:-len(".norm.wav")] not in stems:
+                with contextlib.suppress(Exception):
+                    c.unlink()
+                    gone += 1
+        if gone:
+            log.info("wav cache: removed %d orphaned copies", gone)
+        return gone
+
 
 def _clamp(v, lo=0.0, hi=1.0):
     try:

@@ -70,6 +70,17 @@ A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, e
 - **Master volume** follows a perceptual curve and applies to everything live.
 - **Voice ducking** is a small envelope thread. While a voice is audible, music and looping beds slide down by the set depth (fast attack, a short hold between lines, then a gentle release). One-shot effects are left alone.
 
+## Song shows
+
+`songshow.py` builds a song show in three steps, all at authoring time:
+
+- **Listen.** ffmpeg (three at a time, at low priority) splits the song into five frequency bands (kick, bass, guitar and mids, snare crack, cymbals) and audioop measures each one every 11.6 ms. A dynamic-programming beat tracker (Ellis 2007) follows the drummer's real tempo. Downbeats come from the backbeat, with sung lines settling which beat is "1". Cymbals in the top band are the surest sign the drums are playing; kick and snare follow the backbeat with extra hits added where the bands show them.
+- **Read.** Timed lyrics from LRCLIB (the community entries disagree by a second or two, so it takes the one closest to the others) become sections. The AI turns their meaning into a palette per section. Colors are used at full strength (on a light, a dark color just looks switched off), so a quiet section is a deep hue at a low energy. The words stay in memory only.
+- **Play.** `compose()` gives each light an instrument and lays events on the beat grid. The ending and the AI's accent moments get the lights to themselves, so a strobe run-up or a beat of darkness plays out in full. The result goes through the same sanitizer as every generated scene, so the fog and strobe caps still apply.
+- **Extend.** The longer clip is read again on the bar lines saved with the scene, and the rest of the song gets sections of its own. The old ending's events are tagged when the scene is made, so Extend lifts exactly those.
+
+**Light timing** is applied in the player: the bus renders the scene at "now minus the offset", read every frame, so the Sync test can be tuned while it plays. A scene that starts with the lights set early holds its sound back by that much instead, so its first moments aren't skipped, and a scene with the lights set late waits for them to reach the end before it holds the last frame.
+
 ## The System tab
 
 `system.py` reads FPP's status three ways: the daemon directly, through FPP's web server, and through its PHP layer. That's how it can tell "FPP is down" apart from "FPP's web UI is stuck". It reads Pi vitals from `/proc`, `/sys` and `vcgencmd`, and runs the setup checks. Fixes go through `sudo -n`, which never prompts. Each fix is small and targeted, backs up any FPP file before changing it, and reverts if FPP doesn't come back.
@@ -103,6 +114,7 @@ backend/
     control.py        Live cards, fog bursts, stop
     generate.py       optional AI scene drafting (+ sanitizer)
     beats.py          beat detection for beat-synced scenes
+    songshow.py       song shows: band analysis, lyrics, sections, choreography
     domain/           devices, fixture profiles, scenes, the channel resolver
     fpp/              FPP client and provisioning
   data-example/       example devices, profiles and scenes (copied to data/ on first start)

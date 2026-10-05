@@ -162,6 +162,14 @@ button.ghost{background:transparent}
 .sheet .savebar .primary{flex:2}.sheet .savebar .ghost{flex:1}
 .toggle{display:flex;align-items:center;gap:10px;justify-content:space-between}
 .showopt{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft)}
+.extbox{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px}
+/* covers only the editor while it's being changed underneath you; the top bar,
+   tabs and STOP EVERYTHING stay usable */
+#view-editor{position:relative}
+.busyveil{position:absolute;inset:0;z-index:15;background:rgba(8,9,13,.72);border-radius:12px}
+.busyveil[hidden]{display:none}
+.busyveil .bv{position:sticky;top:120px;margin:120px auto 0;max-width:320px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.busyveil .bv b{display:block;font-size:15px;margin-bottom:6px}
 .showopt .optname{font-weight:600}
 .showopt .grow{min-width:0}
 .sigpill.presence.off{border-style:dashed;opacity:.8}
@@ -206,6 +214,8 @@ button.ghost{background:transparent}
 }
 /* ============ timeline / keyframe editor ============ */
 .ed-head{display:flex;align-items:center;gap:10px;margin:16px 4px 6px}
+@media (max-width:440px){.ed-head{gap:6px}.ed-head .btn-mini{padding:9px 8px}.ed-head .savestat{min-width:0}}
+button.primary:disabled{opacity:.45;cursor:not-allowed}
 .ed-title{font-family:var(--disp);font-size:18px;letter-spacing:.5px;text-transform:uppercase;flex:1;min-width:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-back{flex:none;background:var(--surface2);border:1px solid var(--line);color:var(--text);
@@ -315,7 +325,7 @@ button.ghost{background:transparent}
 .systile .d{font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
 .systile .dot{flex:none} .systile .vt{min-width:0;overflow:hidden;text-overflow:ellipsis}
-#fogTest,#volTest{flex:none;width:auto;padding:10px 14px}
+#fogTest,#volTest,#syncTest{flex:none;width:auto;padding:10px 14px}
 .chk{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line-soft)}
 .chk:first-child{border-top:0;padding-top:2px}
 .chk .dot{flex:none;margin-top:6px}
@@ -392,7 +402,7 @@ button.ghost{background:transparent}
           <div class="field" style="margin-top:0"><label>Describe the scene</label>
             <textarea id="genDesc" rows="3" placeholder="e.g. a slow green graveyard mist that builds to a screaming strobe hit at the end"></textarea></div>
           <div class="field"><label>Length <span class="muted" id="genDurVal">30 s</span></label>
-            <input type="range" id="genDur" min="10" max="180" step="5" value="30" oninput="document.getElementById('genDurVal').textContent=this.value+' s'"></div>
+            <input type="range" id="genDur" min="10" max="300" step="5" value="30" oninput="genDurLabel()"></div>
           <div class="field"><label>Intensity flow</label>
             <select id="genFlow">
               <option value="flat">Flat — steady</option>
@@ -403,8 +413,11 @@ button.ghost{background:transparent}
             </select></div>
           <div class="field"><label>YouTube audio <span class="muted">optional</span></label>
             <input type="text" id="genYt" placeholder="paste a link — I'll clip the best part to fit"></div>
-          <div class="field toggle" style="margin-top:2px"><label style="margin:0">🎵 Sync lights to the beat <span class="muted">needs a link</span></label>
-            <label class="switch"><input type="checkbox" id="genBeat"><span class="track"></span></label></div>
+          <div class="field toggle" style="margin-top:2px"><label style="margin:0">🎸 Song show <span class="muted">needs a link</span></label>
+            <label class="switch"><input type="checkbox" id="genBeat" onchange="songToggle()"><span class="track"></span></label></div>
+          <div class="sub muted" id="songHint" style="display:none;margin:-4px 0 8px">The drums, bass and guitar drive the lights and the lyrics pick the colors. It starts on the song's first note; leave Length at 5:00 for the whole song. Describing the scene is optional here (it steers the colors). Works best on rock and pop with a clear beat.</div>
+          <div class="field" id="songRow" style="display:none"><label>Song <span class="muted">optional, if the video title is unusual</span></label>
+            <input type="text" id="genSong" maxlength="160" placeholder="Artist - Title"></div>
           <div class="btns">
             <button class="primary" id="genGo" style="color:var(--accent-ink)" onclick="generateScene()">✨ Generate</button>
             <button class="ghost" onclick="toggleGen()">Cancel</button>
@@ -441,6 +454,12 @@ button.ghost{background:transparent}
           <div class="sub">While a voice speaks, music and looping ambience dip by this much, then come back. One-shot effects stay full. 0 turns it off.</div></div>
       </div>
       <input type="range" id="duck" min="0" max="18" step="1" value="9" style="margin-top:10px" aria-label="Voice ducking depth">
+      <div class="row" style="margin-top:14px">
+        <div class="grow"><div class="name" style="font-size:15px">Light timing <span class="muted" id="lagVal">0 ms</span></div>
+          <div class="sub">Lines the lights up with the sound, for every scene. Stand where visitors will and press Sync test: the first light flashes with each click. Slide until flash and click land together.</div></div>
+        <button class="ghost" id="syncTest" onclick="syncTest()" title="12 seconds of clicks with a flash on each">⏱ Sync test</button>
+      </div>
+      <input type="range" id="lag" min="-300" max="300" step="10" value="0" style="margin-top:10px" aria-label="Light timing">
     </div>
     <h2>Show mode</h2>
     <div class="card">
@@ -504,6 +523,7 @@ button.ghost{background:transparent}
   </section>
 
   <section id="view-editor" class="view">
+    <div class="busyveil" id="busyVeil" hidden><div class="bv"><b id="busyTitle">Working…</b><div class="sub" id="busySub"></div></div></div>
     <div class="ed-head">
       <button class="btn-back" onclick="exitEditor()">← Scenes</button>
       <div class="ed-title" id="edtName">Scene</div>
@@ -538,6 +558,14 @@ button.ghost{background:transparent}
           <div class="field"><label>Name</label><input type="text" id="setName"></div>
           <div class="field"><label>Blurb</label><input type="text" id="setBlurb"></div>
           <div class="field"><label>Duration <span class="muted" id="setDurVal">90 s</span></label><input type="number" id="setDur" min="3" max="600"></div>
+          <div class="field extbox"><label>Make it longer <span class="muted">up to 5 minutes</span></label>
+            <div class="rowline">
+              <select id="extSecs" style="flex:none;width:auto"><option value="30">+30 s</option><option value="60" selected>+60 s</option><option value="90">+90 s</option></select>
+              <button class="primary" type="button" id="extGo" style="flex:1" onclick="extendScene()">✨ Extend</button>
+            </div>
+            <input type="text" id="extNote" maxlength="300" placeholder="optional: what happens next (e.g. build to a big finish)" style="margin-top:8px">
+            <div class="sub muted" id="extStat" style="margin-top:6px">Continues this scene's look and story. A YouTube song gets a longer clip from the same spot; beat-synced scenes stay on the beat.</div>
+          </div>
           <div class="field"><label>Music</label><select id="setMusic"></select></div>
           <div class="trimrow" style="margin:-4px 0 4px;flex-wrap:wrap">
             <button class="mini" type="button" style="color:var(--text)" onclick="toggleYt()">＋ YouTube</button>
@@ -661,8 +689,8 @@ button.ghost{background:transparent}
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="app.js?v=21"></script>
+<script src="app.js?v=24"></script>
 <script src="stage.js?v=12"></script>
-<script src="timeline.js?v=13"></script>
+<script src="timeline.js?v=14"></script>
 </body>
 </html>

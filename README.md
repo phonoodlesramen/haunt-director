@@ -27,7 +27,7 @@
 - 🔊 **Real sound, on the Pi.** Music beds, voice lines and sound effects, all mixed together in one engine and kept in sync with the lights. When a voice speaks, the music automatically dips so you can hear it. There's a master volume and Test buttons for sound and fog.
 - 🩺 **A System tab that fixes things.** It shows live health for FPP, the lights, sound, sensor and the Pi itself, plus a setup checklist where most problems have a one-click **Fix**. Restart and reboot buttons work from your phone in the yard.
 - 🛡️ **Safety rails built in.** Fog bursts can't outlive their cap, and a single master switch keeps the fogger at zero. If the app stops, the lights go dark within a second instead of freezing on. There's an optional limit on how fast strobes can flash, plus a big red **STOP EVERYTHING** button.
-- ✨ **Optional extras.** Describe a scene in words and let an AI draft it (bring your own key), or sync lights to the beat of a song.
+- ✨ **Optional extras.** Describe a scene in words and let an AI draft it (bring your own key), or paste a song and get a **song show**: the drums, bass and guitar drive the lights, and the lyrics pick the colors.
 
 All of it for $0. No subscription, no cloud account, no login. Just your Pi, on your network.
 

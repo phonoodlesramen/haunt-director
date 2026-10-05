@@ -174,7 +174,8 @@
   function fillSettings(){
     const AL=audioLists(), a=SC.audio||{};
     $('#setName').value=SC.name||''; $('#setBlurb').value=SC.blurb||'';
-    $('#setDur').value=SC.duration_s||90; $('#setDurVal').textContent=(SC.duration_s||90)+' s';
+    $('#setDur').value=SC.duration_s||90; $('#setDurVal').textContent=lenText(SC.duration_s||90);
+    fillExtend();
     fillAudioSelect($('#setMusic'),['music','sfx'],a.music||'','None');
     fillAudioSelect($('#setVo'),['voice'],a.voiceover||'','None');
     const at=$('#setVoAt'); at.max=SC.duration_s||90; at.value=a.voiceover_at_s||0;
@@ -480,7 +481,7 @@
     else if(id==='setFade'){ const v=Math.max(0,+e.target.value||0); SC.audio_fade_out_s=v;
       const val=$('#setFadeVal'); if(val) val.textContent=v.toFixed(1)+' s';
       const hint=$('#setFadeHint'); if(hint) hint.textContent=v.toFixed(1)+' s'; }
-    else if(id==='setDur'){ const v=+e.target.value||0; document.getElementById('setDurVal').textContent=v+' s'; SC.duration_s=Math.max(3,v); const va=document.getElementById('setVoAt'); if(va) va.max=SC.duration_s; buildTimeline(); }
+    else if(id==='setDur'){ const v=+e.target.value||0; document.getElementById('setDurVal').textContent=lenText(v); setTimeout(fillExtend,0); SC.duration_s=Math.max(3,v); const va=document.getElementById('setVoAt'); if(va) va.max=SC.duration_s; buildTimeline(); }
     else if(id==='setVoAt'){ SC.audio=SC.audio||{}; SC.audio.voiceover_at_s=+e.target.value; document.getElementById('setVoAtVal').textContent=(+e.target.value).toFixed(1)+' s'; buildTimeline(); }
     else if(id==='setVo'){ setVoVis(); SC.audio=SC.audio||{}; SC.audio.voiceover=e.target.value||null; if(SC.audio.voiceover_at_s==null) SC.audio.voiceover_at_s=0; buildTimeline(); }
     else if(id==='setMusic'){ SC.audio=SC.audio||{}; SC.audio.music=e.target.value||null; buildTimeline(); }
@@ -689,6 +690,64 @@
       buildTimeline(); if(moved){ renderEventEditor(); touch(); } previewAt(scrubT); };
     window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up);
   }
+
+  // ---- Extend: make this scene longer (new lights continue it; YouTube music gets longer) ----
+  const MAX_SCENE_S=300;
+  function lenText(s){ return (typeof fmtLen==='function') ? fmtLen(s) : (Math.round(s)+' s'); }
+  function fillExtend(){
+    const go=$('#extGo'), st=$('#extStat'); if(!go||!SC) return;
+    const room=MAX_SCENE_S-(+SC.duration_s||0);      // the server adds at most what's left
+    go.disabled = room<5;
+    if(st && room<5) st.textContent='This scene is at the 5-minute limit.';
+  }
+  function busy(on, title, sub){
+    const v=$('#busyVeil'); if(!v) return;
+    v.hidden=!on; if(on){ $('#busyTitle').textContent=title||'Working…'; $('#busySub').textContent=sub||''; }
+  }
+  async function postJSON(url, body){
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const t=await r.text(); let j=null; try{ j=JSON.parse(t); }catch(_){}
+    if(!r.ok) throw new Error((j&&typeof j.detail==='string')?j.detail:(t||String(r.status)).slice(0,200));
+    return j;
+  }
+  let EXTENDING=false;
+  async function adoptServerCopy(before){
+    // take the server's (longer) scene into the editor; Undo goes back to `before`
+    const fresh=await jget('/api/scenes/'+SC.id);
+    if(before!=null){ UNDO.push(before); if(UNDO.length>80) UNDO.shift(); updateUndoBtn(); }
+    SC=fresh; SC.tracks=SC.tracks||{}; sel=null;
+    if(typeof loadAudioLists==='function'){ try{ await loadAudioLists(); }catch(_){} }
+    fillSettings(); buildTimeline(); renderEventEditor(); setScrub(Math.min(scrubT,SC.duration_s));
+    LAST=snap(); setSaveStatus('saved');
+  }
+  window.extendScene=async function(){
+    if(!SC||EXTENDING) return;
+    const go=$('#extGo'); EXTENDING=true; if(go){ go.disabled=true; go.blur(); }
+    const secs=+($('#extSecs').value||60), note=($('#extNote').value||'').trim(), st=$('#extStat');
+    clearTimeout(saveTimer); await commit();                       // your edits land first
+    const before=snap(), id=SC.id, fromS=+SC.duration_s;
+    busy(true,'Extending “'+(SC.name||'scene')+'” by '+lenText(secs)+'…','Writing the new part'+(SC.audio&&SC.audio.music?' and fetching more of the song':'')+'. This can take a minute.');
+    try{
+      const r=await postJSON('/api/scenes/'+id+'/extend',{seconds:secs,note:note||null,from_s:fromS});
+      if(!SC||SC.id!==id) return;                                   // you left for another scene
+      await adoptServerCopy(before);
+      let msg='Added '+lenText(r.added_s)+' ('+r.events+' events'+(r.beat?', on the beat':'')+'). Now '+lenText(r.duration_s)+'.';
+      if(r.music&&r.music.extended&&!r.music.loops) msg+=' The song plays through.';
+      else if(r.music&&r.music.extended&&r.music.loops) msg+=' The song ends at '+lenText(r.music.dur)+', then loops.';
+      else if(r.music&&r.music.loops) msg+=' The music loops to fill it.';
+      if(st) st.textContent=msg; $('#extNote').value='';
+      if(typeof toast==='function') toast('Extended to '+lenText(r.duration_s));
+    }catch(e){
+      // the reply may have been lost (phone slept, Wi-Fi blip) after the server
+      // saved: if the scene did get longer, take that version rather than
+      // letting this stale copy autosave over it
+      let adopted=false;
+      try{ const chk=await jget('/api/scenes/'+id);
+        if(SC&&SC.id===id&&chk&&+chk.duration_s>fromS+0.01){ await adoptServerCopy(before); adopted=true; } }catch(_){}
+      if(st) st.textContent = adopted ? 'Extended to '+lenText(SC.duration_s)+' (the reply got lost, but it saved).' : 'Extend failed: '+e.message;
+      if(typeof toast==='function') toast(adopted?'Extended':'Extend failed');
+    }finally{ EXTENDING=false; busy(false); fillExtend(); }
+  };
 
   // ---- scene management ----
   window.newScene=async function(){
