@@ -186,8 +186,12 @@
       const tr = t ? hx(t.hex) : [0,0,0], tb = t ? (t.brightness||0)/255 : 0;
       if(!shown[d.id]) shown[d.id] = {rgb:[0,0,0], b:0};
       const s = shown[d.id];
-      s.rgb = s.rgb.map((c,i)=> c + (tr[i]-c)*0.20);
-      s.b += (tb - s.b)*0.20;
+      // A state worked out here every frame (the simulator, the full-screen view)
+      // is exact: show it as it is, so a hit lands on its beat at full strength.
+      // Live status only arrives a few times a second: ease between those.
+      const k = STATE.exact ? 1 : 0.20;
+      s.rgb = s.rgb.map((c,i)=> c + (tr[i]-c)*k);
+      s.b += (tb - s.b)*k;
       let b = s.b, c = s.rgb.slice();
       if(t && t.strobe){ const shz=Math.min(Math.max(+t.strobe_hz||3,0.5),8); b = ((now*shz/1000)%1) < 0.5 ? Math.max(b,0.9) : 0; }
       if(aiming === d.id){ b = Math.max(b,0.85); if(c[0]+c[1]+c[2] < 60) c = [232,226,208]; }

@@ -10,11 +10,17 @@ Every entry here really happened on the reference rig on the way to Halloween. *
 
 Better Wi-Fi at the Pi (or a cable) shortens boots in general.
 
+## The Pi takes minutes to start, or doesn't come back after a restart
+
+**What's happening:** the SD card is stalling. A Pi 5 should start in about 30 seconds; on the reference rig a tired card took over 7 minutes, Wi-Fi came up so late that FPP gave up starting (no lights at all), and one restart never came back (green light, no flicker, nothing on the network). `sudo cat /sys/kernel/debug/mmc0/err_stats` shows it: a climbing **Data Timeout** count. Some cards also misbehave with the Pi 5's SD command queueing.
+
+**Fix:** move to a different card (copy the old one first; the card was fine at its own speed tests, it only stalled under load). Adding `dtparam=sd_cqe=off` under `[all]` in `/boot/firmware/config.txt` turns command queueing off, which costs little for a show controller. If FPP didn't start, System tab → **Restart FPP** gets the lights back without a reboot.
+
 ## "Pi audio isn't ready"
 
-**What's happening:** the Pi's default sound output is its HDMI port. With no monitor attached, HDMI refuses to open ("error 524"), so the app never reaches your USB adapter. It tends to show up the first time the rig runs somewhere without a monitor.
+**What's happening:** the app now opens a USB sound adapter directly, so this should be rare. If you still see it, the adapter isn't plugged in, isn't a USB audio device, or something else has it open. Older versions went through ALSA's default device, which is the HDMI port ("error 524" with no monitor) or, on a Pi with the desktop installed, the desktop's sound server; the desktop login also deletes `~/.asoundrc`, so a fix written there didn't survive a restart.
 
-**Fix:** System tab → **Sound output → Use (your adapter)**. It points ALSA's default device at the USB adapter by name (in `~/.asoundrc`, surviving reboots), then restarts the app.
+**Fix:** check the adapter shows up in `aplay -l` as a USB-Audio card, then System tab → **Restart app**. The **Sound output → Use (your adapter)** button still works for a one-off, and you can name a device outright with `HD_AUDIO_DEVICE` in `.env`.
 
 ## I can't find the Pi anymore
 
@@ -38,6 +44,8 @@ Some fixtures need a few frames with the strobe channel at "off" before they act
 ## Scares fire when nobody's there
 
 24 GHz radar sees **motion**, not people: swinging props, flapping fabric, branches and fog plumes all count, and it can see through thin walls and windows. Re-aim it along the approach path and away from the decorations, shorten its range and sensitivity in the vendor's phone app, and keep it away from the fogger. A longer **cooldown** under Show helps too, and so does **Hold before firing** (Show → Presence sensor), which ignores anything that doesn't stay in range for a second or two. (If it never fires, check you're testing in front of the sensor's face, not behind it.)
+
+If it says someone's there **almost all the time**, check the cable first. On the reference rig a sensor connector worked loose in the rain and the reading stuck on present. The app now pulls the sensor input toward "clear" (down for a sensor that goes HIGH on presence), so a disconnected sensor reads as nobody there instead of floating; the flip side is that an unplugged sensor looks exactly like an empty yard, so walk past it after any rewiring. Seal the connector and cable entry against water (self-fusing silicone tape works well).
 
 ## Voices are hard to understand
 

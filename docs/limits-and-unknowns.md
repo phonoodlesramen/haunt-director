@@ -29,7 +29,7 @@ Honest list. Nobody has tried any of these with Haunt Director yet:
 
 **Hardware**
 
-- **Raspberry Pi 4, 3, Zero 2 W, Compute Modules.** The Pi 4 will probably be fine. Smaller boards may struggle with audio decoding and the web UI at the same time.
+- **Raspberry Pi 5 with 4 GB or less, Pi 4, 3, Zero 2 W, Compute Modules.** The whole stack (FPP, Haunt Director and the desktop) uses about 1 GB of RAM on the reference rig, so a 4 GB Pi 5 or a Pi 4 will probably be fine. Smaller boards may struggle with audio decoding and the web UI at the same time.
 - **Other USB DMX adapters** (DMX-Pro style, DMXking, isolated adapters). If FPP supports it, it should work, since Haunt Director never talks to the adapter directly.
 - **Other fixtures.** They need a [profile](fixture-profiles.md). Moving heads, pan and tilt, gobos and color wheels have no event types yet.
 - **Pixels** (WS2811 and friends). Haunt Director doesn't sequence pixels. FPP can still run them on *other* channels alongside, but that combination is untested.
@@ -43,7 +43,7 @@ Honest list. Nobody has tried any of these with Haunt Director yet:
 - **The official FPP SD image** (instead of FPP on Raspberry Pi OS). The default users and their sudo rules differ, which the installer handles, but it hasn't been tried end to end.
 - **Raspberry Pi OS 13 (Trixie)** and Python above 3.11.
 - **Running FPP's own sequences or playlists at the same time.** FPP lets network input override sequence data on the same channels, so it should behave if they use separate channels. Untested.
-- **Weeks of unattended running.** It's been run for evening-length shows. SD card wear, memory over weeks, and cold or hot nights are all unproven.
+- **Weeks of unattended running.** It's been run for evening-length shows, and the reference Pi has stayed up for over a week between restarts. SD card wear, memory over weeks, and cold or hot nights (December, we're looking at you) are all unproven.
 
 ## Known quirks
 

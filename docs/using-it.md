@@ -12,6 +12,18 @@ Five tabs along the bottom (along the top on a laptop), a status strip across th
 
 Hands-on control of each fixture, for testing and for "make the porch purple right now" moments.
 
+### House lights
+
+The card at the top of Live lights the house on nights there's no show. It's **lights only**: it never touches the fogger and never plays a sound.
+
+- **Off / Schedule / On.** On lights the house until you switch it off. Schedule follows the card's own windows, separate from the show's schedule.
+- **Colors.** Give each light one to four colors. With one it holds steady; with more it glides from one to the next, slightly out of step with the other lights, so the house always looks a little different. **Each color lasts about** sets the pace, from a minute to an hour. **Brightness** dims the whole thing. The dot beside each light shows what it's showing right now, and **Preview an hour** plays an hour of the drift in 30 seconds.
+- **Any season.** Orange and purple in October, red, green and warm white in December, red, white and blue in July. The colors are yours; the schedule doesn't know what holiday it is.
+- **Schedule windows** turn on at dusk (plus or minus an offset, using the location on the Show tab) or at a set time, turn off at a set time, and run on the days you pick. A window can run past midnight.
+- **The show always comes first.** While the show is armed, or while any scene plays, house lights step aside; they fade back in when the yard is free again, if they're still due on. Live light cards still sit on top of them.
+- **STOP EVERYTHING** turns them off until the next window starts (in On mode, until you press On again).
+- Edits apply as you make them, so you can stand in the yard and pick colors.
+
 - Each light card has a color swatch, brightness, a strobe rate and quick presets (*Blood, Ember, Toxic, Phantom, Ice, Bone*). Press **Apply** to send it.
 - A light you set here **overrides** the running scene and wears a **Manual** badge. Tap **Release** to hand it back to the scene. Arming the show releases everything automatically.
 - The **fog card** fires a burst of a chosen length. Every burst has a hard cap (8 seconds by default) and turns itself off when it's done, even if your phone loses Wi-Fi mid-burst.
@@ -26,7 +38,7 @@ The **Scenes** tab has the **stage**, a simulator that draws your lights and fog
 The **🖥 Sim / 🏠 Live** switch above the stage (and next to Play in the editor) decides where Play runs:
 
 - **🏠 Live** plays on the real lights, fogger and the Pi's speaker, with the stage following along.
-- **🖥 Sim** plays only on the stage, with the sound coming from the phone or laptop you're holding. The yard isn't touched, so it's the way to try out a new scene before the night.
+- **🖥 Sim** plays only on the stage, with the sound coming from the phone or laptop you're holding. The yard isn't touched, so it's the way to try out a new scene before the night. The stage keeps its lights with that sound: it waits for the song to start (a beat or so on a slow connection), then follows it, and every light change shows at full strength on its beat.
 - **While the show is armed, Play is always Sim** (the switch says ARMED), so you can work on scenes at your desk while the show runs outside. The app also refuses to play, seek or mute a scene on the rig while armed.
 
 Each phone or laptop remembers its own setting. Switching takes effect at once: whatever was playing the other way stops.
@@ -87,7 +99,7 @@ What the model sends back is always **sanitized**: event types and parameters ar
 | **Volume** | The master level for everything the Pi plays. It's a perceptual curve, so 50% sounds about half as loud. Set the speaker once, then ride it here |
 | **🔊 Test** | A short clip at the current volume |
 | **Voice ducking** | While a voice plays, music and looping beds dip by this many dB (default 9), then ease back. One-shot hits stay full so scares keep their punch. 0 turns it off |
-| **Light timing** | Lines the lights up with the sound for every scene, from 300 ms early to 300 ms late. Sound out of the Pi and light through FPP don't arrive at exactly the same moment, and on a song show you can see it. Set early, a scene holds its sound back instead of skipping its first moments, and either way the lights play the scene to its end |
+| **Light timing** | Lines the lights up with the sound for every scene, from 300 ms early to 300 ms late. Sound out of the Pi and light through FPP don't arrive at exactly the same moment, and on a song show you can see it. Set early, a scene holds its sound back instead of skipping its first moments, and either way the lights play the scene to its end. It's for the yard only: Sim keeps itself in time with the sound on your device |
 | **⏱ Sync test** | 12 seconds of clicks through the speaker while a light flashes on each one (the first one not set by hand on the Live tab). Stand where visitors will, then slide Light timing until flash and click land together (it changes live) |
 
 ### Show mode

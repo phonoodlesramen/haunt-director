@@ -341,3 +341,30 @@ def test_setup_check_flags_a_switched_off_sensor(monkeypatch):
     assert c["status"] == "warn" and "switched off" in c["detail"]
     ctx["show_status"]["sensor_enabled"] = True
     assert {x["id"]: x for x in S.run_checks(ctx)}["sensor"]["status"] == "ok"
+
+
+# ---------- the sensor input fails safe ----------
+@pytest.mark.parametrize("active_high", [True, False])
+def test_a_loose_sensor_reads_as_nobody_there(tmp_path, monkeypatch, active_high):
+    """The input is pulled toward 'clear' (down for a HIGH-on-presence sensor, up
+    for a LOW one), so an unplugged or broken cable can't float into phantom
+    scares. gpiozero derives the active level from the pull, which keeps
+    'active' meaning 'present' either way."""
+    import sys
+    import types
+    import haunt_director.show as S
+    made = {}
+
+    class FakeDID:
+        def __init__(self, pin, **kw):
+            made.update(kw, pin=pin)
+            self.when_activated = self.when_deactivated = None
+        def close(self): pass
+    monkeypatch.setitem(sys.modules, "gpiozero", types.SimpleNamespace(DigitalInputDevice=FakeDID))
+    monkeypatch.setattr(S, "_ensure_pin_factory", lambda: None)
+    d, _ = _director(tmp_path)
+    d.gpio_pin, d.gpio_active_high = 4, active_high
+    d.start_gpio()
+    assert made["pin"] == 4 and made["pull_up"] is (not active_high)
+    assert "active_state" not in made                  # implied by the pull; gpiozero refuses both
+    assert d._gpio is not None and d._gpio.when_activated == d._on_presence

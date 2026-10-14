@@ -37,7 +37,7 @@ Public API (all safe to call even when audio is unavailable):
 from __future__ import annotations
 import collections
 import contextlib
-import logging, os, shutil, subprocess, threading
+import logging, os, re, shutil, subprocess, threading, time
 from pathlib import Path
 
 log = logging.getLogger("haunt.audio")
@@ -57,6 +57,21 @@ def _load_pygame():
 
 # substrings that identify a USB DAC / adapter in SDL/ALSA device names
 _USB_HINTS = ("usb", "uac", "audio adapter", "headset", "dac", "device")
+ASOUND_CARDS = "/proc/asound/cards"
+BOOT_ROUNDS, BOOT_WAIT_S = 10, 2.0   # a USB adapter that's busy at boot gets ~20 s to free up
+
+
+def usb_alsa_cards(path=None):
+    """[(card_id, description)] for USB audio adapters, straight from ALSA.
+    Opening one of these directly (plughw:CARD=<id>) doesn't depend on ALSA's
+    "default", which on a Pi with a desktop is the desktop's sound server or the
+    HDMI port, and which a desktop login can re-point (it removes ~/.asoundrc)."""
+    try:
+        txt = Path(path or ASOUND_CARDS).read_text()
+    except Exception:
+        return []
+    return [(m.group(1), m.group(2).strip().split(" at ")[0])
+            for m in re.finditer(r"^\s*\d+\s+\[(\S+)\s*\]:\s*USB-Audio\s*-\s*(.+)$", txt, re.M)]
 
 # voice ducking envelope (linear in dB)
 DUCK_ATTACK_DB_S = 60.0    # dip fast: 9 dB in 0.15 s, so the first words are clear
@@ -75,6 +90,7 @@ class AudioEngine:
     def __init__(self, audio_dir, device: str | None = None, cache_dir=None):
         self.audio_dir = Path(audio_dir)
         self.device = device                      # explicit SDL device name, or None to auto/default
+        self.device_label = None                  # what we actually opened, for the status page
         self.cache_dir = Path(cache_dir) if cache_dir else (self.audio_dir / "_wavcache")
         try:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
@@ -107,10 +123,14 @@ class AudioEngine:
         self._duck_last = None
         self._duck_thread = None
         self._lock = threading.RLock()
-        self._init_mixer()
+        self._init_mixer(rounds=BOOT_ROUNDS)
 
     # ---- setup ----
-    def _init_mixer(self):
+    def _init_mixer(self, rounds=1):
+        """Open the sound output. In order: the device named in settings (or found
+        by SDL), then each USB adapter directly, then ALSA's default. When a USB
+        adapter is there but can't be opened yet (busy while the Pi boots), try
+        again for a few rounds before giving up; a later play tries again too."""
         os.environ.setdefault("SDL_VIDEODRIVER", "dummy")   # headless: no video
         os.environ.setdefault("SDL_AUDIODRIVER", "alsa")
         try:
@@ -118,36 +138,55 @@ class AudioEngine:
         except Exception as e:
             log.warning("audio disabled (pygame import failed: %s)", e)
             return
-        dev = self.device or self._auto_device()
         kw = dict(frequency=44100, size=-16, channels=2, buffer=1024)
-        for attempt in ([dev] if dev else []) + [None]:
-            try:
-                self._pg.mixer.quit()
-            except Exception:
-                pass
-            try:
-                if attempt:
-                    self._pg.mixer.init(devicename=attempt, **kw)
-                else:
-                    self._pg.mixer.init(**kw)
-                self._pg.mixer.set_num_channels(16)
-                with contextlib.suppress(Exception):
-                    self._pg.mixer.set_reserved(_RESERVED)   # keep music+vo away from find_channel()
-                self._music_slots = [self._pg.mixer.Channel(_MUSIC_A), self._pg.mixer.Channel(_MUSIC_B)]
-                self._music_i = 0
-                self._music = None
-                self._vo = self._pg.mixer.Channel(_VO_CH)
-                self._sndcache.clear()
-                self._cue.clear()                      # old channels are gone with the old mixer
-                self._cue_role.clear()
-                self._ok = True
-                self.device = attempt
-                log.info("audio ready (device=%s)", attempt or "default")
-                self._start_duck_thread()
-                return
-            except Exception as e:
-                log.warning("audio init failed on device=%s: %s", attempt or "default", e)
+        for rnd in range(max(1, int(rounds))):
+            if rnd:
+                time.sleep(BOOT_WAIT_S)
+            usb = usb_alsa_cards()
+            dev = self.device or self._auto_device()
+            attempts = ([(dev, dev, None)] if dev else [])                       # SDL device name
+            attempts += [(desc, None, f"plughw:CARD={cid},DEV=0") for cid, desc in usb]   # USB, direct
+            attempts += [("default", None, None)]
+            for label, name, alsa in attempts:
+                if self._try_open(name, alsa, kw):
+                    self.device = name
+                    self.device_label = label
+                    log.info("audio ready (device=%s%s)", label, f", {alsa}" if alsa else "")
+                    self._start_duck_thread()
+                    return
+            if not usb:
+                break                        # no adapter to wait for: don't hold things up
         self._ok = False
+
+    def _try_open(self, name, alsa, kw):
+        try:
+            self._pg.mixer.quit()
+        except Exception:
+            pass
+        if alsa:
+            os.environ["AUDIODEV"] = alsa    # SDL's ALSA backend opens this as its default device
+        else:
+            os.environ.pop("AUDIODEV", None)
+        try:
+            if name:
+                self._pg.mixer.init(devicename=name, **kw)
+            else:
+                self._pg.mixer.init(**kw)
+            self._pg.mixer.set_num_channels(16)
+            with contextlib.suppress(Exception):
+                self._pg.mixer.set_reserved(_RESERVED)   # keep music+vo away from find_channel()
+            self._music_slots = [self._pg.mixer.Channel(_MUSIC_A), self._pg.mixer.Channel(_MUSIC_B)]
+            self._music_i = 0
+            self._music = None
+            self._vo = self._pg.mixer.Channel(_VO_CH)
+            self._sndcache.clear()
+            self._cue.clear()                      # old channels are gone with the old mixer
+            self._cue_role.clear()
+            self._ok = True
+            return True
+        except Exception as e:
+            log.warning("audio init failed on device=%s: %s", alsa or name or "default", e)
+            return False
 
     def _auto_device(self):
         for name in self.list_devices():
@@ -527,7 +566,7 @@ class AudioEngine:
         """Live snapshot of what the mixer is actually playing (diagnostics)."""
         if not self._ok:
             return {"ok": False}
-        out = {"ok": True, "device": self.device, "mute": sorted(self._mute),
+        out = {"ok": True, "device": self.device_label or self.device, "mute": sorted(self._mute),
                "master": round(self._master, 3),
                "duck": {"depth_db": self._duck_depth_db, "now_db": round(self._duck_db, 1),
                         "thread": bool(self._duck_thread is not None and self._duck_thread.is_alive())}}

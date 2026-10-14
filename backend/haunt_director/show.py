@@ -364,8 +364,12 @@ class ShowDirector:
         try:
             from gpiozero import DigitalInputDevice
             _ensure_pin_factory()
-            dev = DigitalInputDevice(self.gpio_pin, pull_up=None,
-                                     active_state=bool(self.gpio_active_high),
+            # Pull the line toward "clear": down for a sensor that goes HIGH on
+            # presence, up for one that goes LOW. The LD2410 drives its OUT pin
+            # both ways, so this changes nothing while it's connected, but a
+            # loose or unplugged cable now reads as nobody there. (A floating
+            # input tends to read as someone standing there: phantom scares.)
+            dev = DigitalInputDevice(self.gpio_pin, pull_up=not bool(self.gpio_active_high),
                                      bounce_time=0.08)
             dev.when_activated = self._on_presence
             dev.when_deactivated = self._on_clear

@@ -129,3 +129,97 @@ def test_the_page_has_the_sim_live_switch():
     assert "fsOpen('${s.id}',{autoplay:true})" in (ROOT / "web" / "app.js").read_text()  # every scene card
     js = (ROOT / "web" / "sim.js").read_text()
     assert "window.__armed ? \"sim\"" in js                                    # armed: always the simulator
+
+
+CLOCK_RUNNER = r"""
+const fs = require("fs"), vm = require("vm");
+let NOW = 0, RAF = [];
+const ctx = {window: {}, document: {addEventListener(){}, querySelectorAll(){ return []; }, getElementById(){ return null; }},
+             performance: {now: () => NOW}, requestAnimationFrame(f){ RAF.push(f); return RAF.length; }, cancelAnimationFrame(){},
+             localStorage: {getItem(){ return null; }, setItem(){}}, console, Math, isFinite};
+ctx.window = ctx; vm.createContext(ctx);
+vm.runInContext(fs.readFileSync(process.argv[process.argv.length - 1], "utf8"), ctx);
+// a stand-in for the browser's <audio>: the test decides when it starts, how fast it runs, when it stalls
+vm.runInContext(`
+  var AUDIO = {music: null, scene: null};
+  var EL = null;
+  function playAudio(s, loop, mute, from){ stopAudio(); if(!s.audio || !s.audio.music) return;
+    EL = {currentTime: 0, paused: true, readyState: 0, duration: s.__clip, error: null, __from: from || 0};
+    AUDIO.music = EL; AUDIO.scene = s.id; }
+  function stopAudio(){ AUDIO.music = null; AUDIO.scene = null; EL = null; }
+`, ctx);
+const job = JSON.parse(fs.readFileSync(0, "utf8"));
+const out = [];
+function frame(){ const f = RAF; RAF = []; f.forEach(cb => cb(NOW)); }
+for(const c of job.cases){
+  NOW = 1000; RAF = [];
+  const sc = {id: "s", name: "s", duration_s: c.dur, tracks: {}, audio: c.music ? {music: "m.mp3"} : null, __clip: c.clip};
+  vm.runInContext("simStop()", ctx);
+  ctx.simPlay(sc, {from: c.from || 0});
+  const rows = [];
+  let ct = null, startAt = c.sound_starts_ms, rate = c.rate || 1;
+  for(let ms = 0; ms <= c.run_ms; ms += 16){
+    NOW = 1000 + ms;
+    const el = vm.runInContext("EL", ctx);
+    if(c.seek_at_ms !== undefined && ms >= c.seek_at_ms && !c.__seeked){ c.__seeked = true; ctx.simSeek(c.seek_to); startAt = ms + c.sound_starts_ms; ct = null; }
+    const e2 = vm.runInContext("EL", ctx);
+    if(e2 && startAt !== null && ms >= startAt && !(c.blocked)){
+      const stalled = c.stall && ms >= c.stall[0] && ms < c.stall[1];
+      if(ct === null) ct = e2.__from % (e2.duration || 1e9);
+      else if(!stalled) ct += rate * 0.016;
+      e2.paused = false; e2.readyState = stalled ? 2 : 4;
+      e2.currentTime = Math.round(ct * 1000) / 1000;
+    }
+    frame();
+    rows.push([ms, ctx.simTime(), e2 ? e2.currentTime : null, ctx.__simClock()]);
+  }
+  out.push(rows);
+}
+process.stdout.write(JSON.stringify(out));
+"""
+
+
+def _clock(cases):
+    js = subprocess.run([NODE, "-e", CLOCK_RUNNER, str(ROOT / "web" / "sim.js")], input=json.dumps({"cases": cases}),
+                        capture_output=True, text=True, timeout=120, check=True)
+    return json.loads(js.stdout)
+
+
+@pytest.mark.skipif(not NODE, reason="needs node")
+def test_the_sim_lights_wait_for_the_sound_then_follow_it():
+    late, slow, stall, blocked, bed, seek, silent = _clock([
+        {"dur": 60, "clip": 60.5, "music": True, "sound_starts_ms": 400, "run_ms": 3000},          # sound loads late
+        {"dur": 60, "clip": 60.5, "music": True, "sound_starts_ms": 100, "run_ms": 20000, "rate": 0.99},  # its clock runs 1% slow
+        {"dur": 60, "clip": 60.5, "music": True, "sound_starts_ms": 100, "run_ms": 6000, "stall": [2000, 3000]},
+        {"dur": 60, "clip": 60.5, "music": True, "sound_starts_ms": 0, "run_ms": 4000, "blocked": True},  # the browser won't play it
+        {"dur": 90, "clip": 30, "music": True, "sound_starts_ms": 100, "run_ms": 2000},            # a short score looping under it
+        {"dur": 60, "clip": 60.5, "music": True, "sound_starts_ms": 300, "run_ms": 3000, "seek_at_ms": 1000, "seek_to": 40},
+        {"dur": 60, "clip": None, "music": False, "sound_starts_ms": None, "run_ms": 1000},
+    ])
+    # held at the start until the sound moves, then in step with it
+    assert all(t == 0 and k == "wait" for ms, t, ct, k in late if ms < 400)
+    assert late[-1][3] == "music"
+    assert max(abs(t - ct) for ms, t, ct, k in late if ms > 500) < 0.02
+    # a slow sound clock: the lights stay with the sound, not the wall clock
+    assert max(abs(t - ct) for ms, t, ct, k in slow if ms > 1000) < 0.02
+    assert abs(slow[-1][1] - 19.9 * 0.99) < 0.05
+    # a stall: back in step within a frame or two of the sound moving again
+    assert max(abs(t - ct) for ms, t, ct, k in stall if ms > 3100) < 0.02
+    # sound that never starts: the lights go on without it after a short wait
+    assert blocked[-1][3] == "clock" and 1.0 < blocked[-1][1] < 1.6
+    # a short looping bed isn't a clock for the scene
+    assert bed[-1][3] == "clock" and abs(bed[-1][1] - 1.9) < 0.05
+    # a seek holds at the new spot until the sound gets there, then follows it
+    assert all(abs(t - 40) < 1e-9 and k == "wait" for ms, t, ct, k in seek if 1008 <= ms < 1300)
+    assert seek[-1][3] == "music" and max(abs(t - ct) for ms, t, ct, k in seek if ms > 1400) < 0.02
+    # no music: this device's clock, from the first frame
+    assert silent[0][3] == "clock" and abs(silent[-1][1] - 1.0) < 0.02
+
+
+def test_the_stage_shows_exact_states_without_easing():
+    stage = (ROOT / "web" / "stage.js").read_text()
+    assert "const k = STATE.exact ? 1 : 0.20;" in stage
+    assert "exact: true" in (ROOT / "web" / "sim.js").read_text()
+    assert "exact: true" in (ROOT / "web" / "fullview.js").read_text()
+    html = (ROOT / "web" / "index.html").read_text()
+    assert "the simulator keeps its lights with this device's own sound" in html

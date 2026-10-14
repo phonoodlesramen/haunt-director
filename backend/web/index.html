@@ -240,6 +240,31 @@ button.primary:disabled{opacity:.45;cursor:not-allowed}
 .trimbox audio{width:100%;margin:6px 0;height:36px}
 .trimrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .trimrow .mini{flex:none}
+/* house lights (Live tab): the yard lit with no show running */
+.hl-pill{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--line);color:var(--faint);background:var(--surface)}
+.hl-pill.on{color:#1d2a12;background:var(--ok);border-color:var(--ok)}
+.hl-pill.waiting{color:var(--warn);border-color:#5a4a28}
+.hl-pill.show,.hl-pill.stopped{color:var(--muted)}
+.hlseg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.hlseg button{flex:1;min-width:0;border:0;border-radius:0;background:transparent;color:var(--muted);padding:9px 0;font-weight:600}
+.hlseg button+button{border-left:1px solid var(--line)}
+.hlseg button.on{background:var(--accent);color:var(--accent-ink)}
+.hlrow{display:grid;grid-template-columns:22px minmax(0,1fr) auto auto;grid-template-areas:"dot name cols sw";
+  align-items:center;gap:8px 10px;padding:10px 0;border-top:1px solid var(--line-soft)}
+.hlrow .hlnow{grid-area:dot}.hlrow .grow{grid-area:name}.hlrow .hlcols{grid-area:cols}.hlrow .switch{grid-area:sw}
+.hlrow:first-child{border-top:0}
+.hlrow.off .hlcols,.hlrow.off .name{opacity:.45}
+.hlnow{width:22px;height:22px;border-radius:50%;flex:none;border:1px solid var(--line);background:#000;transition:background .1s}
+.hlcols{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.hlcols input[type=color]{width:34px;height:34px}
+.hlcols .mini{color:var(--text);min-width:0;width:34px;padding:7px 0}
+.hldays{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.hlday{flex:none;width:34px;min-width:0;padding:6px 0;border-radius:8px;font-size:12px;font-weight:600;
+  background:var(--surface);border:1px solid var(--line);color:var(--faint)}
+.hlday.on{background:var(--surface3);color:var(--text);border-color:var(--accent)}
+@media (max-width:540px){.hlrow{grid-template-columns:22px minmax(0,1fr) auto;grid-template-areas:"dot name sw" ". cols cols"}
+  .hlcols{justify-content:flex-start}}
 /* show mode */
 .showstate{display:flex;align-items:center;gap:12px}
 .ss-dot{width:14px;height:14px;border-radius:50%;background:var(--faint);flex:none}
@@ -396,6 +421,25 @@ body.fs-on{overflow:hidden}
       </div>
       <div class="sub" id="s-warn" style="margin-top:10px"></div>
     </div>
+    <h2 style="display:flex;align-items:center;gap:8px">House lights <span class="hl-pill" id="hlPill">off</span></h2>
+    <div class="card" id="houseCard">
+      <div class="hlseg" role="group" aria-label="House lights">
+        <button data-hm="off" onclick="houseMode('off')">Off</button><button data-hm="schedule" onclick="houseMode('schedule')">Schedule</button><button data-hm="on" onclick="houseMode('on')">On</button>
+      </div>
+      <div class="sub" id="hlStatus" style="margin-top:10px">Loading…</div>
+      <div class="sub muted" style="margin-top:4px">Lights only: no fog, no sound. The show always comes first; house lights return when it's disarmed.</div>
+      <div id="hlLights" style="margin-top:8px"></div>
+      <header class="cardhdr" style="margin-top:10px"><h3 class="ch">Brightness</h3><span class="muted" id="hlBriVal">80%</span></header>
+      <input type="range" id="hlBri" min="5" max="100" step="5" value="80" aria-label="House lights brightness">
+      <header class="cardhdr" style="margin-top:10px"><h3 class="ch">Each color lasts about</h3><span class="muted" id="hlHoldVal">8 min</span></header>
+      <input type="range" id="hlHold" min="1" max="60" step="1" value="8" aria-label="How long each color lasts">
+      <div class="sub">Each light glides to its next color, out of step with the others. A light with one color holds it steady.</div>
+      <div class="btns"><button class="ghost" id="hlPrev" onclick="housePreview()">▶ Preview an hour</button><span class="muted" id="hlSaved" style="font-size:12px;align-self:center"></span></div>
+      <header class="cardhdr" style="margin-top:14px"><h3 class="ch">Schedule</h3></header>
+      <div class="sub">Used in Schedule mode. Dusk follows the location set on the Show tab. A window can run past midnight.</div>
+      <div id="hlWindows"></div>
+      <div class="btns"><button class="ghost" onclick="houseAddWindow()">＋ Add window</button></div>
+    </div>
     <h2>Lights</h2><div id="lights"></div>
     <h2>Fog</h2><div id="fog"></div>
     <h2 style="display:flex;align-items:center">Yard lights <span class="muted" style="font-size:12px;font-weight:400;margin-left:8px">static solar spotlights</span></h2>
@@ -489,7 +533,7 @@ body.fs-on{overflow:hidden}
       <input type="range" id="duck" min="0" max="18" step="1" value="9" style="margin-top:10px" aria-label="Voice ducking depth">
       <div class="row" style="margin-top:14px">
         <div class="grow"><div class="name" style="font-size:15px">Light timing <span class="muted" id="lagVal">0 ms</span></div>
-          <div class="sub">Lines the lights up with the sound, for every scene. Stand where visitors will and press Sync test: the first light flashes with each click. Slide until flash and click land together.</div></div>
+          <div class="sub">Lines the lights up with the sound, for every scene. Stand where visitors will and press Sync test: the first light flashes with each click. Slide until flash and click land together. This sets the yard only: the simulator keeps its lights with this device's own sound.</div></div>
         <button class="ghost" id="syncTest" onclick="syncTest()" title="12 seconds of clicks with a flash on each">⏱ Sync test</button>
       </div>
       <input type="range" id="lag" min="-300" max="300" step="10" value="0" style="margin-top:10px" aria-label="Light timing">
@@ -724,10 +768,11 @@ body.fs-on{overflow:hidden}
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="sim.js?v=2"></script>
-<script src="fullview.js?v=1"></script>
-<script src="app.js?v=26"></script>
-<script src="stage.js?v=13"></script>
+<script src="sim.js?v=3"></script>
+<script src="fullview.js?v=2"></script>
+<script src="app.js?v=27"></script>
+<script src="stage.js?v=14"></script>
 <script src="timeline.js?v=16"></script>
+<script src="house.js?v=1"></script>
 </body>
 </html>

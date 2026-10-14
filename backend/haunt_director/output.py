@@ -16,7 +16,9 @@ that composes a complete frame every tick from layers (highest wins):
     2. manual   Live-card / fog-burst overrides, per device, optional expiry
     3. scene    the playing scene (evaluated HERE, in this thread), or the last
                 frame held after a scene ends naturally (with fog + strobe off)
-    4. idle     zeros
+    4. house    house lights (house.py): lights only, used only when there is
+                no scene and no held frame
+    5. idle     zeros
 
 and hands it to a Transport that owns the wire format:
 
@@ -293,6 +295,7 @@ class OutputBus:
         self._held: dict[int, int] = {}
         self._last_scene: dict[int, int] = {}
         self._manual: dict[str, tuple[dict[int, int], float | None]] = {}
+        self._house: SceneSource | None = None
 
         self._fog_chans: set[int] = set()
         self._strobe_fx: dict[int, list[int]] = {}
@@ -377,6 +380,20 @@ class OutputBus:
                 self._held = final
                 self._source = None
 
+    # ---- house layer ----
+    def set_house(self, source: SceneSource | None) -> None:
+        """House lights underneath everything: shown only when no scene is
+        playing and no frame is held. None turns the layer off."""
+        with self._lock:
+            self._house = source
+
+    def clear_held_if_idle(self) -> None:
+        """Drop a held frame (a finished scene's last look) unless a scene is
+        playing, so house lights can show."""
+        with self._lock:
+            if self._source is None:
+                self._held = {}
+
     # ---- manual layer ----
     def set_manual(self, device_id: str, values: dict[int, int],
                    expires_at: float | None = None) -> None:
@@ -412,6 +429,13 @@ class OutputBus:
             chans = self._held
             manual = list(self._manual.items())
             fog_chans = self._fog_chans
+            house = self._house
+        if src is None and not chans and house is not None:
+            try:
+                chans = house(now) or {}
+            except Exception as e:                  # house lights must never kill output either
+                self._note_error("house", e)
+                chans = {}
         if src is not None:
             try:
                 chans = src(now) or {}
@@ -553,5 +577,6 @@ class OutputBus:
             "scene_active": scene_active,
             "holding_last_frame": holding,
             "manual": self.manual_devices(),
+            "house": self._house is not None,
             "fog_enabled": self.fog_enabled,
         }

@@ -1,6 +1,6 @@
 # 🤝 Contributing
 
-Thanks for wanting to help make more yards scarier! Bug reports, fixture profiles, docs fixes and code are all welcome. Be kind. Everyone here is doing this for fun.
+Thanks for wanting to help make more yards scarier (or merrier)! Bug reports, fixture profiles, docs fixes and code are all welcome. Be kind. Everyone here is doing this for fun.
 
 ## Ways to help
 

@@ -32,7 +32,8 @@ All light and fog output goes through **one writer**: the output bus (`backend/h
 1. **Fog guard.** If fog output is switched off, the fog channel is zero. Nothing outranks this.
 2. **Manual overrides.** Live cards and fog bursts. Fog bursts carry an expiry time, and the bus drops them on the first frame past it, so a burst can't outlive its cap even if the request that started it vanished.
 3. **The scene.** The player hands the bus a function that evaluates the current scene at the shared clock. When a scene ends naturally, the bus holds its final look, with fog and strobe forced off, until the next scene takes over. There's no dark gap between scenes.
-4. **Idle.** Everything zero.
+4. **House lights** (`house.py`). Only when there's no scene and no held look: each fixture's slow color drift, computed every frame from the wall clock, with a 4-second fade in and out. Fixtures only; the fogger is never part of this layer. A small controller decides every half second whether house lights are due (mode, schedule window, STOP EVERYTHING) and steps aside the moment the show is armed or a scene plays.
+5. **Idle.** Everything zero.
 
 Because every frame is complete and comes from one place, there's no way for two requests to fight over a channel. (Earlier versions sent individual channel updates to FPP from several places. That caused the most baffling bugs of the whole project: wrong colors after transitions, and strobes that sometimes didn't fire.)
 
@@ -54,7 +55,7 @@ FPP's Pixel Overlay Models are how outside programs claim channels. Haunt Direct
 
 A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, each a list of timed **events** (`set_color`, `fade_color`, `pulse`, `strobe`, `fog` and friends), plus optional audio. `evaluate(scene, t)` turns that into each device's state at time `t`: color, brightness, strobe rate and fog level. A fixture's [profile](fixture-profiles.md) then turns the state into channel values. That's the only code that knows about channels, and it's where the safety bands and strobe cap are enforced.
 
-The **simulator** in the browser (`web/sim.js`) carries a line-for-line copy of `evaluate()`, so a scene played in Sim looks exactly like it would on the rig. A test runs both on random and real scenes and checks every frame matches.
+The **simulator** in the browser (`web/sim.js`) carries a line-for-line copy of `evaluate()`, so a scene played in Sim looks exactly like it would on the rig. A test runs both on random and real scenes and checks every frame matches. Its clock is the device's own sound: the lights hold at the start until the music is really playing, then follow the music's position, easing back into step if the two drift and jumping if the sound stalls. A scene without music, a short score looping under a longer scene, or sound the browser won't play runs on the browser's clock instead.
 
 ## The player and the show director
 

@@ -618,7 +618,7 @@ async function pollPlay(){
       window.stageUpdate(s2, SCENES.find(s=>s.id===st.scene));
     }
     if(window.__editing && st.playing && window.__edtSync && !simOn) window.__edtSync(st.t);
-    $("#s-play").textContent = st.playing ? (SCENES.find(s=>s.id===st.scene)?.name || st.scene) : "Manual";
+    $("#s-play").textContent = st.playing ? (SCENES.find(s=>s.id===st.scene)?.name || st.scene) : (st.house ? "House lights" : "Manual");
     SCENES.forEach(s=>{
       if(simOn && window.__simScene===s.id) return;    // the simulator draws its own progress
       const on = st.playing && st.scene===s.id;

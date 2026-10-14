@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Docs: a rewritten README (now with a cost guide in four tiers, from $0 to "mostly up"), a tiered shopping list in [What you need](docs/hardware.md), SD card backup advice, and notes on using the same rig for Christmas and other holidays
+- Live: **House lights**, the yard lit for nights without a show. Lights only (never fog or sound), one to four colors per light gliding slowly out of step, Off / Schedule / On with their own dusk-or-clock windows and days. The show and any playing scene always take priority; STOP EVERYTHING turns them off until the next window
+- Fix: the presence sensor input is pulled toward "clear", so a loose or unplugged sensor cable no longer floats into phantom presence (and scares)
+- Fix: sound opens the USB audio adapter directly. On a Pi with the desktop installed, ALSA's default is the desktop's sound server or the HDMI port, and the desktop login deletes `~/.asoundrc`, so sound could come up dead after a restart. A busy adapter gets about 20 seconds at boot
+- Fix: in Sim the lights now keep time with the music. They wait for the sound to start, then follow it (they used to start on Play, ahead of a song still loading), and the stage shows each change at full strength on its beat instead of easing into it
 - Scenes: **⛶ Full screen** play view. The house, a whole-scene bar with a song show's sections, and a lane per light, fogger and sound sliding past a NOW line, so you can follow every trigger. Works in Sim and Live
 - Scenes: **🖥 Sim / 🏠 Live** switch. Sim plays a scene on the stage and this device's speaker only, never the yard; while the show is armed, Play is always Sim
 - Generate: **🎸 Song show** replaces beat sync. Drums, bass and rhythm guitar each drive a light, sections come from timed lyrics (LRCLIB) or the music, and the AI picks colors from what the words mean. Only timings and colors are saved, never lyrics. Extend works on song shows too

@@ -120,9 +120,15 @@ async def lifespan(app: FastAPI):
         director.start_gpio()
     director.start_scheduler()
     app.state.show = director
+    # House lights: lights only, their own schedule, underneath any scene (house.py)
+    from ..house import HouseLights
+    app.state.house = HouseLights(store, bus, app.state.player, director, DATA_DIR / "house.json")
+    app.state.house.start()
     try:
         yield
     finally:
+        with contextlib.suppress(Exception):
+            await app.state.house.stop()
         with contextlib.suppress(Exception):
             await app.state.show._stop_task()
         with contextlib.suppress(Exception):
@@ -461,6 +467,10 @@ async def stop_everything():
     """STOP EVERYTHING — disarm the show, cancel any scene, clear every override,
     all channels off. Always reachable. Disarming comes FIRST: otherwise an armed
     Show Director sees the player go idle and starts the next ambient scene."""
+    h = getattr(app.state, "house", None)
+    if h is not None:
+        with contextlib.suppress(Exception):
+            h.snooze()                  # first, so house lights can't fade in as the show stands down
     d = _show(app)
     if d is not None and d.armed:
         with contextlib.suppress(Exception):
@@ -1926,6 +1936,13 @@ async def play_state():
             out["devices"][dev] = {"hex": hexc, "brightness": s.brightness,
                                    "strobe": s.strobe_hz > 0, "strobe_hz": round(_cap_hz(s.strobe_hz), 2),
                                    "fog": s.fog}
+    h = getattr(app.state, "house", None)
+    if h is not None and h.active and not st["playing"]:
+        lvl = h._level(time.monotonic())
+        out["house"] = True
+        out["devices"] = {k: {"hex": "#%02x%02x%02x" % rgb, "brightness": int(bri * lvl + 0.5),
+                              "strobe": False, "strobe_hz": 0, "fog": 0}
+                          for k, (rgb, bri) in h.colors_now().items()}
     bus = getattr(app.state, "bus", None)
     out["overrides"] = bus.manual_devices() if bus is not None else []
     # live presence sensor state for the top signal strip (polled ~3x/sec)
@@ -1935,6 +1952,45 @@ async def play_state():
         out["presence"] = {"active": pa, "connected": pa is not None, "armed": bool(d.armed),
                            "enabled": bool(d.sensor_enabled)}
     return out
+
+
+# ---- house lights (house.py) ----
+class HouseCfg(BaseModel):
+    mode: str | None = None
+    brightness: float | None = Field(None, ge=0, le=1)
+    hold_min: float | None = Field(None, ge=1, le=60)
+    lights: dict | None = None
+    windows: list | None = None
+
+
+class HouseMode(BaseModel):
+    mode: str
+
+
+def _house():
+    h = getattr(app.state, "house", None)
+    if h is None:
+        raise HTTPException(503, "House lights aren't running yet")
+    return h
+
+
+@app.get("/api/house")
+async def house_get():
+    return _house().status()
+
+
+@app.put("/api/house")
+async def house_put(body: HouseCfg):
+    if body.mode is not None and body.mode not in ("off", "schedule", "on"):
+        raise HTTPException(400, "mode is off, schedule or on")
+    return _house().set_config(body.model_dump(exclude_none=True))
+
+
+@app.post("/api/house/mode")
+async def house_mode(body: HouseMode):
+    if body.mode not in ("off", "schedule", "on"):
+        raise HTTPException(400, "mode is off, schedule or on")
+    return _house().set_mode(body.mode)
 
 
 @app.post("/api/play/stop")

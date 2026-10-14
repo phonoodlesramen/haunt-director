@@ -214,7 +214,7 @@
     }
     var states = window.simEvaluate ? simEvaluate(sc, FS.t, capHz()) : {};
     if(run !== "sim" && run !== "paused" && window.stageUpdate){   // sim.js draws its own; otherwise we do
-      var st = {t: FS.t, duration_s: d, playing: run === "live", scene: sc.id, sim: run !== "live", devices: states};
+      var st = {t: FS.t, duration_s: d, playing: run === "live", scene: sc.id, sim: run !== "live", exact: true, devices: states};
       if(window.__editing && window.__stripMuted && window.__editSceneId && __editSceneId() === sc.id) st = window.__stripMuted(st);
       window.stageUpdate(st, sc);
     }

@@ -3,6 +3,8 @@
    speaker are never touched, so you can rehearse a new scene while the show
    runs in the yard.
 
+   While it plays, the lights follow this device's own sound (see startClock).
+
    simEvaluate() is a line-for-line port of domain/scenes._evaluate_track (the
    same evaluation the rig and the scrub preview use). tests/test_sim.py runs
    both on random scenes and checks they agree. Keep them in step. */
@@ -87,16 +89,73 @@
   window.__simTrack = evalTrack;               // test hook
 
   // ---------------- the sim player ----------------
-  var SIM = {scene: null, start: 0, loop: false, mute: [], raf: 0, paused: null};   // paused: the held time
+  /* The lights follow the music. The browser starts the sound whenever it has
+     loaded enough of it, so on Play (and after a seek or resume) the lights wait
+     at the start until the sound is really moving, then run from the sound's own
+     position, nudged back into step if the two drift apart. A scene without
+     music, a short score that loops under a longer scene, or sound the browser
+     won't play runs on this device's clock instead, as before. */
+  var WAIT_MAX_MS = 2500;     // sound that hasn't started by then: run without it
+  var SNAP_S = 0.08;          // off by more than this: jump to the sound
+  var SLEW_S = 0.012;         // off by more than this: ease back into step
+  var SIM = {scene: null, start: 0, loop: false, mute: [], raf: 0, paused: null,   // paused: the held time
+             wait: null, locked: false};                                          // wait: {from, since}
   function capHz(){ try{ return (typeof OUTPUT !== "undefined" && OUTPUT && +OUTPUT.strobe_max_hz) || 0; }catch(e){ return 0; } }
+  function music(){
+    try{
+      return (SIM.scene && typeof AUDIO !== "undefined" && AUDIO && AUDIO.music && AUDIO.scene === SIM.scene.id) ? AUDIO.music : null;
+    }catch(e){ return null; }
+  }
+  function hasMusic(sc){ return !!(sc && sc.audio && sc.audio.music); }
+  /* where the sound should be when the scene is at raw seconds (a looping clip wraps) */
+  function soundAt(el, raw){ var cd = +el.duration; return (isFinite(cd) && cd > 0) ? raw % cd : raw; }
+  /* follow the sound only when it runs alongside the whole scene */
+  function lockable(el){
+    var cd = +el.duration, d = +SIM.scene.duration_s || 0;
+    if(!isFinite(cd) || cd <= 0) return false;
+    if(cd < d - 0.5) return false;                         // a short score looping under the scene
+    return !SIM.loop || Math.abs(cd - d) < 0.5;            // a looping scene: only when they loop together
+  }
+  /* (re)start the lights at `from` with the sound */
+  function startClock(from){
+    SIM.start = performance.now() - from * 1000;
+    SIM.locked = false;
+    SIM.wait = null;
+    if(typeof playAudio === "function") playAudio(SIM.scene, SIM.loop, SIM.mute, from);   // this device's speaker
+    if(hasMusic(SIM.scene) && music()) SIM.wait = {from: from, since: performance.now(), ct: null};
+  }
+  function waitDone(now){
+    var w = SIM.wait, el = music();
+    if(!w) return true;
+    var give = function(){ SIM.start = now - w.from * 1000; SIM.wait = null; SIM.locked = false; return true; };
+    if(!el || el.error || now - w.since > WAIT_MAX_MS) return give();
+    var ct = +el.currentTime, want = soundAt(el, w.from);
+    var moving = !el.paused && el.readyState >= 3 && w.ct !== null && ct > w.ct;
+    w.ct = ct;
+    if(!moving || Math.abs(ct - want) > 0.6) return false;   // still loading, or still seeking to the spot
+    SIM.start = now - (w.from + (ct - want)) * 1000;         // the sound is moving: start the lights with it
+    SIM.wait = null;
+    SIM.locked = lockable(el);
+    return true;
+  }
+  function follow(now){
+    var el = music();
+    if(!SIM.locked || !el || el.paused) return;
+    var raw = (now - SIM.start) / 1000, cd = +el.duration;
+    var err = +el.currentTime - soundAt(el, raw);
+    if(isFinite(cd) && cd > 0){ if(err > cd / 2) err -= cd; else if(err < -cd / 2) err += cd; }
+    if(el.readyState < 3 || Math.abs(err) > SNAP_S) SIM.start -= err * 1000;   // the sound stalled or jumped: stay on it
+    else if(Math.abs(err) > SLEW_S) SIM.start -= err * 100;                  // small drift: a tenth of the way each frame
+  }
   function simTime(now){
     if(SIM.paused !== null) return SIM.paused;
+    if(SIM.wait) return SIM.wait.from;                       // holding for the sound
     var d = +SIM.scene.duration_s || 0, raw = Math.max(0, (now - SIM.start) / 1000);
     return SIM.loop && d > 0 ? raw % d : Math.min(raw, d);
   }
   function render(t, playing){
     var sc = SIM.scene;
-    var st = {t: t, duration_s: sc.duration_s, playing: playing, scene: sc.id, sim: true,
+    var st = {t: t, duration_s: sc.duration_s, playing: playing, scene: sc.id, sim: true, exact: true,
               devices: window.simEvaluate(sc, t, capHz())};
     if(window.__editing && window.__stripMuted) st = window.__stripMuted(st);
     if(window.stageUpdate && !window.__scrubbing) window.stageUpdate(st, sc);   // dragging the playhead previews instead
@@ -108,9 +167,12 @@
   }
   function tick(){
     if(!SIM.scene || SIM.paused !== null) return;
-    var d = +SIM.scene.duration_s || 0, raw = (performance.now() - SIM.start) / 1000;
+    var now = performance.now();
+    if(!waitDone(now)){ render(SIM.wait.from, true); SIM.raf = requestAnimationFrame(tick); return; }
+    follow(now);
+    var d = +SIM.scene.duration_s || 0, raw = (now - SIM.start) / 1000;
     if(!SIM.loop && raw >= d){ render(d, false); window.simStop(); return; }
-    render(simTime(performance.now()), true);
+    render(simTime(now), true);
     SIM.raf = requestAnimationFrame(tick);
   }
   /* opts: {loop, mute: [lane keys], from: seconds} */
@@ -120,16 +182,15 @@
     if(!scene) return;
     var from = Math.max(0, Math.min(+opts.from || 0, +scene.duration_s || 0));
     SIM.scene = scene; SIM.loop = !!opts.loop; SIM.mute = (opts.mute || []).slice(); SIM.paused = null;
-    SIM.start = performance.now() - from * 1000;
     window.__simScene = scene.id;
-    if(typeof playAudio === "function") playAudio(scene, SIM.loop, SIM.mute, from);   // this device's speaker
+    startClock(from);
     SIM.raf = requestAnimationFrame(tick);
   };
   window.simStop = function(){
     var had = SIM.scene;
     if(SIM.raf) cancelAnimationFrame(SIM.raf);
     SIM.raf = 0;
-    SIM.paused = null;
+    SIM.paused = null; SIM.wait = null; SIM.locked = false;
     if(had){
       SIM.scene = null; window.__simScene = null;
       if(typeof stopAudio === "function") stopAudio();
@@ -141,13 +202,13 @@
     if(!SIM.scene) return;
     var d = +SIM.scene.duration_s || 0; t = Math.max(0, Math.min(+t || 0, d));
     if(SIM.paused !== null){ SIM.paused = t; render(t, true); return; }   // stays paused, at the new spot
-    SIM.start = performance.now() - t * 1000;
-    if(typeof playAudio === "function") playAudio(SIM.scene, SIM.loop, SIM.mute, t);
+    startClock(t);
   };
   /* hold the scene where it is (the sound stops); simResume() carries on from there */
   window.simPause = function(){
     if(!SIM.scene || SIM.paused !== null) return;
     SIM.paused = simTime(performance.now());
+    SIM.wait = null; SIM.locked = false;
     if(SIM.raf) cancelAnimationFrame(SIM.raf);
     SIM.raf = 0;
     if(typeof stopAudio === "function") stopAudio();
@@ -157,8 +218,7 @@
     if(!SIM.scene || SIM.paused === null) return;
     var t = SIM.paused;
     SIM.paused = null;
-    SIM.start = performance.now() - t * 1000;
-    if(typeof playAudio === "function") playAudio(SIM.scene, SIM.loop, SIM.mute, t);
+    startClock(t);
     SIM.raf = requestAnimationFrame(tick);
   };
   window.simPaused = function(){ return !!SIM.scene && SIM.paused !== null; };
@@ -166,6 +226,8 @@
   window.simSetMute = function(arr){ SIM.mute = (arr || []).slice(); };
   window.simActive = function(id){ return !!SIM.scene && (id === undefined || SIM.scene.id === id); };
   window.simTime = function(){ return SIM.scene ? simTime(performance.now()) : 0; };
+  /* test hook: how the clock is running ("wait", "music" or "clock") */
+  window.__simClock = function(){ return !SIM.scene ? null : SIM.wait ? "wait" : SIM.locked ? "music" : "clock"; };
 
   // ---------------- Sim / Live: one setting per phone or laptop ----------------
   var KEY = "hd.playMode";
