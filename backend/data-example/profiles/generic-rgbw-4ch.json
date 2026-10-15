@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "generic-rgbw-4ch",
+  "vendor": "Generic",
+  "model": "RGBW light",
+  "mode_name": "4CH",
+  "channel_count": 4,
+  "has_master_dimmer": false,
+  "tested": false,
+  "notes": "Starter layout, not tested on a specific light. Put your light in its 4-channel DMX mode and check the channel order in its manual. No dimmer or strobe channel, so brightness is mixed into the color and strobes show as steady light.",
+  "channels": [
+    { "offset": 0, "role": "red", "name": "Red", "default": 0 },
+    { "offset": 1, "role": "green", "name": "Green", "default": 0 },
+    { "offset": 2, "role": "blue", "name": "Blue", "default": 0 },
+    { "offset": 3, "role": "white", "name": "White", "default": 0 }
+  ]
+}

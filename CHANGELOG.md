@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- System: **Your rig**, a rig editor. Add, rename, re-address and remove lights, foggers and yard lights from the app, with the next free DMX address suggested, overlaps and wrong profiles refused, and a **Flash it** button to find a light in the yard. Changes wait while the show is armed or a scene is playing
+- Rig: **followers**. A light can follow another light (a fogger, another fogger): in any scene with no part of its own it plays the other's part, so new fixtures join every existing scene. The editor shows the borrowed part and can copy it into the light's own lane
+- Rig: the channel block grows on its own to reach your last device (up to 512), and the Setup check reports rig problems and when FPP's DMX output stops short of your last device
+- Profiles: a shipped library, read straight from `data-example/profiles` so updates reach existing installs, with starter profiles for common 3, 4 and 6 channel PAR layouts. Your own profiles in `data/profiles` still win
+- Fix: device names are escaped everywhere they're shown
 - Docs: a rewritten README (now with a cost guide in four tiers, from $0 to "mostly up"), a tiered shopping list in [What you need](docs/hardware.md), SD card backup advice, and notes on using the same rig for Christmas and other holidays
 - Live: **House lights**, the yard lit for nights without a show. Lights only (never fog or sound), one to four colors per light gliding slowly out of step, Off / Schedule / On with their own dusk-or-clock windows and days. The show and any playing scene always take priority; STOP EVERYTHING turns them off until the next window
 - Fix: the presence sensor input is pulled toward "clear", so a loose or unplugged sensor cable no longer floats into phantom presence (and scares)

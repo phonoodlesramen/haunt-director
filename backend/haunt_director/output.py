@@ -320,6 +320,16 @@ class OutputBus:
         self._err_logged: dict[str, float] = {}
         self.last_frame = bytes(nch)
 
+    # ---- channel block ----
+    def ensure_channels(self, n: int) -> None:
+        """Grow the frame to cover DMX 1..n (the rig editor added a device past
+        the end). Never shrinks while running: channels a removed device used
+        simply go to zero on every frame, which is what we want anyway."""
+        n = max(1, min(512, int(n)))
+        with self._lock:
+            if n > self.nch:
+                self.nch = n
+
     # ---- device map (fog guard, strobe channels) ----
     def refresh_devices(self) -> None:
         fog, strobe, soff = set(), {}, {}
@@ -445,9 +455,10 @@ class OutputBus:
                 chans = self._last_scene
             if self.strobe_clear_frames:
                 chans = self._strobe_clear(chans)
-        frame = bytearray(self.nch)
+        nch = self.nch
+        frame = bytearray(nch)
         for c, v in chans.items():
-            if 1 <= c <= self.nch:
+            if 1 <= c <= nch:
                 frame[c - 1] = max(0, min(255, int(v)))
         expired = []
         for dev_id, entry in manual:
@@ -456,7 +467,7 @@ class OutputBus:
                 expired.append((dev_id, entry))
                 continue
             for c, v in vals.items():
-                if 1 <= c <= self.nch:
+                if 1 <= c <= nch:
                     frame[c - 1] = max(0, min(255, int(v)))
         if expired:
             with self._lock:
@@ -465,7 +476,7 @@ class OutputBus:
                         del self._manual[dev_id]
         if not self.fog_enabled:
             for c in fog_chans:
-                if 1 <= c <= self.nch:
+                if 1 <= c <= nch:
                     frame[c - 1] = 0
         return bytes(frame)
 

@@ -102,7 +102,11 @@ Fixes that restart FPP or the app are refused until you disarm the show and stop
 
 ### Your fixtures
 
-Your show lives in `backend/data/`, which the app creates on first start by copying the examples from `backend/data-example/`. It's git-ignored, so updates never overwrite it. Devices are in `backend/data/devices.json`. The example matches the reference rig: three PARs at 1, 17 and 33, a fogger at 49, and a couple of non-DMX extras. Edit the names and `dmx_address` values to match yours:
+Your show lives in `backend/data/`, which the app creates on first start by copying the examples from `backend/data-example/`. It's git-ignored, so updates never overwrite it. The example rig matches the reference rig: three PARs at 1, 17 and 33, a fogger at 49, and a couple of non-DMX extras.
+
+Make it yours on the **System** tab under **[Your rig](using-it.md#your-rig)**: rename, re-address, add and remove lights and foggers, and pick each one's fixture profile. The app suggests free addresses, refuses overlaps, and the **Flash it** button finds a light in the yard. Then set each fixture's address (and mode) on its own display to match.
+
+Prefer files? Devices live in `backend/data/devices.json`, one entry each:
 
 ```json
 {
@@ -122,9 +126,11 @@ Your show lives in `backend/data/`, which the app creates on first start by copy
 | `static_rgb` | A light you can't control (solar spot, battery uplight). Shown in the simulator only |
 | `prop`, `audio_sink` | Markers for the simulator |
 
-Different lights? Write a [fixture profile](fixture-profiles.md) in `backend/data/profiles/`. It's one small JSON file per light model.
+Optional fields: `follows` (another device's `id`; see [followers](using-it.md#your-rig)), `sim_position` and `aim` (where it sits on the stage picture; the editor sets these).
 
-Restart the app after editing: `sudo systemctl restart haunt-director` (or tap **Restart app** on the System tab).
+Restart the app after editing the file by hand: `sudo systemctl restart haunt-director` (or tap **Restart app** on the System tab). Changes made under Your rig apply at once.
+
+Different lights? Check the profile list first: besides the tested HOLDLAMP PAR and fogger, there are **starter profiles** for the most common cheap-PAR layouts. If none fits, write a [fixture profile](fixture-profiles.md) in `backend/data/profiles/`. It's one small JSON file per light model.
 
 ### Your house
 

@@ -8,6 +8,7 @@
   const jget=(p,o)=>fetch(p,o).then(r=>{ if(!r.ok) throw new Error(r.status); return r.status===204?null:r.json(); });
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const uid=()=>'e'+Math.random().toString(36).slice(2,8);
+  const escT=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const LBL=112, PPS=12;             // label column px, px per second
 
   let SC=null, DEVS=[], sel=null, scrubT=0, stageHome=null, previewTimer=null;
@@ -153,7 +154,7 @@
   window.__stripMuted=stripMuted;
   function mkLbl(text, muteKey){
     const lbl=document.createElement('div'); lbl.className='rowlbl';
-    lbl.innerHTML='<span class="kd"></span><span class="rl-name">'+text+'</span>'+
+    lbl.innerHTML='<span class="kd"></span><span class="rl-name">'+escT(text)+'</span>'+
       '<button class="mutebtn'+(MUTE.has(muteKey)?' on':'')+'" data-m="'+muteKey+'" title="'+(MUTE.has(muteKey)?'Un-mute':'Mute')+' this track">'+(MUTE.has(muteKey)?'🔇':'🔊')+'</button>';
     const mb=lbl.querySelector('.mutebtn');
     mb.addEventListener('pointerdown',ev=>{ ev.preventDefault(); ev.stopPropagation(); });
@@ -226,6 +227,23 @@
       track.addEventListener('pointerdown', rulerScrub);   // click empty track to scrub
       track.addEventListener('dblclick',(function(dev){ return function(e){ if(e.target!==this) return; e.preventDefault(); e.stopPropagation(); addEventAt(dev, timeFromX(e.clientX)); }; })(d.id));   // double-click empty track: add an event right there
       const evs=(SC.tracks[d.id]||[]).slice().sort((a,b)=>a.t-b.t);
+      // a light with no part of its own here plays the part of the light it
+      // follows: show that part, faded, with a way to make it its own
+      const src=!evs.length&&window.partSource?window.partSource(d.id,SC.tracks,window.__follows||{}):null;
+      if(src&&src!==d.id){
+        const lead=DEVS.find(x=>x.id===src);
+        for(const ev of (SC.tracks[src]||[])){
+          const g=document.createElement('div'); g.className='tlblock ghost';
+          const dr=DUR_T.has(ev.type);
+          g.style.left=(ev.t*PPS)+'px'; g.style.width=Math.max(8,(dr?(ev.duration_s||0.4):0.4)*PPS)+'px'; g.style.background=blockColor(ev);
+          track.appendChild(g);
+        }
+        const hint=document.createElement('div'); hint.className='tlfollow';
+        hint.innerHTML='↪ Plays '+escT(lead?lead.name:src)+'\'s part <button class="mini">Give it its own</button>';
+        hint.addEventListener('pointerdown',e=>e.stopPropagation());
+        hint.querySelector('button').onclick=(function(dev,from){ return function(){ copyPart(dev,from); }; })(d.id,src);
+        track.appendChild(hint);
+      }
       for(const ev of evs){
         const b=document.createElement('div');
         b.className='tlblock'+(sel&&sel.dev===d.id&&sel.id===ev.id?' sel':'');
@@ -387,6 +405,12 @@
     buildTimeline(); renderEventEditor(); setScrubUiLight(); previewAt(scrubT); touch();
   }
   function addEvent(dev){ addEventAt(dev, scrubT); }
+  // start a follower's own part from a copy of the part it was borrowing
+  function copyPart(dev,from){
+    SC.tracks[dev]=(SC.tracks[from]||[]).map(e=>{ const c=JSON.parse(JSON.stringify(e)); c.id=uid(); return c; });
+    sel=null; buildTimeline(); renderEventEditor(); previewAt(scrubT); touch();
+    if(typeof toast==='function') toast('Copied. It has its own part in this scene now.');
+  }
 
   function fieldLabel(inputEl,text){ const f=inputEl.closest('.field'); if(f){ const m=f.querySelector('label .muted'); if(m) m.textContent=text; } }
 

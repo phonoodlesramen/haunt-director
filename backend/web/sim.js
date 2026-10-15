@@ -76,13 +76,33 @@
 
   function hex2(v){ return ("0" + v.toString(16)).slice(-2); }
   /* {dev: {hex, brightness, strobe, strobe_hz, fog}} -- the shape /api/scenes/{id}/state returns */
-  window.simEvaluate = function(scene, t, capHz){
+  /* Whose events a device plays in a scene: its own if it has any, else the
+     first device up its follow chain that has some (domain/rig.part_source).
+     follows: {device: device it follows}. */
+  window.partSource = function(dev, tracks, follows){
+    tracks = tracks || {}; follows = follows || {};
+    if((tracks[dev] || []).length) return dev;
+    var seen = {}, cur = follows[dev]; seen[dev] = 1;
+    while(cur && !seen[cur]){
+      if((tracks[cur] || []).length) return cur;
+      seen[cur] = 1; cur = follows[cur];
+    }
+    return null;
+  };
+  /* follows defaults to the rig's (window.__follows, set when devices load) */
+  window.simEvaluate = function(scene, t, capHz, follows){
     var out = {}, tracks = (scene && scene.tracks) || {};
+    follows = follows || window.__follows || {};
     Object.keys(tracks).forEach(function(dev){
       var s = evalTrack(tracks[dev], t);
       var hz = s.strobe_hz && capHz > 0 ? Math.min(s.strobe_hz, capHz) : s.strobe_hz;
       out[dev] = {hex: "#" + hex2(s.rgb[0]) + hex2(s.rgb[1]) + hex2(s.rgb[2]), brightness: s.brightness,
                   strobe: s.strobe_hz > 0, strobe_hz: Math.round(hz * 100) / 100, fog: s.fog};
+    });
+    Object.keys(follows).forEach(function(dev){            // followers borrow their leader's part
+      if((tracks[dev] || []).length) return;
+      var src = window.partSource(dev, tracks, follows);
+      if(src && out[src]) out[dev] = out[src];
     });
     return out;
   };

@@ -37,6 +37,13 @@ class FogBurst(BaseModel):
 #  on the output bus, dropped on the first frame past its deadline.)
 
 
+def _block_end(store) -> int:
+    """Last DMX channel the output frame covers: HD_DMX_CHANNEL_COUNT (64 by
+    default), grown to reach every device in the rig, at most 512."""
+    from ..domain.rig import block_end
+    return block_end(list(store.devices.values()), store.profiles, settings.dmx_end_channel)
+
+
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     from ..domain.resolve import set_strobe_cap
@@ -44,19 +51,21 @@ async def lifespan(app: FastAPI):
     # Provision FPP (Pi-local, best-effort). Skipped where FPP isn't installed, so a
     # dev laptop starts instantly instead of waiting on sudo and an absent fppd.
     from pathlib import Path as _Pfpp
+    store = Store()
+    app.state.store = store
+    block = _block_end(store)        # the configured block, grown to reach every device (domain/rig.py)
     with contextlib.suppress(Exception):
         if not _Pfpp("/opt/fpp").exists():
             raise RuntimeError("no FPP here")
         from ..fpp.provision import ensure_all
         ensure_all(settings.overlay_model_name, settings.dmx_start_channel,
-                   settings.dmx_channel_count, settings.e131_universe,
+                   block - settings.dmx_start_channel + 1, settings.e131_universe,
                    with_output=(settings.output_kind == "e131"))
     fpp = FppClient(settings.fpp_base_url, settings.overlay_model_name, settings.fpp_timeout_s)
-    store = Store()
     # The ONE writer to FPP (output.py). Everything that affects lights or fog
     # -- scenes, Live cards, fog bursts, Stop -- is a layer on this bus.
     bus = OutputBus(store, make_transport(settings), fps=settings.output_fps,
-                    nch=settings.dmx_end_channel,          # frame covers DMX 1..end of the block
+                    nch=block,                             # frame covers DMX 1..end of the block
                     strobe_clear_frames=settings.strobe_clear_frames)
     app.state.bus = bus
     ctrl = ControlService(fpp, store, bus, settings.fog_max_seconds)
@@ -460,6 +469,199 @@ async def set_static(device_id: str, body: StaticConfig):
     ctrl.store.save_devices()
     return {"saved": device_id, "static_color": dev.static_color, "static_mode": dev.static_mode,
             "static_brightness": dev.static_brightness, "static_on": dev.static_on}
+
+
+# ---- the rig editor (System -> Your rig): add, change and remove devices ----
+RIG_KINDS = ("dmx_fixture", "dmx_fog", "static_rgb")
+IDENTIFY_S = 3.0
+
+
+def _kind_of(d) -> str:
+    return getattr(d.kind, "value", d.kind)
+
+
+def _rig_busy() -> str | None:
+    d = _show(app)
+    if d is not None and d.armed:
+        return "Disarm the show first, then change the rig."
+    if app.state.player.is_playing:
+        return "Stop the scene that's playing first, then change the rig."
+    return None
+
+
+def _rig_view() -> dict:
+    from ..domain.rig import issues, needed_end, span, profile_kind
+    store = _ctrl(app).store
+    devs = list(store.devices.values())
+    bus = getattr(app.state, "bus", None)
+    out_devs = []
+    for d in devs:
+        sp = span(d, store.profiles)
+        out_devs.append({**d.model_dump(), "span": list(sp) if sp else None})
+    profs = []
+    for p in store.profiles.values():
+        profs.append({"id": p.id, "vendor": p.vendor, "model": p.model, "mode_name": p.mode_name,
+                      "channel_count": p.channel_count, "kind": profile_kind(p), "tested": bool(p.tested),
+                      "notes": p.notes, "source": store.profile_source.get(p.id, "library")})
+    profs.sort(key=lambda x: (x["kind"] != "light", not x["tested"], x["vendor"] == "Generic", x["vendor"], x["model"]))
+    busy = _rig_busy()
+    return {"devices": out_devs, "profiles": profs,
+            "block": {"start": settings.dmx_start_channel, "end": bus.nch if bus is not None else _block_end(store),
+                      "configured_end": settings.dmx_end_channel, "needed_end": needed_end(devs, store.profiles)},
+            "issues": issues(devs, store.profiles), "busy": busy is not None, "busy_reason": busy}
+
+
+def _rig_commit(new_devices, touched=()) -> None:
+    """Make a new device list live: save it, re-point the output bus (fog
+    guard, strobe map, channel block), drop stale Live overrides, and let house
+    lights pick up the change."""
+    store = _ctrl(app).store
+    store.replace_devices(new_devices)
+    bus = getattr(app.state, "bus", None)
+    if bus is not None:
+        for dev_id in touched:
+            bus.release_manual(dev_id)
+        bus.refresh_devices()                        # fog guard covers any new fogger first...
+        bus.ensure_channels(_block_end(store))       # ...then the frame grows to reach it
+    h = getattr(app.state, "house", None)
+    if h is not None:
+        with contextlib.suppress(Exception):
+            h.refresh_devices()
+
+
+def _rig_check(new_devices, dev_id: str) -> None:
+    """Refuse a change that leaves THIS device broken (other, older problems
+    don't block it; they show up in the list and the System tab)."""
+    from ..domain.rig import issues
+    store = _ctrl(app).store
+    errs = [i for i in issues(new_devices, store.profiles) if i["level"] == "error" and dev_id in i["devices"]]
+    if errs:
+        raise HTTPException(400, errs[0]["message"])
+
+
+class RigDeviceIn(BaseModel):
+    name: str = Field(..., min_length=1, max_length=40)
+    kind: str = "dmx_fixture"
+    profile_id: str | None = None
+    dmx_address: int | None = Field(None, ge=1, le=512)
+    follows: str | None = None
+    enabled: bool = True
+
+
+class RigDevicePatch(BaseModel):
+    name: str | None = Field(None, min_length=1, max_length=40)
+    profile_id: str | None = None
+    dmx_address: int | None = Field(None, ge=1, le=512)
+    follows: str | None = None                       # "" = follow nobody
+    enabled: bool | None = None
+
+
+@app.get("/api/rig")
+async def rig_get():
+    return _rig_view()
+
+
+@app.get("/api/rig/suggest-address")
+async def rig_suggest_address(profile_id: str, exclude: str | None = None):
+    from ..domain.rig import suggest_address
+    store = _ctrl(app).store
+    p = store.profiles.get(profile_id)
+    if p is None:
+        raise HTTPException(404, f"no profile {profile_id}")
+    return {"address": suggest_address(list(store.devices.values()), store.profiles, p.channel_count, exclude=exclude)}
+
+
+@app.post("/api/rig/devices")
+async def rig_add(body: RigDeviceIn):
+    from ..domain.rig import new_id, suggest_address, default_placement
+    from ..domain.devices import Device
+    if (why := _rig_busy()):
+        raise HTTPException(409, why)
+    if body.kind not in RIG_KINDS:
+        raise HTTPException(400, "A new device is a light, a fogger or a yard light.")
+    store = _ctrl(app).store
+    devs = list(store.devices.values())
+    data = {"id": new_id(body.name, store.devices), "name": body.name.strip(), "kind": body.kind,
+            "enabled": body.enabled, **default_placement(devs, body.kind)}
+    if body.kind == "static_rgb":
+        data["static_color"], data["static_brightness"] = "#fff4e0", 0.3
+    else:
+        prof = store.profiles.get(body.profile_id or "")
+        if prof is None:
+            raise HTTPException(400, "Pick a fixture profile for it.")
+        addr = body.dmx_address or suggest_address(devs, store.profiles, prof.channel_count)
+        if addr is None:
+            raise HTTPException(400, "There's no room left in the DMX universe for it.")
+        data.update(profile_id=prof.id, dmx_address=addr, follows=body.follows or None)
+    dev = Device.model_validate(data)
+    new = devs + [dev]
+    _rig_check(new, dev.id)
+    _rig_commit(new)
+    return {"device": dev.model_dump(), "rig": _rig_view()}
+
+
+@app.put("/api/rig/devices/{device_id}")
+async def rig_update(device_id: str, body: RigDevicePatch):
+    if (why := _rig_busy()):
+        raise HTTPException(409, why)
+    store = _ctrl(app).store
+    cur = store.device(device_id)
+    if cur is None:
+        raise HTTPException(404, f"no device {device_id}")
+    patch = body.model_dump(exclude_unset=True)
+    if "name" in patch:
+        patch["name"] = (patch["name"] or "").strip() or cur.name
+    if "follows" in patch:
+        patch["follows"] = patch["follows"] or None
+    if _kind_of(cur) not in ("dmx_fixture", "dmx_fog"):
+        patch = {k: v for k, v in patch.items() if k in ("name", "enabled")}
+    elif "profile_id" in patch and patch["profile_id"] not in store.profiles:
+        raise HTTPException(400, "That fixture profile isn't installed.")
+    dev = cur.model_copy(update=patch)                # a new object: the output thread never sees a half-edit
+    new = [dev if d.id == device_id else d for d in store.devices.values()]
+    _rig_check(new, device_id)
+    _rig_commit(new, touched=(device_id,))
+    return {"device": dev.model_dump(), "rig": _rig_view()}
+
+
+@app.delete("/api/rig/devices/{device_id}")
+async def rig_delete(device_id: str):
+    if (why := _rig_busy()):
+        raise HTTPException(409, why)
+    store = _ctrl(app).store
+    if store.device(device_id) is None:
+        raise HTTPException(404, f"no device {device_id}")
+    new, unfollowed = [], []
+    for d in store.devices.values():
+        if d.id == device_id:
+            continue
+        if d.follows == device_id:                    # its followers now play only their own parts
+            d = d.model_copy(update={"follows": None})
+            unfollowed.append(d.name)
+        new.append(d)
+    _rig_commit(new, touched=(device_id,))
+    return {"deleted": device_id, "unfollowed": unfollowed, "rig": _rig_view()}
+
+
+@app.post("/api/rig/devices/{device_id}/identify")
+async def rig_identify(device_id: str):
+    """Flash one light bright white for a few seconds, so you can tell which
+    one it is out in the yard."""
+    if (why := _rig_busy()):
+        raise HTTPException(409, why)
+    from ..domain.resolve import resolve_fixture
+    store = _ctrl(app).store
+    dev = store.device(device_id)
+    if dev is None:
+        raise HTTPException(404, f"no device {device_id}")
+    if _kind_of(dev) != "dmx_fixture":
+        raise HTTPException(400, "Only lights can flash. Test a fogger with its Test button on Live.")
+    prof = store.profile_for(dev)
+    if prof is None or dev.dmx_address is None:
+        raise HTTPException(400, f"{dev.name} needs a profile and an address first.")
+    vals = resolve_fixture(prof, dev.dmx_address, rgb=(255, 255, 255), brightness=255)
+    app.state.bus.set_manual(device_id, vals, expires_at=time.monotonic() + IDENTIFY_S)
+    return {"device": device_id, "seconds": IDENTIFY_S}
 
 
 @app.post("/api/stop")
@@ -1276,7 +1478,7 @@ async def scene_state(scene_id: str, t: float = 0.0):
     if not sc:
         raise HTTPException(404, f"no scene {scene_id}")
     out = {"t": t, "duration_s": sc.duration_s, "playing": False, "scene": scene_id, "devices": {}}
-    for dev, st in evaluate(sc, max(0.0, min(float(t), sc.duration_s))).items():
+    for dev, st in evaluate(sc, max(0.0, min(float(t), sc.duration_s)), _ctrl(app).store.follows).items():
         out["devices"][dev] = {"hex": "#%02x%02x%02x" % st.rgb, "brightness": st.brightness,
                                "strobe": st.strobe_hz > 0, "strobe_hz": round(_cap_hz(st.strobe_hz), 2),
                                "fog": st.fog}
@@ -1931,7 +2133,7 @@ async def play_state():
     out = {"t": st["t"], "playing": st["playing"], "scene": st["scene"], "devices": {}}
     sc = _ctrl(app).store.scenes.get(st["scene"]) if st["scene"] else None
     if sc:
-        for dev, s in evaluate(sc, p._t).items():
+        for dev, s in evaluate(sc, p._t, _ctrl(app).store.follows).items():
             hexc = "#%02x%02x%02x" % s.rgb
             out["devices"][dev] = {"hex": hexc, "brightness": s.brightness,
                                    "strobe": s.strobe_hz > 0, "strobe_hz": round(_cap_hz(s.strobe_hz), 2),
@@ -2122,9 +2324,17 @@ async def system_checks():
         asyncio.to_thread(_sys.fpp_status, settings.fpp_base_url),
         asyncio.to_thread(_sys.vitals))
     bus = getattr(app.state, "bus", None)
+    from ..domain.rig import issues as _rig_issues, needed_end as _needed_end
+    store = _ctrl(app).store
+    devs = list(store.devices.values())
     ctx = {"settings": settings, "fpp": fpp_info, "vitals": vit,
            "bus_stats": bus.stats() if bus is not None else {},
-           "audio_state": _audio_state(), "show_status": _show_status()}
+           "audio_state": _audio_state(), "show_status": _show_status(),
+           "rig": {"block_end": bus.nch if bus is not None else _block_end(store),
+                   "needed_end": _needed_end(devs, store.profiles),
+                   "issues": _rig_issues(devs, store.profiles),
+                   "lights": sum(1 for d in devs if getattr(d.kind, "value", d.kind) == "dmx_fixture"),
+                   "foggers": sum(1 for d in devs if getattr(d.kind, "value", d.kind) == "dmx_fog")}}
     checks = await asyncio.to_thread(_sys.run_checks, ctx)
     counts = {k: sum(1 for c in checks if c["status"] == k) for k in ("ok", "warn", "fail", "unknown")}
     return {"checks": checks, "counts": counts}
@@ -2136,7 +2346,7 @@ _FIXES = {
     "fppd":       (True,  lambda: _sys.restart_fppd()),
     "fpp_web":    (False, lambda: _sys.restart_web()),
     "boot_retry": (False, lambda: _sys.fix_boot_retry()),
-    "overlay":    (True,  lambda: _sys.fix_overlay(settings)),
+    "overlay":    (True,  lambda: _sys.fix_overlay(settings, _block_end(_ctrl(app).store))),
     "ddp_in":     (False, lambda: _sys.fix_ddp_input()),
     "e131_out":   (True,  lambda: _sys.fix_e131_off()),
     "audio":      (True,  lambda: _sys.fix_audio(settings.service_name)),

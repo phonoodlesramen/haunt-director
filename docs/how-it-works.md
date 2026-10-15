@@ -49,11 +49,17 @@ With `HD_OUTPUT_TRANSPORT=ddp` (the recommended setting), each frame is **one UD
 
 ### The overlay model
 
-FPP's Pixel Overlay Models are how outside programs claim channels. Haunt Director keeps one, named `haunt`, covering its channel block (1 to 64 by default). It's added automatically at startup alongside any overlay models you already have (FPP is only restarted if something actually needed changing), and the System tab can recreate it.
+FPP's Pixel Overlay Models are how outside programs claim channels. Haunt Director keeps one, named `haunt`, covering its channel block (1 to 64 by default, or further if your rig needs it; see below). It's added automatically at startup alongside any overlay models you already have (FPP is only restarted if something actually needed changing), and the System tab can recreate it.
+
+### The channel block and the rig
+
+The output frame covers DMX channel 1 up to the end of the **channel block**: `HD_DMX_CHANNEL_COUNT` (64 by default), grown to reach the last channel any device uses, never past 512. The rules for the rig live in one pure module, `domain/rig.py`: each device's channel span, the block size, overlap and profile checks, address suggestions, and followers. The rig editor, the System tab and the tests all use it.
+
+A rig edit swaps in a whole new device list at once (never edited in place), so the output thread only ever sees one rig or the other. The bus then refreshes its fog guard and strobe map, *then* grows the frame, so a new fogger is guarded before it can ever be sent. The frame never shrinks while running; channels a removed device used just go to zero. Rig edits wait while the show is armed or a scene is playing.
 
 ## Scenes
 
-A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, each a list of timed **events** (`set_color`, `fade_color`, `pulse`, `strobe`, `fog` and friends), plus optional audio. `evaluate(scene, t)` turns that into each device's state at time `t`: color, brightness, strobe rate and fog level. A fixture's [profile](fixture-profiles.md) then turns the state into channel values. That's the only code that knows about channels, and it's where the safety bands and strobe cap are enforced.
+A scene (`backend/data/scenes/*.json`) is a set of **tracks**, one per device, each a list of timed **events** (`set_color`, `fade_color`, `pulse`, `strobe`, `fog` and friends), plus optional audio. `evaluate(scene, t)` turns that into each device's state at time `t`: color, brightness, strobe rate and fog level. **Followers** are resolved here too: a device with no events of its own in the scene plays the part of the device it follows, walking up the chain (loops are cut), so a light added later still takes part in every existing scene. A fixture's [profile](fixture-profiles.md) then turns the state into channel values. That's the only code that knows about channels, and it's where the safety bands and strobe cap are enforced.
 
 The **simulator** in the browser (`web/sim.js`) carries a line-for-line copy of `evaluate()`, so a scene played in Sim looks exactly like it would on the rig. A test runs both on random and real scenes and checks every frame matches. Its clock is the device's own sound: the lights hold at the start until the music is really playing, then follow the music's position, easing back into step if the two drift and jumping if the sound stalls. A scene without music, a short score looping under a longer scene, or sound the browser won't play runs on the browser's clock instead.
 

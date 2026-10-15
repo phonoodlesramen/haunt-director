@@ -25,6 +25,9 @@ class Device(BaseModel):
     sim_position: dict | None = None  # {"x":.6, "y":.57}
     aim: dict | None = None           # {"x":.58, "y":.25} — where the beam lands
     spread: float = 1.0               # beam width multiplier
+    # follow another device of the same kind: in any scene where this one has no
+    # events of its own, it plays that device's part (domain/rig.py)
+    follows: str | None = None
     # static RGB fixtures: a global, always-on colour we can't drive over DMX —
     # we just record what the physical light is set to so the yard preview matches.
     static_color: str = "#ff3030"     # one of the 8 preset colours (hex)

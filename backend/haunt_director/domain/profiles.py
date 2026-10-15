@@ -43,6 +43,8 @@ class FixtureProfile(BaseModel):
     mode_name: str = ""
     channel_count: int
     has_master_dimmer: bool = False
+    tested: bool = False              # checked on a real fixture (vs. a starter layout)
+    notes: str = ""                   # shown when choosing a profile
     channels: list[ChannelDef]
 
     def offset_for(self, role: ChannelRole) -> int | None:

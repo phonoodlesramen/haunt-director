@@ -42,12 +42,17 @@
   function lanesFor(sc){
     var tracks = sc.tracks || {}, out = [];
     var devs = (typeof SIGDEVS !== "undefined" && SIGDEVS) || [];
-    var ids = devs.map(function(d){ return d.id; }).filter(function(id){ return (tracks[id] || []).length; });
+    var fol = window.__follows || {};
+    var src = function(id){ return window.partSource ? window.partSource(id, tracks, fol) : ((tracks[id] || []).length ? id : null); };
+    // every device that plays something: its own part, or the part of the light it follows
+    var ids = devs.map(function(d){ return d.id; }).filter(function(id){ return src(id); });
     Object.keys(tracks).forEach(function(id){ if(ids.indexOf(id) < 0 && (tracks[id] || []).length) ids.push(id); });
     ids.forEach(function(id){
       var d = devs.find(function(x){ return x.id === id; });
-      var evs = tracks[id].slice().sort(function(a, b){ return a.t - b.t; });
-      out.push({kind: d && d.kind === "dmx_fog" ? "fog" : "light", id: id, name: d ? d.name : id, evs: evs,
+      var from = src(id), lead = from !== id ? devs.find(function(x){ return x.id === from; }) : null;
+      var evs = (tracks[from] || []).slice().sort(function(a, b){ return a.t - b.t; });
+      out.push({kind: d && d.kind === "dmx_fog" ? "fog" : "light", id: id,
+                name: (d ? d.name : id) + (from !== id ? " ↪ " + (lead ? lead.name : from) : ""), evs: evs,
                 maxDur: evs.reduce(function(m, e){ return Math.max(m, +e.duration_s || 0); }, 0)});
     });
     var au = sc.audio || {}, snd = [], d = +sc.duration_s || 0;

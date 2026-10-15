@@ -234,6 +234,23 @@ class HouseLights:
                     devs.append((dev.id, dev.dmx_address, prof))
         self._devs = tuple(devs)
 
+    def refresh_devices(self):
+        """The rig changed (rig editor): pick up new lights, drop removed ones.
+        A new light that follows another starts with that light's colors."""
+        ids = self._light_ids()
+        with self._lock:
+            old = self.cfg.get("lights") or {}
+            seeded = dict(old)
+            for dev in self._lights():
+                if dev.id not in seeded and dev.follows and dev.follows in old:
+                    seeded[dev.id] = dict(old[dev.follows])
+            new = clean_config({**self.cfg, "lights": seeded}, ids)
+            changed = new != self.cfg
+            self.cfg = new
+            if changed:
+                self._save()
+        self._refresh_devs()
+
     def _save(self):
         with contextlib.suppress(Exception):
             self.path.write_text(json.dumps(self.cfg, indent=2))

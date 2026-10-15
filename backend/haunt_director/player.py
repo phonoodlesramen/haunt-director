@@ -40,7 +40,7 @@ DUCK_MAX_DB = 18
 def scene_channels(store, scene: Scene, t: float, mute=()) -> dict[int, int]:
     """A scene's absolute DMX channel values at time t. Pure: safe to call from
     the output thread. (The fog guard is applied by the bus, not here.)"""
-    states = evaluate(scene, t)
+    states = evaluate(scene, t, getattr(store, "follows", None))   # followers borrow their leader's part
     channels: dict[int, int] = {}
     for dev_id, st in states.items():
         dev = store.device(dev_id)

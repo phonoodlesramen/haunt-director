@@ -394,6 +394,35 @@ body.fs-on{overflow:hidden}
 .sysbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .sysbtns button{font-size:13px;padding:12px 10px}
 .sysbtns button.danger{border-color:var(--danger);color:var(--danger)}
+/* System -> Your rig */
+.rgsum{display:flex;justify-content:space-between;gap:6px 12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.rgiss{font-size:13px;line-height:1.4;padding:8px 10px;border-radius:8px;margin:8px 0}
+.rgiss.error{background:rgba(224,90,71,.12);color:#f3a597;border:1px solid rgba(224,90,71,.45)}
+.rgiss.warn{background:rgba(212,162,76,.1);color:#e6c483;border:1px solid rgba(212,162,76,.4)}
+.rgrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line-soft)}
+.rglist .rgrow:first-child{border-top:0}
+.rgrow.off .rgname,.rgrow.off .sub{opacity:.55}
+.rgrow.bad .rgname{color:#f3a597}
+.rgicon{width:12px;height:12px;flex:none;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(232,163,61,.5)}
+.rgicon.dmx_fog{border-radius:3px;background:var(--fogc);box-shadow:none}
+.rgicon.static_rgb{background:transparent;border:2px solid var(--muted);box-shadow:none}
+.rgname{font-weight:600;font-size:14.5px;overflow-wrap:anywhere}
+.rgbadge{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:1px 6px;vertical-align:2px;white-space:nowrap}
+button.rgbtn{flex:none;min-width:0;width:auto;padding:8px 12px;font-size:13px}
+.rgform{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px 12px 14px;margin:4px 0 10px}
+.rgform .rghd{font-family:var(--disp);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rgform .field{margin:10px 0}
+.rgform .field input[type=text],.rgform .field input[type=number],.rgform .field select{background:var(--surface)}
+.rgform button.danger{border-color:var(--danger);color:var(--danger)}
+.rgerr{font-size:13px;line-height:1.4;color:#f3a597;background:rgba(224,90,71,.12);border:1px solid rgba(224,90,71,.45);border-radius:8px;padding:8px 10px;margin-top:10px}
+.rgerr[hidden]{display:none}
+.rgadd button{min-width:0}
+/* scene editor: a follower's borrowed part */
+.tlblock.ghost{opacity:.28;pointer-events:none;border-style:dashed}
+.tlfollow{position:absolute;left:6px;top:50%;transform:translateY(-50%);z-index:2;display:flex;align-items:center;gap:8px;
+  font-size:11.5px;color:var(--muted);background:rgba(14,16,22,.88);border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 10px;white-space:nowrap}
+.tlfollow .mini{color:var(--text);padding:3px 8px;font-size:11px;border-radius:999px}
 .fpplink{display:inline-block;margin-top:12px;color:var(--accent);font-size:14px;text-decoration:none}
 .sysreconnect{border-color:var(--warn)}
 .pill{cursor:pointer}
@@ -739,6 +768,8 @@ body.fs-on{overflow:hidden}
     <div class="sysgrid" id="sysTiles"></div>
     <div class="sub muted" id="sysUpdated" style="margin-top:10px">Checking…</div>
   </div>
+  <h2>Your rig</h2>
+  <div class="card" id="rigCard"><div class="muted">Loading…</div></div>
   <h2>Setup check</h2>
   <div class="syssum" id="sysSummary"></div>
   <div class="card" id="sysChecks"><div class="muted">Checking…</div></div>
@@ -768,11 +799,12 @@ body.fs-on{overflow:hidden}
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="sim.js?v=3"></script>
-<script src="fullview.js?v=2"></script>
-<script src="app.js?v=27"></script>
-<script src="stage.js?v=14"></script>
-<script src="timeline.js?v=16"></script>
+<script src="sim.js?v=4"></script>
+<script src="fullview.js?v=3"></script>
+<script src="app.js?v=28"></script>
+<script src="stage.js?v=15"></script>
+<script src="timeline.js?v=17"></script>
 <script src="house.js?v=1"></script>
+<script src="rig.js?v=1"></script>
 </body>
 </html>

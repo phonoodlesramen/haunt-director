@@ -230,6 +230,29 @@ def run_checks(ctx):
     fpp = ctx.get("fpp") or fpp_status(s.fpp_base_url)
     on_pi = fpp["http"]["daemon"] != 0 or Path("/opt/fpp").exists()
     out = []
+    rig = ctx.get("rig") or {}
+    block_end = int(rig.get("block_end") or s.dmx_end_channel)
+    needed = int(rig.get("needed_end") or 0)
+
+    # 0. The rig itself (System -> Your rig)
+    if rig:
+        iss = rig.get("issues") or []
+        errs = [i for i in iss if i["level"] == "error"]
+        n_l, n_f = rig.get("lights", 0), rig.get("foggers", 0)
+        what = f"{n_l} light{'s' if n_l != 1 else ''}" + (f" and {n_f} fogger{'s' if n_f != 1 else ''}" if n_f else "")
+        more = f" (and {len(iss) - 1} more)" if len(iss) > 1 else ""
+        if errs:
+            out.append(_c("rig", "Your rig", "fail", errs[0]["message"] + more,
+                          help="Fix it under Your rig, above."))
+        elif iss:
+            out.append(_c("rig", "Your rig", "warn", iss[0]["message"] + more,
+                          help="Check it under Your rig, above."))
+        elif n_l or n_f:
+            out.append(_c("rig", "Your rig", "ok",
+                          f"{what}, using DMX channels 1 to {needed}." if needed else f"{what}."))
+        else:
+            out.append(_c("rig", "Your rig", "warn", "No lights or foggers yet.",
+                          help="Add them under Your rig, above."))
 
     # 1. FPP daemon
     if fpp["daemon_ok"]:
@@ -287,10 +310,19 @@ def run_checks(ctx):
         dev = o.get("device") or ""
         present = bool(dev) and Path("/dev/" + dev).exists()
         tip = ""
-        if int(o.get("channelCount") or 0) > max(64, s.dmx_end_channel):
-            tip = (f" Tip: your fixtures stop at channel {s.dmx_end_channel}; a {max(64, s.dmx_end_channel)}-channel "
+        o_start = int(o.get("startChannel") or 1)
+        o_end = o_start + int(o.get("channelCount") or 0) - 1
+        if int(o.get("channelCount") or 0) > max(64, block_end):
+            tip = (f" Tip: your fixtures stop at channel {block_end}; a {max(64, block_end)}-channel "
                    f"output makes each DMX frame much shorter.")
-        if dev and not present:
+        if dev and present and needed and (o_start > 1 or o_end < needed):
+            out.append(_c("dmx_out", "DMX output", "warn",
+                          f"FPP sends channels {o_start} to {o_end}, but your rig uses channels up to {needed}. "
+                          f"Lights past channel {o_end} stay dark.",
+                          help=f"In FPP: Input/Output Setup → Other, set this output to start at 1 with a channel "
+                               f"count of {needed} or more (rounding up to {min(512, ((needed + 15) // 16) * 16)} leaves room), "
+                               f"save, then restart FPP."))
+        elif dev and not present:
             out.append(_c("dmx_out", "DMX output", "fail",
                           f"{o.get('type')} is set to {dev}, but that device isn't plugged in.",
                           help="Check the USB DMX dongle. If it moved (ttyUSB1?), update it in FPP: Input/Output Setup → Other."))
@@ -302,9 +334,22 @@ def run_checks(ctx):
     # 5. Overlay model (Haunt Director's claim on the DMX channels)
     code, models = _http(s.fpp_base_url.rstrip("/") + "/api/models?simple=true")
     if code == 200 and isinstance(models, list):
-        if s.overlay_model_name in models:
+        mcount = None
+        mf = _read_root_json(f"{FPP_CFG}/model-overlays.json") if s.overlay_model_name in models else None
+        for m in ((mf or {}).get("models") or []):
+            if isinstance(m, dict) and m.get("Name") == s.overlay_model_name:
+                mcount = int(m.get("ChannelCount") or 0)
+        transport = str(getattr(s, "output_transport", "rest")).lower()
+        if s.overlay_model_name in models and mcount is not None and transport != "ddp" \
+                and s.dmx_start_channel + mcount - 1 < block_end:
+            out.append(_c("overlay", "Haunt Director's channel block in FPP", "warn",
+                          f"Overlay model '{s.overlay_model_name}' covers channels {s.dmx_start_channel} to "
+                          f"{s.dmx_start_channel + mcount - 1}, but your rig needs 1 to {block_end}.",
+                          _fix("Resize it (restarts FPP)", disruptive=True)))
+        elif s.overlay_model_name in models:
             out.append(_c("overlay", "Haunt Director's channel block in FPP", "ok",
-                          f"Overlay model '{s.overlay_model_name}' covers channels {s.dmx_start_channel}–{s.dmx_end_channel}."))
+                          f"Overlay model '{s.overlay_model_name}' covers channels {s.dmx_start_channel} to "
+                          f"{s.dmx_start_channel + mcount - 1 if mcount else block_end}."))
         else:
             out.append(_c("overlay", "Haunt Director's channel block in FPP", "fail",
                           f"Overlay model '{s.overlay_model_name}' is missing.",
@@ -486,10 +531,11 @@ def fix_e131_off():
     return False, "FPP didn't come back, so the change was reverted."
 
 
-def fix_overlay(settings):
+def fix_overlay(settings, block_end=None):
     from .fpp.provision import ensure_all
+    end = int(block_end or settings.dmx_end_channel)
     r = ensure_all(settings.overlay_model_name, settings.dmx_start_channel,
-                   settings.dmx_channel_count, settings.e131_universe, with_output=False)
+                   end - settings.dmx_start_channel + 1, settings.e131_universe, with_output=False)
     if r.get("ok"):
         return True, "Created; FPP restarted."
     return False, "FPP didn't accept it" + (" and the change was reverted." if r.get("reverted") else ".")

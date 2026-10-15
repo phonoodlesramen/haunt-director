@@ -37,6 +37,16 @@ That was the old way of sending light data, with individual channel updates thro
 - **Flicker or random flashes** usually mean a missing **terminator** on the last fixture, or a long, cheap cable.
 - **One light responds to another's controls?** Overlapping addresses. Leave 16-channel gaps.
 
+## A light I just added stays dark
+
+Work through these in order:
+
+- **Flash it.** System → Your rig → Edit → **Flash it**. If a *different* light flashes, the addresses are swapped; if nothing does, keep going.
+- **The address on the light.** Its own display has to show the same DMX address as Your rig, and the same channel mode as its profile (an 8-channel profile needs the light in its 8-channel mode).
+- **FPP's channel count.** FPP only sends as many channels as its DMX output is set to. The Setup check warns when that stops short of your last device and tells you the number to set (FPP: Input/Output Setup → Other).
+- **The cable.** Each light's DMX OUT goes to the next one's IN, and the terminator moves to the new last light.
+- **In a scene it's dark but on a Live card it works.** The scene has no part for it. Set it to **follow** a light under Your rig, or give it events in the editor.
+
 ## The strobe keeps going after a scene ends
 
 Some fixtures need a few frames with the strobe channel at "off" before they actually stop. Set `HD_STROBE_CLEAR_FRAMES=3` in `backend/.env` and restart.

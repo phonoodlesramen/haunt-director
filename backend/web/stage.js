@@ -37,6 +37,16 @@
     try{ DEVS = await (await fetch("/api/devices")).json(); }catch(e){ return; }
     Object.values(fixEls).forEach(e=>e.remove()); Object.values(aimEls).forEach(e=>e.remove());
     for(const k in fixEls) delete fixEls[k]; for(const k in aimEls) delete aimEls[k];
+    // a device added without a stage position (say, by editing devices.json)
+    // still shows up, in a row along the ground, ready to drag into place
+    let unplaced = 0;
+    for(const d of DEVS){
+      if(!d.sim_position && (d.kind === "dmx_fixture" || d.kind === "dmx_fog" || d.kind === "static_rgb")){
+        const x = Math.min(0.94, 0.1 + 0.12 * unplaced++);
+        d.sim_position = {x: x, y: d.kind === "dmx_fog" ? 0.6 : 0.64};
+        if(d.kind !== "dmx_fog" && !d.aim) d.aim = {x: x, y: 0.3};
+      }
+    }
     for(const d of DEVS){
       if(!d.sim_position) continue;
       const f = document.createElement("div");

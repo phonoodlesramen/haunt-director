@@ -57,6 +57,7 @@ Press ✎ on a scene to open the **editor**:
 <img src="images/editor.jpg" alt="The timeline editor" width="100%">
 
 - **One lane per device.** Double-click a lane to drop an event where you clicked, or tap an event to edit it.
+- **Followers show their borrowed part.** A light that [follows](#your-rig) another and has no events of its own in this scene shows the other light's events, faded, with **↪ Plays Skelly Light's part**. Press **Give it its own** to copy that part into its lane and change it from there, or just add an event.
 - **Event types:** `set_color`, `fade_color`, `set_brightness`, `fade_brightness`, `pulse`, `strobe`, `blackout`, and `fog` on the fogger lane. Fades have curves (linear, ease in, ease out, ease in-out).
 - **Sound lanes:** a **music** bed, a **voice-over**, and any number of **layers**. Looping layers are ambient beds (wind, rain); one-shots are hits (thunder, screams). **+ Sound** and **+ Voice** add them at the playhead, and you can **trim** a clip to just the part you want.
 - **🔊 on a lane** mutes it while you work, for lights and sound alike.
@@ -136,9 +137,30 @@ The repo ships with five placeholder sounds, synthesized from scratch and dedica
 
 <img src="images/phone-system.jpg" alt="System tab" width="300">
 
+### FPP health
+
 **FPP health** shows live tiles for FPP itself, FPP's web UI, the lights output (frames per second and errors), sound, the sensor, the Pi (temperature, power problems, load), the network (address and Wi-Fi signal) and uptime.
 
+### Your rig
+
+**Your rig** lists every light, fogger and yard light with its DMX channels and fixture profile, plus anything wrong with the setup (two lights sharing channels, a missing profile, a fogger with a light's profile). From here you can:
+
+- **＋ Light, ＋ Fogger, ＋ Yard light.** Name it and pick its [fixture profile](fixture-profiles.md). The app suggests the next free DMX address (it leaves room in 16-channel slots: 65, 81, 97 and so on) and shows exactly which channels it will use. Set the same address on the light's own display.
+- **Edit** a device: rename it, change its profile or address, choose who it **follows**, or switch it out of use without deleting it.
+- **Flash it** lights one light bright white for 3 seconds, so you can find it in the yard.
+- **Delete** asks twice.
+
+Changes apply right away: the Live cards, the signal strip, house lights and the stage all pick them up. They wait while the show is armed or a scene is playing. New devices start along the ground on the stage picture; drag them into place with Scenes → **Edit layout**.
+
+**Followers.** A light can follow another light. In any scene where it has no events of its own, it plays the other light's part, so a light you add in November still joins every scene you wrote in October (and every example scene). Give it a part of its own and that part wins. Foggers can follow foggers the same way. A follower starts with its leader's house light colors, too.
+
+**The channel block grows by itself.** The light output covers DMX channels 1 to 64 by default (`HD_DMX_CHANNEL_COUNT`) and stretches to reach your last device, up to 512, one DMX universe. FPP's own DMX output has a channel count too; if it stops short of your last device, the Setup check says so and gives you the number to set.
+
+### Setup check
+
 **Setup check** runs about a dozen checks on the things Haunt Director depends on. Most failures come with a one-click **Fix**, and the rest come with a hint. The full list is in [Install, step 4](install.md#4-run-the-setup-check). Fixes that would restart FPP or the app are refused until you disarm the show and stop any playing scene.
+
+### Maintenance
 
 **Maintenance** has four buttons, and each one asks twice:
 

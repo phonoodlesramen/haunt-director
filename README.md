@@ -36,6 +36,7 @@ No subscription. No cloud account. No login. Just your Pi, on your network.
 - 🔊 **Real sound, mixed on the Pi.** Music beds, voice lines and sound effects in one mixer, kept in time with the lights. Voices automatically duck the music so your "welcome, mortals" actually lands. Master volume, a light-timing nudge and Test buttons included.
 - 🎸 **Song shows.** Give it a song and the drums, bass and guitar each drive a light, while the meaning of the lyrics picks the colors for each section. Only timings and colors are saved, never the words.
 - ✨ **AI scene drafts.** Describe a scene in plain words and get a first draft to tweak. Song shows and drafts are optional and use your own AI key.
+- 🧩 **Your rig, your way.** Add lights and foggers from your phone. Pick a fixture profile (tested ones, plus starters for the most common cheap PARs), and the app finds a free DMX address, catches overlaps, and flashes the new light so you can find it in the yard. A new light can **follow** one you already have, so it joins every scene you've written.
 - 🩺 **A System tab that fixes things.** Live health for FPP, the lights, sound, sensor and the Pi, plus a setup checklist where most problems have a one-tap **Fix**. Restart and reboot from your phone, in the yard, in the dark.
 - 🛡️ **Safety rails, not suggestions.** Fog bursts can't outlive their cap, one master switch holds the fogger at zero, there's an optional cap on strobe speed, and if the app ever stops, the lights go dark within a second instead of freezing on. Plus a big red **STOP EVERYTHING** button.
 
@@ -90,7 +91,8 @@ flowchart LR
 - **Sound is mixed on the Pi.** One in-process mixer with 16 channels drives a USB audio adapter directly. Scare sounds are loaded into memory at startup so a trigger never waits on the SD card, and a light-timing offset (-300 to +300 ms) lines the lights up with your speaker.
 - **Song shows are real signal processing.** ffmpeg splits the song into five frequency bands, a dynamic-programming beat tracker (Ellis, 2007) follows the drummer's actual tempo, and timed lyrics from LRCLIB mark the sections. The AI just picks the palette.
 - **House lights run on the wall clock.** The color drift is a pure function of the time, so the Pi, the preview on your phone and the dot on each card always agree. A golden-ratio phase offset keeps neighboring lights from changing together, and dusk is worked out from your location.
-- **Fixtures are data.** Each light model is a small JSON profile: which channel is red, which is strobe, and which ranges to avoid so a cheap PAR never wanders into its built-in "auto disco" mode in the middle of a scare.
+- **Fixtures are data.** Each light model is a small JSON profile: which channel is red, which is strobe, and which ranges to avoid so a cheap PAR never wanders into its built-in "auto disco" mode in the middle of a scare. A small library ships with the app, including starter layouts for common cheap PARs.
+- **The rig grows with you.** Add a light and the output stretches to reach it, up to a full DMX universe (512 channels). One pure module checks the whole rig (overlaps, wrong profiles, follow loops), and a follower plays its leader's part in any scene that has none for it, so last month's scenes light up this month's fixtures.
 - **Tested without hardware.** The test suite swaps the DMX path for a recording transport, so it runs anywhere, including CI. Anything touching fog, strobe, the output bus or STOP needs a test. No exceptions.
 - **Light on its feet.** On the reference Pi, the whole stack (FPP, Haunt Director and the desktop) uses about 1 GB of RAM.
 
@@ -118,7 +120,7 @@ And here's where those numbers come from:
 | USB to DMX adapter | 🕯️ 🎃 🦇 | $20 to $40 generic, about $72 ENTTEC | Tested: ENTTEC Open DMX USB. Generic cables with a genuine FTDI chip work the same way in FPP (untested here) |
 | 3-pin DMX cables and a terminator | 🕯️ 🎃 🦇 | about $30 for two 25 ft cables, $11 terminator | The terminator fixes a surprising amount of flicker |
 | Indoor RGBW DMX PAR lights | 🕯️ | about $100 for four | Not waterproof. Keep them dry |
-| Outdoor (IP65) RGBW DMX PAR lights | 🎃 🦇 | $90 to $110 each, $450 and up for name brands | Tested: HOLDLAMP IP65 RGBW in 8 channel mode. Other fixtures need a small [profile](docs/fixture-profiles.md) |
+| Outdoor (IP65) RGBW DMX PAR lights | 🎃 🦇 | $90 to $110 each, $450 and up for name brands | Tested: HOLDLAMP IP65 RGBW in 8 channel mode. Starter profiles cover common 3, 4 and 6 channel layouts; anything else needs a small [profile](docs/fixture-profiles.md) |
 | DMX fog machine | 🎃 🦇 | $60 to $150; $260 to $300 low-lying; about $400 name brand | It needs a DMX input. A 1-channel fogger works as is; foggers with built-in LEDs need a profile |
 | USB audio adapter | 🎃 🦇 | $10 to $16 | The Pi 5 has no headphone jack. Any class-compliant adapter should do |
 | Powered speaker with a wired input | 🎃 🦇 | $40 to $200 | AUX, RCA or line in. Bluetooth adds lag and is untested |
@@ -157,8 +159,8 @@ The full walkthrough is in [docs/install.md](docs/install.md).
 |---|---|
 | 🧰 [What you need](docs/hardware.md) | Equipment by tier with prices, the exact tested gear, wiring, DMX addressing |
 | 🛠️ [Install](docs/install.md) | FPP, Haunt Director, first-run setup, updating |
-| 🗺️ [Tour](docs/using-it.md) | Every tab, the editor, show mode, house lights, sound, the System tab |
-| 💡 [Fixture profiles](docs/fixture-profiles.md) | Teach it a new light in one small JSON file |
+| 🗺️ [Tour](docs/using-it.md) | Every tab, the editor, show mode, house lights, sound, your rig, the System tab |
+| 💡 [Fixture profiles](docs/fixture-profiles.md) | The included library, starter layouts, and teaching it a new light |
 | ⚙️ [How it works](docs/how-it-works.md) | The output bus, DDP, the audio engine, the safety layers |
 | 📏 [Limits and unknowns](docs/limits-and-unknowns.md) | Recommended limits, what's untested, known quirks |
 | 🦺 [Safety](docs/safety.md) | Strobes and photosensitivity, fog, outdoor power |

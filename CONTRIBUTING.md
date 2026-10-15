@@ -32,7 +32,7 @@ HD_AUDIO_ENABLED=false .venv/bin/uvicorn haunt_director.api.app:app --reload --p
 ## Fixture profiles
 
 1. Work out your fixture's channels ([guide](docs/fixture-profiles.md#finding-your-fixtures-channel-chart)).
-2. Add `backend/data/profiles/<vendor>-<model>-<N>ch.json`.
+2. Add `backend/data-example/profiles/<vendor>-<model>-<N>ch.json` (the library that ships with the app). Set `"tested": true` and a short `notes` line (the mode to set, anything odd).
 3. Test it on the real light: color, brightness, strobe at a few rates, and strobe off.
 4. Open a pull request with the exact product name and link, the mode you used, and anything odd (non-linear strobe, auto-mode bands).
 
@@ -46,6 +46,6 @@ HD_AUDIO_ENABLED=false .venv/bin/uvicorn haunt_director.api.app:app --reload --p
 
 ## Ideas we'd love help with
 
-Optional login for remote access · moving-head support (pan, tilt, gobos) · a devices editor in the UI · more sensors and per-zone triggers · Home Assistant integration · per-scene or time-of-night scene pools · translations · a proper isolated-DMX recommendation list.
+Optional login for remote access · moving-head support (pan, tilt, gobos) · more sensors and per-zone triggers · Home Assistant integration · per-scene or time-of-night scene pools · translations · a proper isolated-DMX recommendation list.
 
 By contributing you agree your contributions are licensed under the project's [MIT license](LICENSE).

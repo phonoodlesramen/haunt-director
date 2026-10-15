@@ -17,7 +17,7 @@ You don't have to buy it all at once. Each tier keeps everything from the one be
 
 Item-by-item prices are in the [README](../README.md#what-it-costs). They're rough US street prices from October 2026, and a memory shortage has pushed Raspberry Pi and SD card prices up sharply this year, so check before you buy.
 
-> 🦇 **Going big?** More than four DMX devices means a bigger channel block. Set `HD_DMX_CHANNEL_COUNT` (and FPP's DMX output channel count to match). Up to 512 channels fit in one universe, but only 64 have been tested, and nobody has tried more than about 10 fixtures yet ([limits](limits-and-unknowns.md#recommended-limits)).
+> 🦇 **Going big?** Add each light under System → [Your rig](using-it.md#your-rig); the channel block grows to fit on its own, up to 512 channels (one universe). Also raise FPP's own DMX output channel count to reach your last device; the Setup check tells you when it falls short. Only 64 channels have been tested on hardware so far ([limits](limits-and-unknowns.md#recommended-limits)).
 
 ## The shopping list
 
@@ -30,7 +30,7 @@ Item-by-item prices are in the [README](../README.md#what-it-costs). They're rou
 | **microSD card** (32 GB+) | OS, FPP, your audio | ✅ 128 GB SanDisk. Audio is the only thing that takes real space. Buy a name brand, and once the rig works, save an image of the card: the reference rig's first card started stalling under load ([what that looks like](troubleshooting.md#the-pi-takes-minutes-to-start-or-doesnt-come-back-after-a-restart)) |
 | **Falcon Player (FPP)** | Talks to the DMX hardware | ✅ FPP 9.5. See [Install](install.md#1-install-fpp) |
 | **USB to DMX adapter** | Turns USB into a DMX signal | ✅ ENTTEC Open DMX USB (FTDI FT232R) as FPP `DMX-Open`. 🤞 anything FPP supports, like `DMX-Pro` adapters |
-| **DMX fixtures** | The lights! | ✅ HOLDLAMP IP65 RGBW PAR, 8 channel mode. Others need a [profile](fixture-profiles.md). Outdoors, get IP65 (weatherproof) fixtures; indoor ones belong under cover |
+| **DMX fixtures** | The lights! | ✅ HOLDLAMP IP65 RGBW PAR, 8 channel mode. 🤞 starter profiles for common 3, 4 and 6 channel layouts. Others need a [profile](fixture-profiles.md). Outdoors, get IP65 (weatherproof) fixtures; indoor ones belong under cover |
 | **DMX cables + a terminator** | Daisy-chain the fixtures | 3-pin XLR is typical for these lights. Put a 120 Ω terminator in the last fixture's DMX OUT |
 | **A phone or laptop** | Running the app | Any modern browser on the same network |
 

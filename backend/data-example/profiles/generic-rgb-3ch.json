@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "generic-rgb-3ch",
+  "vendor": "Generic",
+  "model": "RGB light",
+  "mode_name": "3CH",
+  "channel_count": 3,
+  "has_master_dimmer": false,
+  "tested": false,
+  "notes": "Starter layout, not tested on a specific light. Put your light in its 3-channel DMX mode and check the channel order in its manual. No dimmer or strobe channel, so brightness is mixed into the color and strobes show as steady light.",
+  "channels": [
+    { "offset": 0, "role": "red", "name": "Red", "default": 0 },
+    { "offset": 1, "role": "green", "name": "Green", "default": 0 },
+    { "offset": 2, "role": "blue", "name": "Blue", "default": 0 }
+  ]
+}

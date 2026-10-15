@@ -16,6 +16,8 @@ async function api(path, opts){
   }
   return r.status === 204 ? null : r.json();
 }
+// names are typed by people (the rig editor): always escape them into HTML
+function escH(v){ return String(v==null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 // "45 s" under a minute, "2:30" above
 function fmtLen(s){ s = Math.round(+s || 0); return s < 60 ? s + " s" : Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
 function hexToRgb(h){
@@ -115,8 +117,8 @@ function lightCard(dev){
   el.innerHTML = `
     <div class="row">
       <div class="swatch" id="sw_${dev.id}"></div>
-      <div class="grow"><div class="name">${dev.name}<span class="mbadge" title="Overriding the running scene">Manual</span></div>
-        <div class="sub">DMX ${dev.dmx_address} · ${dev.profile_id}</div></div>
+      <div class="grow"><div class="name">${escH(dev.name)}<span class="mbadge" title="Overriding the running scene">Manual</span></div>
+        <div class="sub">DMX ${dev.dmx_address} · ${escH(dev.profile_id)}${dev.follows && DEVNAME[dev.follows] ? " · follows " + escH(DEVNAME[dev.follows]) : ""}</div></div>
       <input type="color" id="col_${dev.id}" value="#8b2fff">
     </div>
     <label>Brightness <span class="muted" id="bl_${dev.id}">78%</span></label>
@@ -155,7 +157,7 @@ function fogCard(dev){
   const el = document.createElement("div"); el.className="card";
   el.innerHTML = `
     <div class="row">
-      <div class="grow"><div class="name">${dev.name}</div>
+      <div class="grow"><div class="name">${escH(dev.name)}</div>
         <div class="sub">DMX ${dev.dmx_address} · bursts auto-stop at the safety cap</div></div>
     </div>
     <label>Burst length <span class="muted" id="fgl_${dev.id}">3.0 s</span></label>
@@ -203,7 +205,7 @@ function yardCard(dev){
   el.innerHTML = `
     <div class="row">
       <div class="swatch" id="ysw_${dev.id}"></div>
-      <div class="grow"><div class="name">${dev.name}</div>
+      <div class="grow"><div class="name">${escH(dev.name)}</div>
         <div class="sub">Solar RGB spotlight — set this to match the light in the yard</div></div>
       <label class="switch" title="On / off"><input type="checkbox" id="yon_${dev.id}"><span class="track"></span></label>
     </div>
@@ -444,20 +446,38 @@ async function testSound(){
   ["pointerup", "pointercancel", "change"].forEach(ev => v.addEventListener(ev, ()=>{ _vol.dragging = false; }));
 })();
 
+const DEVNAME = {};   // device id -> name
+// Build everything that depends on the rig: Live cards, the signal strip, the
+// follow map the simulator uses. Runs at startup and again after a rig edit.
+async function loadDevices(){
+  const devs = await api("/api/devices");
+  for(const k in DEVNAME) delete DEVNAME[k];
+  devs.forEach(d=>{ DEVNAME[d.id] = d.name; });
+  const fol = {};
+  devs.forEach(d=>{ const lead = devs.find(x=>x.id===d.follows);
+    if(lead && lead.id !== d.id && lead.kind === d.kind && d.enabled !== false &&
+       (d.kind==="dmx_fixture"||d.kind==="dmx_fog")) fol[d.id] = lead.id; });
+  window.__follows = fol;
+  ["#lights", "#fog", "#yardlights"].forEach(s=>{ $(s).innerHTML = ""; });
+  const lights = devs.filter(d=>d.kind==="dmx_fixture");
+  if(lights.length) lights.forEach(lightCard);
+  else $("#lights").innerHTML='<div class="card muted">No lights yet. Add them under System → Your rig.</div>';
+  const fogs = devs.filter(d=>d.kind==="dmx_fog");
+  FOG_IDS = fogs.filter(d=>d.enabled !== false).map(d=>d.id);
+  if(fogs.length) fogs.forEach(fogCard); else $("#fog").innerHTML='<div class="card muted">No fog device.</div>';
+  const yard = devs.filter(d=>d.kind==="static_rgb");
+  if(yard.length) yard.forEach(yardCard);
+  else $("#yardlights").innerHTML='<div class="card muted">No yard lights yet.</div>';
+  SIGDEVS = devs.filter(d=>d.kind==="dmx_fixture"||d.kind==="dmx_fog")
+                .sort((a,b)=>(a.dmx_address||0)-(b.dmx_address||0));
+  buildSignalStrip();
+  if(window.stageReloadDevices) window.stageReloadDevices();
+  return devs;
+}
+window.loadDevices = loadDevices;
+
 async function boot(){
-  try{
-    const devs = await api("/api/devices");
-    devs.filter(d=>d.kind==="dmx_fixture").forEach(lightCard);
-    const fogs = devs.filter(d=>d.kind==="dmx_fog");
-    FOG_IDS = fogs.filter(d=>d.enabled !== false).map(d=>d.id);
-    if(fogs.length) fogs.forEach(fogCard); else $("#fog").innerHTML='<div class="card muted">No fog device.</div>';
-    const yard = devs.filter(d=>d.kind==="static_rgb");
-    if(yard.length) yard.forEach(yardCard);
-    else $("#yardlights").innerHTML='<div class="card muted">No yard lights yet.</div>';
-    SIGDEVS = devs.filter(d=>d.kind==="dmx_fixture"||d.kind==="dmx_fog")
-                  .sort((a,b)=>(a.dmx_address||0)-(b.dmx_address||0));
-    buildSignalStrip();
-  }catch(e){ toast("Load failed: "+e.message); }
+  try{ await loadDevices(); }catch(e){ toast("Load failed: "+e.message); }
   loadOutput();
   poll(); setInterval(guarded(poll), 3000);
 }
@@ -470,7 +490,7 @@ function go(tab){
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+tab));
   document.querySelectorAll(".nav button").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.tab===tab)));
   if(tab==="library" && typeof loadLibrary === "function") loadLibrary();
-  if(tab==="system") loadSys(true);
+  if(tab==="system"){ loadSys(true); if(window.rigLoad) window.rigLoad(); }
   if(tab!=="editor"){ try{ localStorage.setItem("hd_tab", tab); }catch(e){} }
 }
 

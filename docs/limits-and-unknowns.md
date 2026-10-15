@@ -8,8 +8,8 @@ Here's what's actually been proven, what we'd recommend, and what nobody has tri
 
 | Thing | Tested | Recommended | Notes |
 |---|---|---|---|
-| DMX devices | 4 (3 PARs + fogger) | A handful to a couple dozen | One universe. Beyond about 10 fixtures, nobody has tried it yet |
-| Channel block | 1 to 64 | Up to 512 (one universe) | Set `HD_DMX_CHANNEL_COUNT`; the output frame and FPP overlay model follow it. Keep FPP's DMX output count to match. Only 64 has been tested |
+| DMX devices | 4 (3 PARs + fogger) on the rig; up to about 10 in tests and the simulator | A handful to a couple dozen | One universe. Beyond the reference rig's four, nobody has tried more on real hardware yet |
+| Channel block | 1 to 64 on the rig | Up to 512 (one universe) | Grows on its own to reach your last device (or set `HD_DMX_CHANNEL_COUNT`). FPP's own DMX output count has to reach it too; the Setup check tells you. Only 64 has been tested on hardware |
 | Frame rate | 25 fps | 25 fps | `HD_OUTPUT_FPS`. Fades look smooth at 25, and higher just means more USB traffic |
 | Scene length | up to 300 s | 30 to 300 s | The generator and Extend stop at 5 minutes. Ambient scenes loop the rotation, so long isn't required |
 | Events per scene | about 2,200 (a 5-minute beat-sync test scene) | a few hundred to about 2,500 | The AI generator caps itself at 120, or 1.5 per second for longer scenes. Beat sync and song shows allow about 7 per second for each light (6,000 at most), and thin out evenly if they'd go over, so the ending stays. A song show on 3 lights is about 1,500 for a 3 1/2-minute song. A 2,000-event scene opens in the editor in about 3 seconds on a slow phone |
@@ -31,7 +31,8 @@ Honest list. Nobody has tried any of these with Haunt Director yet:
 
 - **Raspberry Pi 5 with 4 GB or less, Pi 4, 3, Zero 2 W, Compute Modules.** The whole stack (FPP, Haunt Director and the desktop) uses about 1 GB of RAM on the reference rig, so a 4 GB Pi 5 or a Pi 4 will probably be fine. Smaller boards may struggle with audio decoding and the web UI at the same time.
 - **Other USB DMX adapters** (DMX-Pro style, DMXking, isolated adapters). If FPP supports it, it should work, since Haunt Director never talks to the adapter directly.
-- **Other fixtures.** They need a [profile](fixture-profiles.md). Moving heads, pan and tilt, gobos and color wheels have no event types yet.
+- **Other fixtures.** They need a [profile](fixture-profiles.md). The starter profiles are common layouts that haven't been tried on a specific light. Moving heads, pan and tilt, gobos and color wheels have no event types yet.
+- **The rig editor on a real rig.** Adding, re-addressing and following lights is tested end to end in software and in the browser, but hasn't yet been run against a fifth fixture on the reference rig.
 - **Pixels** (WS2811 and friends). Haunt Director doesn't sequence pixels. FPP can still run them on *other* channels alongside, but that combination is untested.
 - **Wireless DMX, Art-Net or E1.31 out to other controllers.** FPP can do it. Untested with Haunt Director.
 - **I²S audio HATs and Bluetooth speakers.** HATs that show up as an ALSA card will probably work. Bluetooth adds latency that varies between reconnects, which matters for scares timed to lights.

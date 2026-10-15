@@ -6,6 +6,8 @@
   "mode_name": "8CH",
   "channel_count": 8,
   "has_master_dimmer": true,
+  "tested": true,
+  "notes": "Tested on the reference rig. Set the light to its 8-channel DMX mode.",
   "channels": [
     { "offset": 0, "role": "dimmer", "name": "Master Dimmer", "default": 0 },
     { "offset": 1, "role": "red", "name": "Red", "default": 0 },

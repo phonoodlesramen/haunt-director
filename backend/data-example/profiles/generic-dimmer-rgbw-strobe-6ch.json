@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "generic-dimmer-rgbw-strobe-6ch",
+  "vendor": "Generic",
+  "model": "Dimmer + RGBW + strobe light",
+  "mode_name": "6CH",
+  "channel_count": 6,
+  "has_master_dimmer": true,
+  "tested": false,
+  "notes": "Starter layout, not tested on a specific light. Put your light in its 6-channel DMX mode and check the channel order in its manual. Expects dimmer, red, green, blue, white, then strobe (0 to 5 off, 6 to 255 slow to fast). Strobe speeds are approximate until you calibrate them (see the fixture profiles guide).",
+  "channels": [
+    { "offset": 0, "role": "dimmer", "name": "Master Dimmer", "default": 0 },
+    { "offset": 1, "role": "red", "name": "Red", "default": 0 },
+    { "offset": 2, "role": "green", "name": "Green", "default": 0 },
+    { "offset": 3, "role": "blue", "name": "Blue", "default": 0 },
+    { "offset": 4, "role": "white", "name": "White", "default": 0 },
+    { "offset": 5, "role": "strobe", "name": "Strobe", "default": 0,
+      "off_band": {"lo": 0, "hi": 5}, "rate_band": {"lo": 6, "hi": 255, "min_hz": 1.0, "max_hz": 20.0} }
+  ]
+}

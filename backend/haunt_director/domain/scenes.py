@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from .rig import part_source
+
 SIZABLE = {"fade_color", "fade_brightness", "strobe", "pulse", "fog"}
 INSTANT = {"set_color", "set_brightness", "blackout"}
 # A strobe's active window is floored to this so it always lasts long enough to
@@ -152,5 +154,16 @@ def _evaluate_track(events: list[Event], t: float) -> DeviceState:
         strobe_hz=strobe, fog=int(max(0, min(255, fog * 255))))
 
 
-def evaluate(scene: Scene, t: float) -> dict[str, DeviceState]:
-    return {dev: _evaluate_track(evs, t) for dev, evs in scene.tracks.items()}
+def evaluate(scene: Scene, t: float, follows: dict[str, str] | None = None) -> dict[str, DeviceState]:
+    """Each device's state at time t. With `follows` ({device: device it
+    follows}), a device that has no events of its own in this scene plays the
+    part of the device it follows (domain/rig.part_source)."""
+    out = {dev: _evaluate_track(evs, t) for dev, evs in scene.tracks.items()}
+    if follows:
+        for dev in follows:
+            if scene.tracks.get(dev):
+                continue
+            src = part_source(dev, scene.tracks, follows)
+            if src is not None and src in out:
+                out[dev] = out[src]
+    return out

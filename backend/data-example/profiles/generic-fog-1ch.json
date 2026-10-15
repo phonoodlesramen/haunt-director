@@ -6,6 +6,8 @@
   "mode_name": "1CH",
   "channel_count": 1,
   "has_master_dimmer": false,
+  "tested": true,
+  "notes": "Tested on the reference rig. Fits any fogger whose DMX mode is a single output channel.",
   "channels": [
     { "offset": 0, "role": "fog", "name": "Fog Output", "default": 0,
       "off_band": { "lo": 0, "hi": 5 } }

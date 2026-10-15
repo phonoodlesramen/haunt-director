@@ -1,8 +1,24 @@
 # 💡 Fixture profiles
 
-Every DMX light speaks its own little dialect. Channel 1 might be the dimmer on one PAR and red on another, and "strobe off" might be 0 or anything from 0 to 10. Haunt Director never guesses. Each light model gets a **profile**: one small JSON file in `backend/data/profiles/` that says what each channel does.
+Every DMX light speaks its own little dialect. Channel 1 might be the dimmer on one PAR and red on another, and "strobe off" might be 0 or anything from 0 to 10. Haunt Director never guesses. Each light model gets a **profile**: one small JSON file that says what each channel does.
 
-Write one profile per *model and mode*, then point any number of devices at it.
+Write one profile per *model and mode*, then point any number of devices at it (pick it under System → [Your rig](using-it.md#your-rig)).
+
+## What's included
+
+The app ships a small library in `backend/data-example/profiles/`. It's read straight from there, so updating Haunt Director brings new and fixed profiles to an existing install.
+
+| Profile | Channels | Status |
+|---|---|---|
+| `holdlamp-rgbw-8ch` | dimmer, R, G, B, W, strobe, function, speed | ✅ tested on the reference rig |
+| `generic-fog-1ch` | fog output | ✅ tested on the reference rig |
+| `generic-rgb-3ch` | R, G, B | 🤞 starter |
+| `generic-rgbw-4ch` | R, G, B, W | 🤞 starter |
+| `generic-dimmer-rgbw-strobe-6ch` | dimmer, R, G, B, W, strobe (0 to 5 off, 6 to 255 slow to fast) | 🤞 starter |
+
+**Starter profiles** are common channel layouts for cheap PARs, not tested on any particular light. Put your light in the matching DMX mode, check the order in its manual, and try a color and a strobe from a Live card before you trust it in a show. A light with no dimmer or strobe channel still works: brightness is mixed into the color, and strobes show as steady light.
+
+**Your own profiles** go in `backend/data/profiles/` (git-ignored, so updates leave them alone). One with the same `id` as a library profile replaces it. Restart the app after adding one.
 
 ## The reference PAR
 
@@ -53,6 +69,9 @@ And a fogger:
 | Field | Meaning |
 |---|---|
 | `id` | What devices refer to in `profile_id`. Use something like `vendor-model-8ch` |
+| `vendor`, `model`, `mode_name` | How it's named in the profile list (`HOLDLAMP IP65 RGBW PAR · 8CH`) |
+| `tested` | `true` once it's been checked on a real fixture. Untested ones are marked "starter" in the app |
+| `notes` | Shown under the profile when you pick it: the mode to set, anything odd |
 | `channel_count` | How many channels this mode uses. Must match the mode set on the fixture's display |
 | `has_master_dimmer` | `true` if a dimmer channel controls overall intensity. If `false`, brightness is baked into the color values instead |
 | `channels[].offset` | 0-based position from the device's DMX address (address 17, offset 2 = channel 19) |
@@ -108,7 +127,7 @@ Describe the bands and mark the safe one as `required_band`. The resolver pins t
 2. Set the fixture's mode on its display (often shown as `d-8`, `CH08` or similar) and note the channel count.
 3. Use FPP's **channel tester** or a scratch profile with every channel as `unused`, then raise one channel at a time and watch what happens.
 4. Write down each channel's role, which values mean "off" for strobe, and any banded ranges.
-5. Save the profile, point a device at it, restart the app, and test with a Live card.
+5. Save the profile in `backend/data/profiles/`, restart the app, pick it for your light under System → Your rig, and test with a Live card (and **Flash it**).
 
 ## Share it! 🙏
 
