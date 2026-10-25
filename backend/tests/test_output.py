@@ -105,9 +105,9 @@ def test_fog_burst_expires_back_to_scene(store):
     sc = store.scenes["blood-moon"]
     bus.set_scene(lambda now: scene_channels(store, sc, 5.0))
     scene_fog = bus.compose(0.0)[48]
-    bus.set_manual("fog_main", {49: 255}, expires_at=10.0)
-    assert bus.compose(9.99)[48] == 255
-    assert bus.compose(10.0)[48] == scene_fog
+    bus.set_manual("fog_main", {49: 255}, expires_at=6.0)   # inside the 8 s cap
+    assert bus.compose(5.99)[48] == 255
+    assert bus.compose(6.0)[48] == scene_fog
     assert bus.manual_devices() == []
 
 
@@ -285,3 +285,41 @@ def test_global_strobe_cap_limits_every_strobe():
     finally:
         R.set_strobe_cap(0)
     assert R.resolve_fixture(prof, 1, rgb=(255, 255, 255), brightness=255, strobe_hz=15) == fast
+
+
+# ---- fog hard cap (bus-level, covers every source) ----
+
+def test_fog_cap_cuts_a_long_scene_fog_and_holds_it_off(store):
+    bus = OutputBus(store, NullTransport(), fog_max_seconds=8.0)
+    bus.set_scene(lambda now: {49: 200})            # hand-edited 30 s fog block
+    assert bus.compose(0.0)[48] == 200
+    assert bus.compose(7.9)[48] == 200
+    assert bus.compose(8.0)[48] == 0                 # cut at the cap
+    assert bus.compose(20.0)[48] == 0                # and stays off while source is still on
+    assert bus.stats()["fog_cap_trips"] == 1
+
+
+def test_fog_cap_rearms_after_source_lets_go(store):
+    bus = OutputBus(store, NullTransport(), fog_max_seconds=8.0)
+    level = {"v": 200}
+    bus.set_scene(lambda now: {49: level["v"]})
+    bus.compose(0.0); assert bus.compose(9.0)[48] == 0
+    level["v"] = 0; bus.compose(10.0)               # source drops: clear air
+    level["v"] = 200
+    assert bus.compose(11.0)[48] == 200              # a fresh burst is allowed
+    assert bus.compose(18.9)[48] == 200
+    assert bus.compose(19.0)[48] == 0
+
+
+def test_fog_cap_covers_manual_without_expiry(store):
+    bus = OutputBus(store, NullTransport(), fog_max_seconds=5.0)
+    bus.set_manual("fog_main", {49: 255})            # no expiry at all
+    assert bus.compose(0.0)[48] == 255
+    assert bus.compose(5.0)[48] == 0
+
+
+def test_fog_cap_zero_disables(store):
+    bus = OutputBus(store, NullTransport(), fog_max_seconds=0)
+    bus.set_scene(lambda now: {49: 200})
+    bus.compose(0.0)
+    assert bus.compose(100.0)[48] == 200

@@ -57,7 +57,8 @@ async def lifespan(app: FastAPI):
     # -- scenes, Live cards, fog bursts, Stop -- is a layer on this bus.
     bus = OutputBus(store, make_transport(settings), fps=settings.output_fps,
                     nch=settings.dmx_end_channel,          # frame covers DMX 1..end of the block
-                    strobe_clear_frames=settings.strobe_clear_frames)
+                    strobe_clear_frames=settings.strobe_clear_frames,
+                    fog_max_seconds=settings.fog_max_seconds)
     app.state.bus = bus
     ctrl = ControlService(fpp, store, bus, settings.fog_max_seconds)
     app.state.ctrl = ctrl
@@ -1262,10 +1263,20 @@ async def save_scene(scene_id: str, patch: ScenePatch):
             setattr(sc, f, data[f])
     if "audio" in data:
         sc.audio = patch.audio       # SceneAudio instance or None (clear)
+    clamped = 0
     if "tracks" in data and patch.tracks is not None:
+        # The bus enforces the fog cap live; clamp here too so the saved scene
+        # (and the editor) show what will actually happen.
+        cap = settings.fog_max_seconds
+        if cap > 0:
+            for evs in patch.tracks.values():
+                for e in evs:
+                    if e.type == "fog" and e.duration_s > cap:
+                        e.duration_s = cap
+                        clamped += 1
         sc.tracks = patch.tracks     # full keyframe replace from the timeline editor
     store.save_scene(sc)
-    return {"saved": scene_id}
+    return {"saved": scene_id, "fog_clamped": clamped, "fog_max_seconds": settings.fog_max_seconds}
 
 
 @app.get("/api/scenes/{scene_id}/state")

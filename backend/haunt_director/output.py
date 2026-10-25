@@ -281,7 +281,7 @@ class OutputBus:
     is thread-safe and non-blocking (safe to call from the asyncio loop)."""
 
     def __init__(self, store, transport, fps: int = FPS, nch: int = NCH,
-                 strobe_clear_frames: int = 0):
+                 strobe_clear_frames: int = 0, fog_max_seconds: float = 8.0):
         self.store = store
         self.transport = transport
         self.fps = max(1, int(fps))
@@ -289,6 +289,14 @@ class OutputBus:
         self.nch = nch
         self.strobe_clear_frames = max(0, int(strobe_clear_frames))
         self.fog_enabled = True
+        # Hard ceiling on continuous fog, enforced on the composed frame so it
+        # covers every source (scenes, hand-edited timelines, Live, house).
+        # <= 0 disables it. Output-thread state only; no lock needed.
+        self.fog_max_seconds = float(fog_max_seconds or 0.0)
+        self._fog_on_since: dict[int, float] = {}
+        self._fog_tripped: set[int] = set()
+        self.fog_cap_trips = 0
+        self.last_fog_trip: float | None = None
 
         self._lock = threading.RLock()
         self._source: SceneSource | None = None
@@ -467,7 +475,37 @@ class OutputBus:
             for c in fog_chans:
                 if 1 <= c <= self.nch:
                     frame[c - 1] = 0
+        self._fog_cap(frame, fog_chans, now)
         return bytes(frame)
+
+    def _fog_cap(self, frame: bytearray, fog_chans: set[int], now: float) -> None:
+        """Force a fog channel to 0 once it has been on continuously for
+        fog_max_seconds, and keep it there until whatever is driving it lets go
+        (drops to 0). A cut-off burst never resumes mid-burst."""
+        cap = self.fog_max_seconds
+        if cap <= 0:
+            return
+        for c in fog_chans:
+            if not 1 <= c <= self.nch:
+                continue
+            if frame[c - 1] == 0:
+                self._fog_on_since.pop(c, None)
+                self._fog_tripped.discard(c)
+                continue
+            if c in self._fog_tripped:
+                frame[c - 1] = 0
+                continue
+            start = self._fog_on_since.setdefault(c, now)
+            if now - start >= cap:
+                self._fog_tripped.add(c)
+                self.fog_cap_trips += 1
+                self.last_fog_trip = now
+                frame[c - 1] = 0
+                log.warning("fog cap: channel %d on for %.1fs, forced off (cap %.1fs)",
+                            c, now - start, cap)
+        for c in [c for c in self._fog_on_since if c not in fog_chans]:
+            self._fog_on_since.pop(c, None)              # device removed / remapped
+        self._fog_tripped &= fog_chans
 
     def _strobe_clear(self, chans: dict[int, int]) -> dict[int, int]:
         """Legacy strobe-latch workaround (off by default). Kept as an escape
@@ -579,4 +617,7 @@ class OutputBus:
             "manual": self.manual_devices(),
             "house": self._house is not None,
             "fog_enabled": self.fog_enabled,
+            "fog_max_seconds": self.fog_max_seconds,
+            "fog_cap_trips": self.fog_cap_trips,
+            "fog_capped_now": sorted(self._fog_tripped),
         }
